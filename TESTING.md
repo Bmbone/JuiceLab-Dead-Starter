@@ -1,5 +1,21 @@
 # Unity verification and submission checklist
 
+## Rune Shield visual checkpoint
+
+- Open `Assets/_Project/Scenes/Medieval13_RuneShieldVFX.unity` in Unity 6000.3.2f1. Import script/shader/materials and check Console. Verify session/ability root/camera/right-wall/font and three material references, plus the existing generated Rune shield LineRenderer.
+- Cast with 3, keypad 3 and the hotbar across all nine level/difficulty choices at 1920x1080 and 1280x720. Check the jade/gold ward, rune row above the spell cards, visible end anchors and ARMED plaque in the right gutter. No opaque quad, missing/pink shader, bad vertex color or clipped label should appear.
+- Inspect world geometry: the ward's lower edge must match the original line's endpoints/y=-5.15. Decorative runes are 0.30 units above that plane; no new collider or reflection plane should exist. World visuals must remain behind the normal ball and paddle, and UI must not intercept input.
+- Let a shield expire unused. Its ward/ARMED plaque should disappear without a gold deflection burst or DEFLECTED claim. Failed cooldown attempts and casts blocked by pause/settings must not start new visuals.
+- Deliberately miss the paddle while shielded. Confirm the original single-use upward reflection, unchanged ball speed/contact position and original deflection cue. The native width flash should trigger one gold pulse, twelve bounded shards and DEFLECTED confirmation, without rearming protection.
+- Check successful deflections near both ends and at varied frame rates, including a deliberately low frame-rate run. This adapter observes the original short line-width flash; verify actual Update/FixedUpdate ordering and that real flashes are detected, with no burst on ordinary expiry, life loss or reset.
+- Pause while armed and during a deflection. Shader animation/shards/confirmation should freeze with the round; existing ability duration/cooldown should resume correctly. Existing Fireball VFX and Giant's Grip must remain unchanged, including simultaneous casts.
+- Lose a life, retry, Next Level and return/menu while shield effects are active. All new visuals/badge must clear; no stale native-visible frame should be mistaken for a new cast or deflection. Menus/results/settings must stay above the badge.
+- Disable RuneShieldVisualFeedback while armed/flashing: original enabled state, widths/colors/material and forceRenderingOff value should restore. Re-enable during the same ability: appearance may resume, with no renewed cast/deflection burst or repeated audio.
+- Tune Ward Opacity and Enable Shards. The badge should remain a state indicator independent of opacity. Confirm fifteen fixed world SpriteRenderers, twelve shard slots, one owned quad and no per-use objects/materials/AudioSources. Reduce viewport width and check the badge hides if its safe gutter disappears.
+- Repeat casts, stop/restart Play twice and unload/reload. Check native line visibility, event cleanup, borrowed font lifetime and owned quad/UI release. Reopen FireballVFX and older scenes to confirm their original shield rendering and all game rules remain intact.
+
+C# syntax, scene/material/GUID references and preservation, native flash/visibility contracts, plane/rune/hotbar/badge geometry and numeric mask/shard bounds pass source checks. Unity C#/shader compilation, actual alpha/TMP rendering, successful-deflection observation, pause/cleanup/input and play-mode/performance verification remain pending.
+
 ## Fireball visual checkpoint
 
 - Open `Assets/_Project/Scenes/Medieval12_FireballVFX.unity` in Unity 6000.3.2f1. Import the new script/shader/materials and check Console. Verify the controller references LevelSession, its ability root and all four materials; AbilityEffects should still create its original reused Fireball hierarchy.

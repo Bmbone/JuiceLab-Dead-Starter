@@ -195,3 +195,15 @@ Each stage is pushed separately to main. Stop Play before pulling and open the s
 - Pause during flight, expire naturally, lose a life mid-flight, retry, Next Level and return/menu. Check frozen motion while paused, no trail bridge/leftover embers and no changed spell/score state. Disable/re-enable mid-flight and inspect original renderer/material/trail restoration.
 - Inspect the fixed 19-sprite/one-trail hierarchy and runtime quad through repeated casts and stop/restart Play. Shader/C# import, actual rendering/vertex colors, layering, cleanup, input and play-mode/performance review remain pending; source/reference/preservation and numeric bounds checks pass.
 - Stop here for review. Rune Shield presentation is the next proposed checkpoint, with Giant's Grip kept separate.
+
+## 19. Rune Shield ward, status and deflection
+
+- New scene: `Assets/_Project/Scenes/Medieval13_RuneShieldVFX.unity`, first in Build Settings. All earlier Assets files stay unchanged.
+- Added a jade/gold runic ward, two crystal anchors, a gold deflection pulse, twelve fading shards and an ARMED / DEFLECTED plaque beside the right pillar. The original protection plane stays fixed; the rune row rises into the gap above the spell bar, with world visuals behind ball/paddle and a gutter safety check for the badge.
+- The controller reads the original line's visibility/width flash and hides only its rendering. It never changes cast eligibility, one-use consumption, cooldown, duration, collision or reflection. Disabling restores the old line; mid-ability re-enable does not replay bursts.
+- One quad, three materials, fifteen SpriteRenderers and one retained font-borrowing badge are reused. Twelve shard slots cap the deflection burst; cosmetic randomness is independent. Pausing freezes effect ages, and life/reset/menu/disable clears them.
+- Review all nine level/difficulty choices at 1920x1080 and 1280x720. Cast with 3/keypad 3/hotbar, verify ARMED, visible runes above the cards, correct endpoints and no blocked pointer or hidden ball. Try cooldown/settings-blocked casts: no false activation should appear.
+- Let the shield expire unused, then deflect a miss in another run. Expiry should hide without shards; a real deflection should pulse gold, emit one bounded burst and show DEFLECTED while retaining the existing upward reflection and cue. It must not grant a second protection.
+- Test pause, life loss, retry, Next Level, return/menu, rapid/low-frame-rate play and disable/re-enable. Check no stale badge or fake burst, restored native renderer flags and unchanged Fireball/other abilities. Narrow viewports should hide the plaque before it overlaps the court.
+- Source checks cover syntax/wiring/frozen assets, native width-marker/lifecycle ownership, plane and HUD clearance, shader masks and shard bounds. Unity engine/shader import, actual readability/detection/rendering, cleanup and play-mode/performance checks remain pending.
+- Stop here for review. Giant's Grip presentation is next.

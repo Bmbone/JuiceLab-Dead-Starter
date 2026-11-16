@@ -6,11 +6,35 @@ Jehad Alharbi — 202248820
 
 1. Open this repository's root folder in Unity Hub using **6000.3.2f1**.
 2. Allow the existing packages to import. No extra tweening or audio packages are required.
-3. Open `Assets/_Project/Scenes/Medieval12_FireballVFX.unity` for the latest checkpoint. It is first in Build Settings; ChapterPresentation, CourtSettings, CastleMusic, CastleAudio, BallPaddle, ImpactMotion, MasonryParticles, BrickBreak, StoneCourt, UI02, UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
+3. Open `Assets/_Project/Scenes/Medieval13_RuneShieldVFX.unity` for the latest checkpoint. It is first in Build Settings; FireballVFX, ChapterPresentation, CourtSettings, CastleMusic, CastleAudio, BallPaddle, ImpactMotion, MasonryParticles, BrickBreak, StoneCourt, UI02, UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
 4. Select 16:9 in Game view, press Play, choose a level, then choose Easy, Medium, or Hard. The ball starts only after both selections are made.
 5. Move with the mouse, A/D, or the left/right arrows. Cast with **1 or Space**, **2**, and **3**, or click the hotbar buttons. Menus support mouse selection or arrow keys and Enter.
 
 For the assignment comparison, open `Assets/_Project/Scenes/Before.unity` or `Assets/_Project/Scenes/After.unity`. Their gameplay rules remain unchanged: the ball launches automatically, the final lost life resets score/lives, and stopping/restarting Play restores the board. Arcade adds the menu/difficulty rules, Abilities adds spells, and Levels adds layout selection. Earlier scene assets and scripts remain unchanged.
+
+## Rune Shield visual checkpoint — change 13
+
+Open `Assets/_Project/Scenes/Medieval13_RuneShieldVFX.unity`. Rune Shield now appears as a jade/gold ward with geometric runes, two crystal-like end anchors, a gold deflection pulse and a fixed burst of rising shards. An ARMED / DEFLECTED plaque appears beside the right pillar. Its one-use protection, reflection position/velocity, duration, cooldown, cast keys and existing sound cues remain unchanged.
+
+The original shield line sits at y=-5.15, mostly behind the enlarged spell cards. The new ward keeps its lower edge on that same plane and places its rune row 0.30 world units above it, in the visible gap above the hotbar. All world elements sort behind the normal ball and paddle. The noninteractive status plaque stays outside the court and hides when the camera/Canvas leave less than 272 reference units of right gutter; menus and settings render above it.
+
+`RuneShieldVfx/RuneShieldVisualFeedback.cs` observes the existing `Rune shield` LineRenderer after the ability controller updates it. Visibility indicates the native shield/flash presentation; its existing `0.065 + flash * 0.15` width marker identifies a successful deflection. The new component does not cast, consume protection, predict a collision or change reflection. It hides only original rendering with forceRenderingOff, preserving enabled state, geometry, widths, colors and material. Disable restores that rendering; a mid-ability re-enable resumes the current appearance without emitting another activation/deflection burst.
+
+The new native URP shader and three shared materials draw ward, anchor and shard masks from one owned white-texture quad. The ARMED badge follows active shield presentation; after use it switches to DEFLECTED and briefly lingers as confirmation, rather than implying renewed protection. Expiry hides the ward/armed badge without a deflection burst. A rising source flash emits twelve shared-pool shards across the rune row; it does not claim an exact impact point.
+
+| Setting / resource | Default |
+|---|---:|
+| Ward Opacity | 0.75 |
+| Enable Shards / Pool | On / 12 sprites |
+| Shard lifetime | 0.22–0.32 s |
+| Deflection badge confirmation | Up to 0.45 s, including fade |
+| World renderers | 15 reused sprites; no new physics or audio voice |
+
+Select `Rune Shield VFX - Ward and Deflection 13` to tune opacity or disable shards. The retained badge borrows the HUD font. No per-cast GameObjects, sprites or material instances are created; a separate fixed-seed System.Random stream controls only decorative shards. Scaled ages/animation pause with the round. Life loss, score-zero reset, menus/results and disable clear the new presentation, while renderer visibility and owned resources are restored/released on disable/destruction.
+
+All prior Assets files remain frozen. The new scene adds only the independent Rune Shield root/transform/controller and its SceneRoots entry, with new script/shader/material assets. Fireball VFX, chapter/result UI, pause/preferences, audio/music, physics and other abilities keep their earlier configuration. Source checks pass for C# syntax, scene/material/GUID wiring, prior-asset preservation, source flash/visibility contracts, physical-plane/rune/badge layout, mask/shard bounds and lifecycle ownership. Unity is unavailable here: engine/shader compilation, actual glyph/alpha rendering, hotbar visibility, deflection detection at real frame rates, pause/cleanup and play-mode checks remain pending in TESTING.md.
+
+Next proposed checkpoint: Giant's Grip visual feedback, in another new scene.
 
 ## Fireball visual checkpoint — change 12
 
@@ -428,7 +452,7 @@ Keep game audio audible alongside narration. Different ball trajectories between
 
 ## AI use
 
-OpenAI ChatGPT/Codex assisted with planning and debugging, the five core feedback components, procedural audio and shaders, scene wiring, optional Arcade/Abilities/Levels gameplay, medieval menus/HUD and font subset, stone bricks/castle walls, pooled break animation and impact scores, layered masonry particles, render-only camera shake and child-renderer brick reactions, wood/brass paddle and orb surfaces with pooled contact feedback, original castle sound assets and event/result audio, synchronized original menu/play music, scene-local pause/settings UI and mixer routing, chapter banners and result decoration, Fireball flame/ribbon/cast-ring/ember presentation, source/rule checks, and documentation. No completed JuiceLab feedback modules were imported.
+OpenAI ChatGPT/Codex assisted with planning and debugging, the five core feedback components, procedural audio and shaders, scene wiring, optional Arcade/Abilities/Levels gameplay, medieval menus/HUD and font subset, stone bricks/castle walls, pooled break animation and impact scores, layered masonry particles, render-only camera shake and child-renderer brick reactions, wood/brass paddle and orb surfaces with pooled contact feedback, original castle sound assets and event/result audio, synchronized original menu/play music, scene-local pause/settings UI and mixer routing, chapter banners and result decoration, Fireball flame/ribbon/cast-ring/ember presentation, Rune Shield ward/badge/deflection presentation, source/rule checks, and documentation. No completed JuiceLab feedback modules were imported.
 
 Student review, Unity tests, and revisions: **[Describe the tests and changes you actually performed. Do not submit this placeholder.]**
 
