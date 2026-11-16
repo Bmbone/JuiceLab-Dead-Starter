@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/_Project/Scenes/Medieval.unity
+    guid: fd8a2c0503a74787906030233533b47f
+  - enabled: 1
     path: Assets/_Project/Scenes/Levels.unity
     guid: 726aa1ba296e4d46b50aaed185091bbf
   - enabled: 1
