@@ -42,3 +42,13 @@ Each stage is pushed separately to main. Stop Play before pulling and open the s
 - Ball and fireball share a guarded damage path; simultaneous hits cannot double-score. Shield reflection keeps the difficulty speed. A life loss cancels effects without refilling cooldowns; retry/menu/result transitions reset all spell state and visuals.
 - Validation: eleven source/asset checks, compiled ability-rule checks (cooldown stress, shield crossings, duplicate hits, reset behavior), the existing 7,868 round assertions, and C# syntax parsing. Unity import, engine compilation, physics, UI and audio testing still require the editor.
 - Review: stop Play, pull main, open Abilities and select a difficulty. Cast all three abilities with keys and clicks; verify each cooldown, shield consumption, expanded-paddle edges, fireball scoring, retry, win and menu resets. Stop here for review before another scene is created.
+
+## 6. Three layouts with independent difficulty selection
+
+- New scene: `Assets/_Project/Scenes/Levels.unity`, first in Build Settings. Abilities, Arcade, After, Before and all their existing Assets are unchanged byte for byte.
+- Level selection offers Courtyard (28 bricks), Twin Towers (26), and Crown (24), followed by Easy/Medium/Hard for the selected layout. All nine combinations preserve the three abilities, three starting lives and 9/12/15 ball speeds.
+- The HUD/result screen shows level and difficulty. Retry preserves both choices and restores that board. Victory uses its actual brick count and score: 280, 260 or 240.
+- Next Level after winning levels 1/2 opens the next difficulty selector without launching. Back to Levels and Return to Main Menu allow direct replay of any layout. Each level starts a fresh score, lives and ability state.
+- New LevelCatalog/LevelRun rules and independent scene adapters/prefab preserve the earlier checkpoints while reusing immutable round and ability helpers.
+- Validation: twelve source/asset checks, 5,042 compiled level assertions covering all nine combinations and 300 mixed attempts, the existing round/ability checks, and C# syntax parsing pass. Unity engine compilation and play-mode/visual checks remain pending.
+- Review: stop Play, pull main, open Levels, compare all three formations, and exercise level/difficulty selection, loss/retry, victory/next-level difficulty selection, and return to menu. Stop here for review before further changes.

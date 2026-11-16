@@ -58,6 +58,7 @@ ExportedObj/
 *.csproj
 !/tests/ArcadeRoundChecks.csproj
 !/tests/AbilityChecks.csproj
+!/tests/LevelChecks.csproj
 *.unityproj
 *.sln
 *.slnx

@@ -1,5 +1,21 @@
 # Unity verification and submission checklist
 
+## Levels checkpoint
+
+- Open `Assets/_Project/Scenes/Levels.unity`. Play should show Courtyard, Twin Towers and Crown. Choose a level: its name/description and Easy/Medium/Hard should appear, while the ball remains stopped.
+- Use Back to Levels and choose a different board. Changing selections or repeatedly clicking must not start/reset play until a difficulty is chosen.
+- Exercise all nine combinations. Courtyard should have 28 bricks in four solid rows, Twin Towers 26 bricks in two tall flanks with an open center, and Crown 24 bricks in a crown formation. All must fit inside the existing court.
+- Check the HUD identifies both selected level and difficulty. Verify Rigidbody2D ball speed is 9 on Easy, 12 on Medium, 15 on Hard, including after bounces and life loss.
+- Score points, lose all lives, then Try Again. It must restore the same layout/difficulty with its correct brick count, three lives, zero score and all three abilities ready.
+- Break all bricks, including the final brick with a fireball. Victory should occur exactly once with maximum score 280/260/240 for levels 1/2/3. Late hits must not change the result.
+- Win level 1, select Next Level, and choose a different difficulty for Twin Towers. Repeat from Twin Towers to Crown. The next board must not auto-launch before choosing difficulty. Each new level starts with zero score, three lives and ready abilities.
+- Crown's victory screen should offer Return to Main Menu without a nonexistent fourth level. Return from each result screen and replay any of the three levels directly.
+- On every board, check fireball piercing/duplicate-hit scoring, widened-paddle edge bounces, one-use shield reflection, cooldown UI, life-loss cleanup, and retry/menu cleanup.
+- Test mouse and keyboard menu navigation at 1920x1080 and 1280x720 in 16:9. Verify Back/Next/Return buttons do not overlap the controls text, and the mode label remains readable next to score/lives.
+- Reopen Abilities, Arcade, After and Before; each should retain the behavior of its own checkpoint.
+
+Automated level rules: `dotnet run --project tests/LevelChecks.csproj` (.NET 8, 5,042 assertions across all nine combinations and 300 mixed attempts). Source/asset checks: `python3 tests/verify_project.py` (twelve checks, including frozen older assets). The existing ability and round checks also pass. Unity engine compilation, visual layout, actual physics and UI interaction still require play-mode verification.
+
 ## Abilities checkpoint
 
 - Open `Assets/_Project/Scenes/Abilities.unity` and start a difficulty. The three hotbar abilities should all be READY, and remain usable across Easy/Medium/Hard.
@@ -14,7 +30,7 @@
 - Check keyboard and hotbar buttons at 1920x1080 and 1280x720 in 16:9. The hotbar should sit below the paddle without changing the score/lives UI. Mute audio and verify casts, duration, shield use and cooldowns remain clear.
 - Reopen Arcade, After and Before: no abilities or changed rules should appear in those checkpoints.
 
-Automated ability rules: `dotnet run --project tests/AbilityChecks.csproj` (.NET 8). Source/asset checks: `python3 tests/verify_project.py` (eleven checks, including frozen earlier assets). Existing round rules: `dotnet run --project tests/ArcadeRoundChecks.csproj`. These do not replace Unity engine compilation and the play-mode checks above.
+Automated ability rules: `dotnet run --project tests/AbilityChecks.csproj` (.NET 8). Source/asset checks: `python3 tests/verify_project.py` (twelve checks, including frozen earlier assets). Existing round rules: `dotnet run --project tests/ArcadeRoundChecks.csproj`. These do not replace Unity engine compilation and the play-mode checks above.
 
 ## Arcade main menu and complete runs
 
@@ -30,7 +46,7 @@ Automated ability rules: `dotnet run --project tests/AbilityChecks.csproj` (.NET
 - Test button selection with mouse and with arrow keys/Enter. Check the main menu, Game Over and Victory at 1920x1080 and 1280x720 in 16:9.
 - Reopen Before and After separately. Their original auto-launch and life-reset behavior must remain intact.
 
-Automated checks: `python3 tests/verify_project.py` (eleven source/asset checks) and `dotnet run --project tests/ArcadeRoundChecks.csproj` (.NET 8, 7,868 rule assertions). These pass in the implementation environment. Unity import, C# engine compilation, physics, UI interaction and visual/audio checks above still require the editor.
+Automated checks: `python3 tests/verify_project.py` (twelve source/asset checks) and `dotnet run --project tests/ArcadeRoundChecks.csproj` (.NET 8, 7,868 rule assertions). These pass in the implementation environment. Unity import, C# engine compilation, physics, UI interaction and visual/audio checks above still require the editor.
 
 ## Import and first run
 
