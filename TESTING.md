@@ -1,5 +1,22 @@
 # Unity verification and submission checklist
 
+## Court settings checkpoint
+
+- Open `Assets/_Project/Scenes/Medieval10_CourtSettings.unity` in Unity 6000.3.2f1. Import scripts/mixer/fonts, check Console and confirm the new settings root references LevelSession, board, music root, world camera, ImpactMotionFeedback, font and mixer groups. Mixer.SetFloat must find MusicVolume and SFXVolume.
+- At 1920x1080 and 1280x720, inspect the 1000x860 framed panel, 76-point title, labels, sliders/readouts, toggles and buttons. Check all text glyphs, clear focus states, and the lower-left entry's clearance from the spell bar and paddle. Decorative trim/text must not intercept input.
+- Open/close from main menu, difficulty selection, every result screen and all nine playing combinations. Esc should consistently toggle it; playing uses Resume/Main Menu, other screens use Close. Underlying controls must not receive clicks, keyboard navigation or Submit while open.
+- During play, record ball velocity/position, paddle position, score/lives, spell active durations and cooldowns. Pause for several real seconds: physics, player movement, cooldowns and projectile progression must freeze while UI and music keep working. No ability controller should be disabled/reset.
+- While paused, press/hold 1/Space, 2, 3, keypad equivalents, movement keys and mouse buttons. No spell may spend a cooldown, create a projectile or alter the run. Check legacy ResetInputAxes really suppresses GetKeyDown in this Unity version while InputSystemUIInputModule still handles slider/toggle/keyboard input. This is a required engine check, not established by source inspection.
+- Resume with Esc, Enter, Space Submit if bound, and mouse. No spell or underlying button action should leak from the closing frame, and normal movement/casts should resume on a fresh input. Confirm the pre-pause time scale restores, including a deliberately non-1 test value; settings opened on menus must not overwrite an unrelated time-scale value.
+- Pause with an active Fireball, widened paddle and shield. Resume and verify remaining state, width, shield use and cooldowns were preserved. Main Menu should restore time and then use the original menu reset/cleanup path.
+- Move Music/SFX sliders while audio plays. Music must affect both arrangements; SFX must affect paddle/wall/brick, life/result and all spell voices. Values must not drift/compound each frame or reset during retry/life loss. At 100% the previous authored balance should remain, and 0% should be inaudible at ordinary listening volume.
+- Test Screen Shake and Brick Motion independently in all four combinations, including after retry and a new board. Check world-camera motion suppression and only the cached visual children returning to rest; collider/root positions, damage and scores must remain unchanged. Re-enable and check normal feedback resumes.
+- Navigate the explicit control loop with Up/Down, adjust sliders with Left/Right and activate toggles/buttons with Enter. Check focus stays inside the modal, returns to an appropriate menu control, and clears from gameplay on resume. Restore Defaults should update controls and effects without closing.
+- Change all four settings, close, stop/restart Play and reopen. Values should persist for this checkpoint. Restore Defaults should return volumes to 100% and both motion switches on. Reopen CastleMusic and older scenes to confirm their behavior stays unchanged.
+- Disable/re-enable the settings component mid-pause/closed, unload/reload the scene while paused, and stop Play while paused. Check exact time-scale restoration, original audio routes, hidden/disposed UI and no lingering render/event observers or generated font/atlas objects. Default audio-source count must remain unchanged.
+
+C# syntax, scene/mixer/GUID references and preservation, UI geometry and gain mapping, pause/input-order and resource/event/render lifecycle source checks pass. Unity engine/mixer/font import, actual pause/shortcut preservation, focus/layout, motion suppression, persistent settings and audio playback checks above remain pending.
+
 ## Castle music checkpoint
 
 - Open `Assets/_Project/Scenes/Medieval09_CastleMusic.unity` in Unity 6000.3.2f1. Import scripts/audio and check Console. Verify both music clips reference the new OGG assets, use preloaded decompressed PCM, preserve 44.1 kHz / 661,500 samples, and have normalization off.

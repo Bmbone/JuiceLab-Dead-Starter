@@ -6,11 +6,38 @@ Jehad Alharbi — 202248820
 
 1. Open this repository's root folder in Unity Hub using **6000.3.2f1**.
 2. Allow the existing packages to import. No extra tweening or audio packages are required.
-3. Open `Assets/_Project/Scenes/Medieval09_CastleMusic.unity` for the latest checkpoint. It is first in Build Settings; CastleAudio, BallPaddle, ImpactMotion, MasonryParticles, BrickBreak, StoneCourt, UI02, UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
+3. Open `Assets/_Project/Scenes/Medieval10_CourtSettings.unity` for the latest checkpoint. It is first in Build Settings; CastleMusic, CastleAudio, BallPaddle, ImpactMotion, MasonryParticles, BrickBreak, StoneCourt, UI02, UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
 4. Select 16:9 in Game view, press Play, choose a level, then choose Easy, Medium, or Hard. The ball starts only after both selections are made.
 5. Move with the mouse, A/D, or the left/right arrows. Cast with **1 or Space**, **2**, and **3**, or click the hotbar buttons. Menus support mouse selection or arrow keys and Enter.
 
 For the assignment comparison, open `Assets/_Project/Scenes/Before.unity` or `Assets/_Project/Scenes/After.unity`. Their gameplay rules remain unchanged: the ball launches automatically, the final lost life resets score/lives, and stopping/restarting Play restores the board. Arcade adds the menu/difficulty rules, Abilities adds spells, and Levels adds layout selection. Earlier scene assets and scripts remain unchanged.
+
+## Court settings checkpoint — change 10
+
+Open `Assets/_Project/Scenes/Medieval10_CourtSettings.unity`. Press **Esc** or click **Pause / Esc** at the lower left during a round to open a large jade-and-gold pause panel. The same entry reads **Settings** on menus/results. The panel uses the existing serif heading typeface, a 76-point title, 33-point setting labels, percentage readouts and large controls on a 1920x1080 Canvas. It adds Music and Sound Effects sliders, independent Screen Shake and Brick Motion switches, Resume/Close, Main Menu during play, and Restore Defaults.
+
+| Control | Behavior |
+|---|---|
+| Esc / Resume | Open or close the modal; resume the saved time scale |
+| Music | Adjust the two arrangements together, independently of effects |
+| Sound Effects | Adjust impacts, life/result cues and all three spell voices |
+| Screen Shake / Brick Motion | Independently suppress their world-camera presentation |
+| Restore Defaults | Music/SFX 100%, both motion options on |
+| Up/Down / Left/Right / Enter | Navigate settings / adjust sliders / activate a control |
+
+`CourtSettingsPanel.cs` owns the pause only when a round is playing. It saves Time.timeScale, sets it to zero and restores its saved value on close/disable/destruction. Gameplay/ability modules remain enabled, preserving active spell state, cooldowns and projectile state. Its early Update clears legacy input for modal and closing frames, while the existing Input System UI module continues processing panel input. A physical-key release latch keeps held spell shortcuts suppressed until released after closing. A full-screen raycast blocker keeps clicks off the spell bar and underlying menus. Resuming clears gameplay selection to avoid accidentally submitting a background button.
+
+The new `CourtSettingsMixer.mixer` has Master, Music and SFX groups. After all Awake-created voices exist, the controller routes this scene's two music sources to Music and its impact/result/spell sources to SFX. Exposed mixer gains apply independently of source volumes, so existing ducking/variation stays intact. Sliders show relative gain: 100% preserves the preceding authored balance; zero maps to the mixer's -80 dB floor. No additional audio voices, clips, packages or AudioListeners are added. Mixer values are applied from Start/Update/UI callbacks, outside Awake/OnEnable.
+
+The motion switches leave existing components enabled. A world-camera render callback runs after the existing shake callback and can restore its default view; it can also reset only the cached brick reaction children to their resting visual pose. Root transforms, colliders and sprite data remain untouched. Cache refreshes follow board rebuild/score resets; render-callback order refreshes follow the existing motion controller's ResetVersion. These adapters depend on the current child name `Brick reaction visual - collider free` and the current legacy-gameplay/new-UI input split, both checked in source and requiring Unity verification.
+
+Preferences use four `Brickkeep.Scene10.*` PlayerPrefs keys and are saved when the panel closes. They persist between runs of this checkpoint; earlier scenes do not read them. The retained UI is built once, with an explicit keyboard-navigation loop and non-raycasting decorative trim/text. Disabling the settings component closes the panel, restores any owned time scale and original audio routing, and removes its render/input observers. Existing music/SFX components continue to own their original Inspector settings.
+
+All previous Assets files are frozen. The new scene adds only an independent settings root/transform/controller and a SceneRoots entry; original gameplay, graphics, audio and UI component blocks retain CastleMusic's serialized values. Source checks pass for C# syntax, scene/mixer/GUID references, asset/block preservation, layout bounds, gain mapping, pause ownership, event/render cleanup and input-order contracts. Unity is unavailable here: engine/mixer/font import, actual paused input/spell behavior, UI focus/layout, rendered motion suppression, persistence and playback require the TESTING.md play-mode review.
+
+Implementation references: Unity's [ResetInputAxes](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Input.ResetInputAxes.html), [Input System UI support](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.19/manual/UISupport.html) and [AudioMixer.SetFloat](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Audio.AudioMixer.SetFloat.html). Native mixer field structure was checked against the [Unity Open Project mixer](https://github.com/UnityTechnologies/open-project-1/blob/main/UOP1_Project/Assets/Settings/Audio/DefaultAudioMixer.mixer); this checkpoint uses its own mixer configuration and no sample audio/code module from that project.
+
+Next proposed checkpoint: improve level introductions and result-screen presentation, while retaining these settings.
 
 ## Castle music checkpoint — change 9
 
@@ -354,7 +381,7 @@ Keep game audio audible alongside narration. Different ball trajectories between
 
 ## AI use
 
-OpenAI ChatGPT/Codex assisted with planning and debugging, the five core feedback components, procedural audio and shaders, scene wiring, optional Arcade/Abilities/Levels gameplay, medieval menus/HUD and font subset, stone bricks/castle walls, pooled break animation and impact scores, layered masonry particles, render-only camera shake and child-renderer brick reactions, wood/brass paddle and orb surfaces with pooled contact feedback, original castle sound assets and event/result audio, synchronized original menu/play music, source/rule checks, and documentation. No completed JuiceLab feedback modules were imported.
+OpenAI ChatGPT/Codex assisted with planning and debugging, the five core feedback components, procedural audio and shaders, scene wiring, optional Arcade/Abilities/Levels gameplay, medieval menus/HUD and font subset, stone bricks/castle walls, pooled break animation and impact scores, layered masonry particles, render-only camera shake and child-renderer brick reactions, wood/brass paddle and orb surfaces with pooled contact feedback, original castle sound assets and event/result audio, synchronized original menu/play music, scene-local pause/settings UI and mixer routing, source/rule checks, and documentation. No completed JuiceLab feedback modules were imported.
 
 Student review, Unity tests, and revisions: **[Describe the tests and changes you actually performed. Do not submit this placeholder.]**
 

@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/_Project/Scenes/Medieval10_CourtSettings.unity
+    guid: a8406bb8b43a44868da7b9db6be2a3e3
+  - enabled: 1
     path: Assets/_Project/Scenes/Medieval09_CastleMusic.unity
     guid: 799202f327594022a0b80dc87928a6ae
   - enabled: 1

@@ -1,0 +1,151 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!241 &24100000
+AudioMixerController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: CourtSettingsMixer
+  m_OutputGroup: {fileID: 0}
+  m_MasterGroup: {fileID: 24300001}
+  m_Snapshots:
+  - {fileID: 24500001}
+  m_StartSnapshot: {fileID: 24500001}
+  m_SuspendThreshold: -80
+  m_EnableSuspend: 0
+  m_UpdateMode: 1
+  m_ExposedParameters:
+  - guid: 9bfe1caf7577485ea26ba8237bf249a1
+    name: MusicVolume
+  - guid: e964c08c6d24427a88832584a0cc0c95
+    name: SFXVolume
+  m_AudioMixerGroupViews:
+  - guids:
+    - 020e9e557c1d4f4bb1e86ca7b3182363
+    - b65470c0bd9a4cd68151ab2800e6de72
+    - bd035c62302a41b09a8f5c0784a9e2d5
+    name: Court mix
+  m_CurrentViewIndex: 0
+  m_TargetSnapshot: {fileID: 24500001}
+--- !u!243 &24300001
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Master
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: 020e9e557c1d4f4bb1e86ca7b3182363
+  m_Children:
+  - {fileID: 24300002}
+  - {fileID: 24300003}
+  m_Volume: 9a32f8e2193f4279b56f11a3bf47b1f4
+  m_Pitch: 5b6fb55c6f2e4886b96e67de25293fc3
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: 24400001}
+  m_UserColorIndex: 1
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
+--- !u!244 &24400001
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name:
+  m_EffectID: 6fe967e7c90e4a1d94c917c8a965f646
+  m_EffectName: Attenuation
+  m_MixLevel: 0aa9eb63b3c34d01b0bc5d3f9e406eb8
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
+--- !u!243 &24300002
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Music
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: b65470c0bd9a4cd68151ab2800e6de72
+  m_Children: []
+  m_Volume: 9bfe1caf7577485ea26ba8237bf249a1
+  m_Pitch: b081adc1099c4e1a8fa3ed4523500b90
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: 24400002}
+  m_UserColorIndex: 2
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
+--- !u!244 &24400002
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name:
+  m_EffectID: 97d5fa68df634a939ae9810908e86cb8
+  m_EffectName: Attenuation
+  m_MixLevel: 8d5794558df447d1874a622ba024227f
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
+--- !u!243 &24300003
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SFX
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: bd035c62302a41b09a8f5c0784a9e2d5
+  m_Children: []
+  m_Volume: e964c08c6d24427a88832584a0cc0c95
+  m_Pitch: 81660a79c8c8417eaf23a1ffc0d82996
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: 24400003}
+  m_UserColorIndex: 3
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
+--- !u!244 &24400003
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name:
+  m_EffectID: 19c08441cec548d3bd58c3a8afc2bde8
+  m_EffectName: Attenuation
+  m_MixLevel: cd67147be6cb488ca1190222994a95f7
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
+--- !u!245 &24500001
+AudioMixerSnapshotController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Default court mix
+  m_AudioMixer: {fileID: 24100000}
+  m_SnapshotID: d1c0b88c095e470d922a183130928bf7
+  m_FloatValues:
+    9a32f8e2193f4279b56f11a3bf47b1f4: 0
+    5b6fb55c6f2e4886b96e67de25293fc3: 1
+    0aa9eb63b3c34d01b0bc5d3f9e406eb8: 0
+    9bfe1caf7577485ea26ba8237bf249a1: 0
+    b081adc1099c4e1a8fa3ed4523500b90: 1
+    8d5794558df447d1874a622ba024227f: 0
+    e964c08c6d24427a88832584a0cc0c95: 0
+    81660a79c8c8417eaf23a1ffc0d82996: 1
+    cd67147be6cb488ca1190222994a95f7: 0
+  m_TransitionOverrides: {}
