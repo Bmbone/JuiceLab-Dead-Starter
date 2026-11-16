@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/_Project/Scenes/MedievalUI01_Score.unity
+    guid: c451fe09fc4145fa8c595bd5e0635ba0
+  - enabled: 1
     path: Assets/_Project/Scenes/Medieval.unity
     guid: fd8a2c0503a74787906030233533b47f
   - enabled: 1
@@ -26,3 +29,4 @@ EditorBuildSettings:
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
+

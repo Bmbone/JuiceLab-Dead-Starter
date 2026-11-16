@@ -52,3 +52,13 @@ Each stage is pushed separately to main. Stop Play before pulling and open the s
 - New LevelCatalog/LevelRun rules and independent scene adapters/prefab preserve the earlier checkpoints while reusing immutable round and ability helpers.
 - Validation: twelve source/asset checks, 5,042 compiled level assertions covering all nine combinations and 300 mixed attempts, the existing round/ability checks, and C# syntax parsing pass. Unity engine compilation and play-mode/visual checks remain pending.
 - Review: stop Play, pull main, open Levels, compare all three formations, and exercise level/difficulty selection, loss/retry, victory/next-level difficulty selection, and return to menu. Stop here for review before further changes.
+
+
+## 7. Score plaque, color flash and upward pulse
+
+- New scene: `Assets/_Project/Scenes/MedievalUI01_Score.unity`, first in Build Settings and based on the existing Medieval checkpoint. All earlier scene files and shared feedback/gameplay assets are unchanged.
+- One UI improvement: a dark score plaque with bronze borders and a gold accent, 40-point gold score, a restrained ivory/scale/upward pulse, and one reused floating gain label. Rapid hits combine their gain label; resets do not produce reward feedback.
+- New `Presentation/MedievalScoreFeedback.cs` replaces ScorePopFeedback only in this scene. The actual score still comes directly from LevelSession. The component returns to its captured position/scale/color, clears on disable/reset, and creates no objects on scoring. Decoration and gain text cannot intercept pointer input.
+- Review: stop Play, pull main, open **MedievalUI01_Score**, then choose a level and difficulty. Compare the score with Medieval at 1920x1080 and 1280x720. Break individual bricks, fire through a row for rapid hits, move the pointer over the plaque, lose/retry a run, and return to the menu. Check correct totals, a short +points label and complete animation recovery. Toggle the new component off/on during a run and confirm that values still update.
+- Validation: source/asset comparison checks pass; only four presentation blocks differ from Medieval and all physics/gameplay blocks match. Unity editor compilation and visual/runtime review remain pending.
+- Stop here for review. Next requested checkpoints: sounds, paddle/ball presentation, life-loss shake and brick-break polish, each in a separate scene.

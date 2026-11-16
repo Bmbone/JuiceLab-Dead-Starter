@@ -1,5 +1,17 @@
 # Unity verification and submission checklist
 
+## Medieval score UI checkpoint
+
+- Open `Assets/_Project/Scenes/MedievalUI01_Score.unity`, select a level/difficulty, and test at 1920x1080 and 1280x720 in 16:9. The framed score must sit above the bricks without overlapping the level label or lives.
+- Break a brick: the displayed score must remain exact, briefly turn ivory, grow and move upward, then return to its original gold/rest pose. A +10 label should float and fade.
+- Break several bricks rapidly with the ball/fireball: the score must never lose points and the one gain label should combine recent gains without accumulating extra UI objects.
+- Keep the pointer over the plaque while moving: it must not block paddle following.
+- Disable/re-enable MedievalScoreFeedback during a pulse: scale, position and color must restore; scoring must continue with the component disabled, and re-enabling must not reward existing points.
+- Lose all lives and retry, return to menu, change level/difficulty, and repeat. Score zero must not produce a reward popup, and each fresh run should show exactly one plaque.
+- Reopen Medieval and all earlier scenes: their score/UI behavior must remain unchanged.
+
+Source/asset comparisons passed. Unity import, engine compilation, layout and play-mode checks above are pending; no new playtest or audio result is claimed for this checkpoint.
+
 ## Levels checkpoint
 
 - Open `Assets/_Project/Scenes/Levels.unity`. Play should show Courtyard, Twin Towers and Crown. Choose a level: its name/description and Easy/Medium/Hard should appear, while the ball remains stopped.
@@ -83,3 +95,4 @@ Ask one other person to play Before and After. Ask which feels more satisfying, 
 - Test the video link from an account/viewer that has not been granted special access.
 - Ensure GitHub contains Assets, Packages, ProjectSettings, README, LICENSE, and SOURCE, but not Library, Temp, or Logs.
 - Submit the GitHub repository URL on Blackboard by November 16, 2026, 2:00 PM Asia/Riyadh.
+
