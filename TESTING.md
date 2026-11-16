@@ -1,20 +1,61 @@
-# Unity verification and submission checklist
+# Validation report
 
-## Giant's Grip and combined regression checkpoint
+This report records the available verification evidence for After. The latest implementation validation corresponds to [polish checkpoint 14](https://github.com/Bmbone/JuiceLab-Dead-Starter/commit/9428b40222295a6de7253a3066480dc71a4be25a). Subsequent documentation changes do not alter gameplay or assets.
 
-Latest scene: `Assets/_Project/Scenes/Medieval14_GiantGripVFX.unity` (first in Build Settings). This checkpoint combines the final planned ability presentation with the available source/asset regression pass. Earlier scenes and gameplay source remain frozen.
+## Automated results
 
-Verified in this environment:
+| Check | Scope | Recorded result |
+|---|---|---|
+| `tests/verify_project.py` | Baseline preservation, scene wiring, feedback lifecycle, score/trail isolation and build-scene metadata | 12 tests passed |
+| `tests/verify_polish.py` | Unique asset IDs, metadata targets, scene/prefab references, final scene fields, materials and WAV payloads | 7 tests passed |
+| C# syntax parsing | All 63 scripts under Assets | No syntax errors detected |
+| Serialized-data parsing | 20 scenes, 6 prefabs, 22 materials, 1 mixer and 9 serialized assets | Parsing passed |
+| Final scene preservation | Previous scene objects and earlier asset content | Preserved |
+| Shader-mask sampling | Procedural alpha masks and numeric bounds | Finite, bounded sample values |
+| Text and layout calculations | Status-label glyph advances, court gutters and Settings clearance | Within calculated bounds at 1920×1080 and 1280×720 |
+| Audio payload inspection | Eight PCM WAV files | Valid headers, formats and complete payloads |
 
-- `python tests/verify_project.py`: **12 tests passed**, with historical Git objects available for its baseline checks.
-- `python tests/verify_polish.py`: **7 tests passed**, covering unique metadata and targets, every scene/prefab's local references, all 20 build scenes, preserved previous scene objects, required project-script fields, the three new material/shader links and eight complete PCM WAV payloads.
-- All 63 Assets C# scripts parsed without syntax errors. YAML parsing passed for 20 scenes, 6 prefabs, 22 materials, one mixer and 9 serialized assets. Unity/package-provided references still require package import; these checks do not resolve package code or compile shaders.
-- All 372 prior Assets blobs match the preceding checkpoint. The new scene adds three objects and one SceneRoots entry only.
-- Numerical shader samples are finite/bounded. Existing font glyph advances fit the 208-unit badge labels, including ENLARGED and RESTORED at 32 points. Layout calculations leave the badge clear of Settings/court at 1920x1080 and 1280x720 and hide it at 4:3 when the gutter is too narrow.
+The automated total is **19 project/asset tests**. Syntax and numeric checks are additional analyses, not Unity compilation or gameplay execution. Audio payload inspection establishes file integrity, not listening quality.
 
-**Not executed:** Unity compilation/import, .NET console rule harnesses, rendering/listening, real input/physics, pause/cleanup, device builds and performance. Neither Unity nor .NET is installed here. The source pass cannot certify play-mode behavior.
+## Runtime verification status
 
-Run from a complete repository checkout with .NET 8 installed:
+Unity and .NET were unavailable during the latest implementation pass.
+
+| Area | Status |
+|---|---|
+| Unity import and C# semantic compilation | Not verified |
+| URP shader compilation and final rendering | Not verified |
+| Executable Arcade/Ability/Level rule harnesses | Not rerun in the latest pass |
+| Mouse, keyboard and hotbar input | Not verified in Unity |
+| Physics, victory/defeat, retry and progression | Not verified in Unity |
+| Pause, resets, component re-enable and scene cleanup | Not verified in Unity |
+| Sound balance, music transitions and device output | Not verified by listening |
+| Build compatibility and performance | Not verified |
+| Recorded peer-playtest findings | Not documented |
+
+The [demonstration video](https://youtu.be/BF2wYM0IkJU) accompanies the project.
+
+## Level and difficulty matrix
+
+All nine combinations are implemented. Their engine playthrough status is recorded below.
+
+| Level | Easy | Medium | Hard |
+|---|---|---|---|
+| Courtyard | Not verified | Not verified | Not verified |
+| Twin Towers | Not verified | Not verified | Not verified |
+| Crown | Not verified | Not verified | Not verified |
+
+## Technical considerations
+
+- The original Before/After scenes preserve the starter rules. The final version's levels, selectable speeds and abilities are separate gameplay extensions.
+- Rune Shield feedback observes the native line-width flash. Deflection detection during low-frame-rate execution remains an engine-validation item.
+- Giant's Grip visuals derive the current world-space box from the collider's local shape and transform, avoiding a cached physics-bounds dependency with automatic transform syncing disabled.
+- Status badges use calculated court gutters and hide when the viewport does not provide enough space. Final TMP and alpha rendering remain engine-dependent.
+- Temporary world effects use scaled ages. Existing UI, TrailRenderer and pause/input interactions remain part of runtime verification.
+
+## Reproducibility
+
+The Python checks use the standard library. Historical comparisons in `verify_project.py` require the repository's Git history. The three console rule harnesses target .NET 8.
 
 ```sh
 python tests/verify_project.py
@@ -24,303 +65,4 @@ dotnet run --project tests/AbilityChecks.csproj
 dotnet run --project tests/LevelChecks.csproj
 ```
 
-Import in Unity 6000.3.2f1, let scripts/shaders compile and check Console before playing. Check the new component's session/paddle/collider/camera/wall/font and material references. Required engine matrix:
-
-| Level | Easy | Medium | Hard |
-|---|---|---|---|
-| Level 1 | Pending | Pending | Pending |
-| Level 2 | Pending | Pending | Pending |
-| Level 3 | Pending | Pending | Pending |
-
-For each combination, check its brick layout/ball speed, mouse and keyboard movement, all three spells, cooldowns, last-brick victory, life loss/game over and retry/menu paths. Confirm score/lives/results remain consistent and sounds/music do not duplicate.
-
-Giant's Grip acceptance checks:
-
-- Cast using 2, keypad 2 and the second hotbar card. The physical paddle must keep its original 1.6x expansion, six-second duration and twelve-second cooldown. Aura/end runes track the actual bounds calculated from the collider shape/current transform, including fast keyboard and mouse moves with AutoSyncTransforms off; no collision shape, movement limit or animation delay may be introduced.
-- Check emerald aura/gold runes, one eight-mote activation burst, readable ENLARGED label and a gold burst/RESTORED confirmation on unused normal expiry. No opaque rectangle, pink shader or clipped TMP label should appear.
-- Failed/cooldown/pause-blocked casts must produce no extra pulse. The effect must not imply an extra hit, protection or a new sound.
-- Pause mid-activation/expansion/expiry and resume. Ages, motes and label fade must freeze with the round; native ability timers and movement must resume correctly.
-- Lose a life, clear the last brick, retry, select Next Level and return to menu while expanded or while motes fade. New overlays must clear immediately with no false expiry confirmation or carry-over.
-- Disable/re-enable the component during expansion: original paddle should remain present, the new appearance may resume, and a second cast burst must not replay. Stop/restart Play twice and unload/reload to check event/resource cleanup.
-- Check both edges, fast movement and simultaneous Fireball/Rune Shield. Ball stays above new world effects. Verify badge above Settings/outside court, menu/settings ordering and narrow-viewport hide behavior.
-- Tune Aura Opacity/Enable Motes. Confirm 11 fixed SpriteRenderers, eight mote slots, one owned quad, borrowed HUD font, three shared materials and zero new colliders/audio voices/per-use objects. Confirm stable hierarchy/material count over repeated casts and on the target build.
-- Reopen RuneShieldVFX and earlier scenes to confirm their original assets/presentation remain available. Listen to menu, paddle/wall/brick, cast, win, life-loss and defeat cues and inspect music transitions in the actual engine.
-
-## Rune Shield visual checkpoint
-
-- Open `Assets/_Project/Scenes/Medieval13_RuneShieldVFX.unity` in Unity 6000.3.2f1. Import script/shader/materials and check Console. Verify session/ability root/camera/right-wall/font and three material references, plus the existing generated Rune shield LineRenderer.
-- Cast with 3, keypad 3 and the hotbar across all nine level/difficulty choices at 1920x1080 and 1280x720. Check the jade/gold ward, rune row above the spell cards, visible end anchors and ARMED plaque in the right gutter. No opaque quad, missing/pink shader, bad vertex color or clipped label should appear.
-- Inspect world geometry: the ward's lower edge must match the original line's endpoints/y=-5.15. Decorative runes are 0.30 units above that plane; no new collider or reflection plane should exist. World visuals must remain behind the normal ball and paddle, and UI must not intercept input.
-- Let a shield expire unused. Its ward/ARMED plaque should disappear without a gold deflection burst or DEFLECTED claim. Failed cooldown attempts and casts blocked by pause/settings must not start new visuals.
-- Deliberately miss the paddle while shielded. Confirm the original single-use upward reflection, unchanged ball speed/contact position and original deflection cue. The native width flash should trigger one gold pulse, twelve bounded shards and DEFLECTED confirmation, without rearming protection.
-- Check successful deflections near both ends and at varied frame rates, including a deliberately low frame-rate run. This adapter observes the original short line-width flash; verify actual Update/FixedUpdate ordering and that real flashes are detected, with no burst on ordinary expiry, life loss or reset.
-- Pause while armed and during a deflection. Shader animation/shards/confirmation should freeze with the round; existing ability duration/cooldown should resume correctly. Existing Fireball VFX and Giant's Grip must remain unchanged, including simultaneous casts.
-- Lose a life, retry, Next Level and return/menu while shield effects are active. All new visuals/badge must clear; no stale native-visible frame should be mistaken for a new cast or deflection. Menus/results/settings must stay above the badge.
-- Disable RuneShieldVisualFeedback while armed/flashing: original enabled state, widths/colors/material and forceRenderingOff value should restore. Re-enable during the same ability: appearance may resume, with no renewed cast/deflection burst or repeated audio.
-- Tune Ward Opacity and Enable Shards. The badge should remain a state indicator independent of opacity. Confirm fifteen fixed world SpriteRenderers, twelve shard slots, one owned quad and no per-use objects/materials/AudioSources. Reduce viewport width and check the badge hides if its safe gutter disappears.
-- Repeat casts, stop/restart Play twice and unload/reload. Check native line visibility, event cleanup, borrowed font lifetime and owned quad/UI release. Reopen FireballVFX and older scenes to confirm their original shield rendering and all game rules remain intact.
-
-C# syntax, scene/material/GUID references and preservation, native flash/visibility contracts, plane/rune/hotbar/badge geometry and numeric mask/shard bounds pass source checks. Unity C#/shader compilation, actual alpha/TMP rendering, successful-deflection observation, pause/cleanup/input and play-mode/performance verification remain pending.
-
-## Fireball visual checkpoint
-
-- Open `Assets/_Project/Scenes/Medieval12_FireballVFX.unity` in Unity 6000.3.2f1. Import the new script/shader/materials and check Console. Verify the controller references LevelSession, its ability root and all four materials; AbilityEffects should still create its original reused Fireball hierarchy.
-- Cast with 1/Space, keypad 1 and the hotbar across all nine level/difficulty choices at 1920x1080 and 1280x720. Look for an ivory-hot core, orange/gold tail flowing downward behind upward flight, a faint halo, soft ribbon, one small cast ring and sparse fading embers. No effect should render pink, invisible from bad vertex colors, or as an opaque square.
-- In Scene view, compare the bright head center with the logical projectile center/radius. The tail/halo are decorative; no collider should be added. Check gameplay speed 16, radius 0.22, piercing behavior, cooldown and original whoosh remain unchanged.
-- Fire through clustered bricks and clear the last brick. Each hit must retain its original score/destruction effects, and victory/menu/music/audio timing must stay immediate. Failed cooldown casts and casts blocked by the settings modal must produce no false visual start.
-- Watch the normal ball while effects cross it or debris. Ribbon/halo/embers should remain behind it; the brighter Fireball head must stay distinct. Check central/edge casts and Giant's Grip without hiding the paddle or creating misleading hit flashes.
-- Let Fireball reach its normal ceiling: the head disappears and the short ribbon/embers finish naturally. Cast again after cooldown: history must clear at the new launch point, with no connecting trail across the court. Reuse should not preserve an old cast-ring position or tint.
-- Pause during flight and wait several real seconds. Head animation, embers, ring and ribbon should pause with the projectile; the original spell/cooldown state should resume correctly. Verify actual TrailRenderer time behavior in the target engine/browser.
-- Lose a life mid-flight, retry, choose Next Level and return/menu while effects are active. All new visuals must clear without a stale source-active frame replaying the cast. Result overlays and settings should remain above effects as before.
-- Disable FireballVisualFeedback during flight: original flame/core/trail rendering should return with original materials/colors/configuration intact. Re-enable during the same flight: new visuals resume without a cast ring in midair. Stop/restart Play twice and inspect saved forceRenderingOff flags and fallback visibility.
-- Toggle Enable Embers and tune opacity while playing. Check no growing hierarchy: exactly 19 new SpriteRenderers, one TrailRenderer and one owned quad per controller, with 16 ember slots and at most four spawns in one frame. No new colliders, physics bodies, materials or AudioSources should appear per cast.
-- Check frame rate, actual alpha blending/trail UVs and shader compatibility on the intended build. Unload/reload and inspect cleanup; the runtime quad should be released and built-in white texture/material assets retained. Reopen ChapterPresentation and earlier scenes to confirm their original ability appearance stays unchanged.
-
-C# syntax, scene/material/GUID references and preservation, logical/visual head alignment, bounded shader-mask/emission/pool samples and source/event/visibility lifecycle checks pass. Unity C#/shader compilation, actual sprite/trail/vertex-color rendering, appearance, pause/cleanup/input and play-mode/performance checks remain pending.
-
-## Chapter presentation checkpoint
-
-- Open `Assets/_Project/Scenes/Medieval11_ChapterPresentation.unity` in Unity 6000.3.2f1. Import scripts and check Console. Verify the new root references LevelSession, the world camera, LeftWall collider and score text. The existing UI must finish construction/styling before the new adapter wires it.
-- Start and retry all nine level/difficulty choices at 1920x1080 and 1280x720. The two-second banner must show the correct number/name/difficulty and fade beside the left pillar. Ball launch, movement, hotbar input, speeds and collision positions must remain immediate/unchanged.
-- Watch fast balls and edge hits during the introduction. The banner must remain outside the collision court, keep a margin for camera motion, and never intercept the pointer. Resize narrower than 16:9 and verify its safety check hides it when the gutter becomes too small.
-- Pause during the introduction, wait several real seconds, then resume. Remaining banner time should be preserved and settings should cover it. Lose a non-final life: the banner must not restart. Repeat retry/menu/Next Level transitions and check for stale labels or overlapping old banners.
-- Win each chapter with ball and Fireball, including rapid final hits. Verify the exact final score remains the original LevelMenuView string (maximum 280/260/240) in the new plaque, with no rounded/animated replacement or extra points.
-- Check gold victory shields/CLEAR seal, coral game-over accents/RETRY seal and the correct next-step line. Levels 1/2 should name the next chapter; Crown must retain its original valid return action. Score, stamps, title, side crests, cue and footer must not overlap or clip.
-- Use Try Again, Next Level and Return to Main Menu by mouse and keyboard immediately on result arrival. Decorative fading must not delay, block, duplicate or replace any action. Existing victory/game-over sounds and music transitions should still trigger exactly as before.
-- Open settings from results and return to all selection screens. Check ordering above new decorations, retained focus/navigation, preserved preferences and no result-sized score text leaking into the difficulty/menu summaries.
-- Disable ChapterPresentation during a banner and during a result. The banner/decor should disappear and original score font size/rectangle should restore. Re-enable mid-play: no old intro should replay; re-enable at results: decoration may fade in, with no repeated game state or audio event.
-- Repeat round transitions and stop/restart Play twice. Intro/result object counts should remain constant, fonts must be borrowed rather than recreated/destroyed, and no stale ScoreChanged listeners should remain after unloading. Reopen CourtSettings/earlier scenes to verify their original presentation remains intact.
-
-C# syntax, scene/GUID references and preservation, current mode-label/catalog contract, font/layout/gutter/fade bounds, exact score ownership and lifecycle source checks pass. Unity compilation/import, actual TMP rendering/layering, camera/Canvas gutter behavior, pause/input and play-mode verification remain pending.
-
-## Court settings checkpoint
-
-- Open `Assets/_Project/Scenes/Medieval10_CourtSettings.unity` in Unity 6000.3.2f1. Import scripts/mixer/fonts, check Console and confirm the new settings root references LevelSession, board, music root, world camera, ImpactMotionFeedback, font and mixer groups. Mixer.SetFloat must find MusicVolume and SFXVolume.
-- At 1920x1080 and 1280x720, inspect the 1000x860 framed panel, 76-point title, labels, sliders/readouts, toggles and buttons. Check all text glyphs, clear focus states, and the lower-left entry's clearance from the spell bar and paddle. Decorative trim/text must not intercept input.
-- Open/close from main menu, difficulty selection, every result screen and all nine playing combinations. Esc should consistently toggle it; playing uses Resume/Main Menu, other screens use Close. Underlying controls must not receive clicks, keyboard navigation or Submit while open.
-- During play, record ball velocity/position, paddle position, score/lives, spell active durations and cooldowns. Pause for several real seconds: physics, player movement, cooldowns and projectile progression must freeze while UI and music keep working. No ability controller should be disabled/reset.
-- While paused, press/hold 1/Space, 2, 3, keypad equivalents, movement keys and mouse buttons. No spell may spend a cooldown, create a projectile or alter the run. Check legacy ResetInputAxes really suppresses GetKeyDown in this Unity version while InputSystemUIInputModule still handles slider/toggle/keyboard input. This is a required engine check, not established by source inspection.
-- Resume with Esc, Enter, Space Submit if bound, and mouse. No spell or underlying button action should leak from the closing frame, and normal movement/casts should resume on a fresh input. Confirm the pre-pause time scale restores, including a deliberately non-1 test value; settings opened on menus must not overwrite an unrelated time-scale value.
-- Pause with an active Fireball, widened paddle and shield. Resume and verify remaining state, width, shield use and cooldowns were preserved. Main Menu should restore time and then use the original menu reset/cleanup path.
-- Move Music/SFX sliders while audio plays. Music must affect both arrangements; SFX must affect paddle/wall/brick, life/result and all spell voices. Values must not drift/compound each frame or reset during retry/life loss. At 100% the previous authored balance should remain, and 0% should be inaudible at ordinary listening volume.
-- Test Screen Shake and Brick Motion independently in all four combinations, including after retry and a new board. Check world-camera motion suppression and only the cached visual children returning to rest; collider/root positions, damage and scores must remain unchanged. Re-enable and check normal feedback resumes.
-- Navigate the explicit control loop with Up/Down, adjust sliders with Left/Right and activate toggles/buttons with Enter. Check focus stays inside the modal, returns to an appropriate menu control, and clears from gameplay on resume. Restore Defaults should update controls and effects without closing.
-- Change all four settings, close, stop/restart Play and reopen. Values should persist for this checkpoint. Restore Defaults should return volumes to 100% and both motion switches on. Reopen CastleMusic and older scenes to confirm their behavior stays unchanged.
-- Disable/re-enable the settings component mid-pause/closed, unload/reload the scene while paused, and stop Play while paused. Check exact time-scale restoration, original audio routes, hidden/disposed UI and no lingering render/event observers or generated font/atlas objects. Default audio-source count must remain unchanged.
-
-C# syntax, scene/mixer/GUID references and preservation, UI geometry and gain mapping, pause/input-order and resource/event/render lifecycle source checks pass. Unity engine/mixer/font import, actual pause/shortcut preservation, focus/layout, motion suppression, persistent settings and audio playback checks above remain pending.
-
-## Castle music checkpoint
-
-- Open `Assets/_Project/Scenes/Medieval09_CastleMusic.unity` in Unity 6000.3.2f1. Import scripts/audio and check Console. Verify both music clips reference the new OGG assets, use preloaded decompressed PCM, preserve 44.1 kHz / 661,500 samples, and have normalization off.
-- Listen in the menu and during play for at least five complete 15-second loops. Check actual seams for clicks/gaps, musical continuity, balance and fatigue on speakers/headphones. Offline seam measurements do not prove Unity/device playback is seamless.
-- Start/leave/retry rounds repeatedly and switch all nine level/difficulty choices. Listen for the calmer arrangement blending into the rhythmic one over 0.8 seconds without restarting the phrase or doubling the common backing. Confirm all existing game speeds, controls, visuals and scoring.
-- Lose non-final lives: the LifeLost cue should stay clear as music briefly lowers and then recovers. The tune must keep its place while the ball relaunches immediately. Rapid contacts and Fireball should not restart or allocate music.
-- Win with the ball and Fireball, including rapid final breaks, then lose all lives in another run. Music should fade to silence in about 0.18 seconds while the correct existing result cue plays once; result timing stays immediate.
-- Return to menu or choose Next Level from a win. Calm music should return at selection, and gameplay should wait for difficulty as before. Verify Next Level's added listener never calls or duplicates its original action.
-- Inspect exactly two music sources under the independent music root, separate from GameFeel's reset hierarchy. Compare their timeSamples over several loops and through transitions. Their sample positions should stay aligned; inspect Unity scheduling behavior on the actual target platform.
-- Change Music Volume and Muted during playback; SFX/spells retain their own settings. Unmuting should reveal the current phrase, not restart it. Change crossfade/fade/duck settings and confirm bounded gains without abrupt scale-up.
-- Disable/re-enable the music component after the first UI frame, including during play, results and transitions. Playback stops immediately. While disabled, return/menu, Next Level and new-round state should still be remembered; re-enable should fade a fresh synchronized phrase in that context, with results remaining silent.
-- Change output device/sample rate if available. Both sources should stop and reschedule together, then fade in without duplicated voices. Check pause/focus behavior and any WebGL build on its actual browser after user interaction.
-- Stop/restart Play twice, including the project's domain-reload options if used, and unload/reload the scene. Check duplicate event/button listeners, leaked voice objects and stale result state. Reopen CastleAudio and older scenes; their sound and music behavior must retain the earlier version.
-
-C# syntax, scene/importer/GUID wiring, prior asset/component preservation, deterministic generation on the same encoder, decoded sample count/format/peak/DC/seam measurements, crossfade bounds and state/lifecycle source checks pass. Unity import/compilation, actual DSP alignment/looping/mix, output-device behavior and play-mode listening remain pending.
-
-## Castle audio checkpoint
-
-- Open `Assets/_Project/Scenes/Medieval08_CastleAudio.unity` in Unity 6000.3.2f1. Allow script/audio import, check Console and verify all eight AudioClip fields are populated. Inspect WAV import: mono, preloaded decompressed PCM, 44.1 kHz. Compare the clips directly in the Inspector before balancing in-game.
-- Check paddle hits, wall/ceiling hits and normal brick breaks. Listen for a wood/pluck attack, a quieter stone wall tap and three distinct stone-crunch variations. Verify subtle left/right panning, capped combo pitch and no simultaneous old EventAudioFeedback playback.
-- Use Fireball for clustered breaks and rapid contacts. The four impact sources must remain bounded, with no per-hit objects/clip allocations. Check that rate limiting suppresses audio clutter without changing score, particles or collisions.
-- Miss while lives remain: hear the short descending LifeLost cue once, then normal immediate relaunch. New impacts should be quieter while that cue plays. Lose the final life: hear GameOverToll once, without also playing LifeLost. Result UI timing must remain immediate.
-- Clear the final brick with the ball and with Fireball, including within 25 ms of a preceding break. VictoryFanfare must play once despite the impact rate limit; later stale events must not restart it. Existing ability cleanup must not cut the dedicated result voice.
-- Exercise all nine level/difficulty combinations, normal/expanded paddle and shield/fireball. Confirm unchanged speeds, controls, three starting lives, ten points per brick and exact maximum scores (280/260/240).
-- Try Again, return to menu and start the next level during a cue. Reset must stop the old sound and begin the next run silently until an event. Next Level may let the existing short victory tail finish on the difficulty selector; starting its run must clear it.
-- While a long cue plays, change Master/Impact/Life Loss/Result sliders and Muted. Verify live volume changes with no delayed replay when unmuting. Stereo Width 0 should center new impacts. These settings affect CastleAudioFeedback; existing ability voices keep their own settings.
-- Disable/re-enable CastleAudioFeedback mid-play and during results. Active cues should stop; future play events should resume, and re-enabling at a result must not replay its sound. The default hierarchy must retain exactly four impact voices and one life/result voice, with one existing AudioListener.
-- Listen on speakers and headphones at ordinary volume. Check attack/tail clicks, harsh highs, repetitive brick texture, relative loudness, stereo balance and mixing with spell sounds. Real output/device quality and overall mix need human review even when PCM levels pass offline checks.
-- Stop/restart Play twice and inspect for duplicate listeners or growing voice objects. Reopen BallPaddle and older scenes to confirm their original sound behavior remains intact.
-
-C# syntax, scene/audio/GUID references and preservation, deterministic WAV regeneration, PCM format/finite level/boundary/DC checks, existing event-state ordering and lifecycle source checks pass. Unity engine compilation/import, actual playback, mixing, device listening and play-mode verification remain pending.
-
-## Ball and paddle checkpoint
-
-- Open `Assets/_Project/Scenes/Medieval07_BallPaddle.unity` in Unity 6000.3.2f1. Allow the shader/materials/scripts to import. Check Console for C# or shader errors; the ball/paddle/halo/rings must not render pink.
-- At 1920x1080 and 1280x720, inspect the wood grain, bevel, brass caps/rivets and jade inlays. Check the ivory/gold orb is easy to follow over the artwork and masonry particles, with a faint halo rather than an opaque billboard square.
-- Play all three difficulties on each formation. Confirm unchanged ball speeds (9/12/15), input, three starting lives, ten points per brick and exact maximum scores (280/260/240). Compare collider/rigidbody/root transforms with ImpactMotion.
-- Hit the paddle at center and both edges, walls and individual bricks. Orb compression should follow the contact normal, glint briefly and return exactly to its child scale of one. The paddle should rebound quickly and settle; rapid contacts must not accumulate scale.
-- Inspect the Ball/Paddle source SpriteRenderers: forceRenderingOff may be true, but enabled state, original sprites/materials, tint and full bounds remain available. Visual proxies must add no colliders or Rigidbody2Ds. There should be exactly one visible ball and paddle.
-- Cast Fireball through a remote cluster. Its original flame/core material and piercing/scoring must remain correct, and a remote break must not flash/compress the orb. Real ball/brick contacts must pulse it once, including corner hits; verify actual collision callback delivery in Unity.
-- Activate Giant's Grip. Check its existing width multiplier, green ability tint and edge bounces. Jade inlays should brighten while brass caps keep their width. The skin should follow paddle rebound and expansion without moving the root or resizing its collider itself.
-- Repeated paddle hits should reuse four ring renderers, each fading in 0.16 s. Object/material counts must stay constant during rapid play. Check ring layering, the thinner gold trail and no visible trail bridge after losing a life.
-- Set Contact Strength to 0 or disable Enable Contact Feedback mid-hit: new glints/compression/rings should clear while skins remain. Disable PaddleSquashFeedback separately to remove the retained paddle rebound; set Halo Opacity to 0 to hide the halo.
-- Disable/re-enable RelicGearFeedback mid-effect: original source rendering should restore and return to one skinned child on re-enable. Test loss/retry, win/Next Level and menu transitions while contacts are active; new rounds must have no stale flash, ring or squash.
-- Stop/restart Play twice and inspect for stale listeners, growing hierarchies or duplicate effects. Reopen ImpactMotion and earlier scenes to confirm their original ball/paddle and trail appearance remains intact.
-
-C# syntax, scene/material/GUID references, frozen assets and physics/gameplay/source-renderer blocks, bounded pulse/scale/ring timing and lifecycle source checks pass. Unity engine/shader compilation, actual graphics, collision callback delivery, rendering visibility/bounds, input and play-mode checks above remain pending.
-
-## Impact motion checkpoint
-
-- Open `Assets/_Project/Scenes/Medieval06_ImpactMotion.unity` in Unity 6000.3.2f1. Let scripts import, check Console, and verify ImpactMotionFeedback has camera/session/background references.
-- Break individual bricks from several directions, then use Fireball for clustered hits. Check restrained camera pulses and damped reactions only in nearby live bricks. Repeated hits must remain capped and settle fully.
-- Miss the ball while lives remain. The life-loss jolt should be stronger and brief, with the normal immediate ball relaunch and correct life count. Final result/menu screens retain their existing immediate timing and remain stable.
-- Check the camera Transform and projection are unchanged during the visible jolt. Its rendering override should be cleared after each camera pass and on disable/reset; verify no lingering view shift after a pulse.
-- Hold the pointer at one screen position and trigger shake. The paddle target should match the unshaken scene, without drift/jitter caused by mouse mapping. Test keyboard input, wall/paddle/brick edge bounces and the expanded paddle as well.
-- In Scene view, inspect root colliders/transforms while nearby visuals react. Only the child renderer should move. Check root SpriteRenderer.bounds stays equal to the original full brick dimensions even with root rendering suppressed, and impact sizes/positions remain correct.
-- Inspect the child appearance: current row tint, grain/brass/carving and material property block should match the previous scene. There must be exactly one generated visual child per live brick, with no duplicate visible root or per-hit objects/material instances.
-- Test Enable Camera Shake off, Enable Brick Reactions off, and Motion Strength 0 independently. Disable the controller or reaction component during a pulse; verify the view/child pose restores and original bricks remain visible. Re-enable and check subsequent hits.
-- At 1920x1080 and 1280x720, watch all viewport edges during the strongest jolt. The background must cover them; the top HUD, score popups and spell bar should stay stable and readable.
-- Run loss/retry, victory/Next Level and menu transitions during motion. New rounds must begin at rest. Stop/restart Play twice and check for stale render/event subscriptions or doubled reactions. Reopen MasonryParticles and earlier scenes to confirm their versions remain unchanged.
-
-C# syntax, source/asset references and preservation, bounded pulse/clearance/overscan and lifecycle checks pass. Unity engine compilation, URP render behavior, source renderer bounds, pointer control and visual/play-mode checks above remain pending.
-
-## Masonry particles checkpoint
-
-- Open `Assets/_Project/Scenes/Medieval05_MasonryParticles.unity` in Unity 6000.3.2f1. Let the new shader/materials/script import and check Console. No particle should render pink or as an opaque full billboard square.
-- Break isolated bricks with the ball and Fireball, including side hits. Chips should spray from the contact face, rotate/fall and fade; powder should expand faintly; brass sparks should align with velocity and disappear quickly.
-- At 1920x1080 and 1280x720, verify the ball remains readable through the burst, dust stays behind it, particle colors fit the brick, and top-row/edge hits stay visually clear.
-- Compare with BrickBreak: retain the flash, carved four-piece break, impact +points and existing sound. Only the old uniform particle burst should be replaced.
-- Produce rapid hits and a full Fireball column. The hierarchy should retain eight burst slots with three systems each. No per-hit GameObjects/material instances or unbounded particles should appear; score/lives and collision behavior must stay exact.
-- Check default caps (120 simultaneously emitted particles across this pool), and optionally the Inspector maxima (264). Pool capacity changes require restarting Play. Higher intensity should change size/speed rather than emission count.
-- Lose/retry, win/Next Level and return/menu while particles are alive. All resets must clear every system; idle menus must never emit particles continuously.
-- Set each layer count to zero and restore it to confirm layers can be isolated. Disable/re-enable MasonryParticleFeedback: particles clear and resume on the next break; the separate break/score/audio effects continue. Test with audio muted and check frame rate during clustered breaks.
-- Stop/restart Play twice and inspect for stale listeners or duplicate systems. Reopen BrickBreak and earlier scenes to verify their original particle implementation remains intact.
-
-C# syntax, particle-mask bounds, event lifecycle, caps and scene/asset reference/preservation checks pass. Unity engine/shader compilation, actual particle rendering, layering/motion, frame rate and play-mode tests above remain pending.
-
-## Brick break / impact scores checkpoint
-
-- Open `Assets/_Project/Scenes/Medieval04_BrickBreak.unity` in Unity 6000.3.2f1; let the new script import and check Console for errors. The feedback component should already have both materials, camera and score text assigned.
-- Break one brick with the ball. It must award the same ten points immediately and bounce normally, then show a warm flash, four matching irregular pieces with brief recoil/spin/fall/fade, and a shadowed gold +10 at that position.
-- Hit different faces and use Fireball. Check direction, original stone/brass alignment, no oversized/missing pieces, and no duplicate score. Fragments should stay behind the live ball and intact bricks.
-- Break several bricks rapidly and repeatedly cast Fireball. The fixed pool should not add hierarchy objects or material instances per hit; each reused slot should reset color, rotation, scale, alpha and label. Pool overflow may replace older visual effects but must never affect earned points.
-- At 1920x1080 and 1280x720, break the top row and side columns. Popups should remain readable and within bounds clear of the top HUD/spell bar. Moving the pointer over labels must not stop paddle following.
-- Lose/retry, win/Next Level, and return/menu while fragments are visible. Resets should clear all copies/popups. The existing immediate result screen covers effects rather than delaying game flow.
-- Disable StoneBreakFeedback during an effect and score with it disabled. Normal score, collision, particles and audio should continue. Re-enable it mid-run: old points must not produce a bonus popup, and the next hit should show the correct new increase.
-- Stop/restart Play twice and inspect for stale subscriptions, runtime sprite leaks or doubled effects. Check animation clarity/frame rate with rapid hits, and reduce speed/lifetime if fragments distract from the ball.
-- Reopen StoneCourt and earlier scenes; their break behavior should remain unchanged.
-
-Source C# syntax, scene/asset references and preservation, fragment polygon/UV geometry and popup-bound checks pass. Unity compilation, actual runtime sprite/text rendering, animation and play-mode tests above remain pending.
-
-## Stone court checkpoint
-
-- Open `Assets/_Project/Scenes/Medieval03_StoneCourt.unity` in Unity 6000.3.2f1 and allow shader/material/script import. Check Console for C# or shader errors; no object should render pink.
-- Compare all three formations at 1920x1080 and 1280x720. Confirm colored beveled bricks, brass straps/rivets, carvings and restrained grain remain readable behind a fast ball.
-- Inspect both side pillars: coursed stone, mouldings/feet, arrow slits, banners and crests should layer correctly, with no decoration extending into the reachable court. Check the top-wall battlement silhouette.
-- Hit both wall faces and the ceiling repeatedly, including beside caps and banners. Collision positions and bounce behavior must match Royal Interface. No new collision component should be present on the decorative hierarchy.
-- Break bricks normally and with Fireball. Each still awards ten points once; their full sprite bounds and collider should agree, with the existing burst color matching the new row tint.
-- Check all nine level/difficulty choices, ability collisions, complete losses/retries, victory/Next Level and return/menu. Surface details and pillar decoration counts must not grow across round transitions.
-- Stop/restart Play twice and check for material/property-block warnings. Inspect frame rate during rapid breaks; all surfaces should share the two material assets rather than creating per-brick material instances.
-- Reopen Royal Interface and earlier scenes. Their brick materials, colors and plain walls must retain their earlier versions.
-
-Source/asset checks pass. Unity C# and shader compilation, graphics, frame rate, physics/play-mode checks above and actual playtest evidence are pending. Break/recoil animation, impact score popups, new particles and shake are queued for later scene checkpoints.
-
-## Royal Interface checkpoint
-
-- Open `Assets/_Project/Scenes/MedievalUI02_RoyalInterface.unity` in Unity 6000.3.2f1. Let the new font and scripts import. Check Console for engine/shader/font errors.
-- Test at 1920x1080 and 1280x720 in 16:9. Menu headings should use the new serif typeface; body text should remain clear. No clipped glyphs, placeholder squares or overlapping labels should appear.
-- Check all three level-card previews match their formations, then exercise all nine level/difficulty combinations. The same original callbacks should run.
-- Navigate cards with Left/Right and Up/Down, then Enter. Back, Next Level, Try Again and Return to Main Menu should all remain reachable by keyboard and mouse. Hover/press scale must settle and reset when a button is hidden.
-- Lose all lives and retry the same board/mode. Win levels 1/2 and continue to the next difficulty selector; win Crown and return to the menu. Repeat transitions and verify panels, decorations and button listeners do not duplicate.
-- During play, score, level/difficulty and lives should be readable in separate top panels. Check exact totals and the retained score flash/pulse/combined +points label during rapid hits.
-- Check the wider spell bar, active/cooldown status, mouse clicks and original key bindings. Move the pointer over decorative frames and labels: they must not interrupt paddle tracking.
-- Resize the Game view: the corner-pivot castle artwork should cover the viewport, stay centered and remain behind gameplay. Verify ball/bricks are never hidden by it.
-- Stop/restart Play twice and inspect for stale runtime font/material objects or duplicate motion. Reopen UI01 and older scenes to verify their versions remain intact.
-
-C# syntax and source/asset/text-metric checks pass. Unity engine compilation, font-atlas creation, actual layout and input/play-mode verification are pending. Brick styling, break animations, world-space score popups and shake are intentionally queued for later scene checkpoints.
-
-## Medieval score UI checkpoint
-
-- Open `Assets/_Project/Scenes/MedievalUI01_Score.unity`, select a level/difficulty, and test at 1920x1080 and 1280x720 in 16:9. The framed score must sit above the bricks without overlapping the level label or lives.
-- Break a brick: the displayed score must remain exact, briefly turn ivory, grow and move upward, then return to its original gold/rest pose. A +10 label should float and fade.
-- Break several bricks rapidly with the ball/fireball: the score must never lose points and the one gain label should combine recent gains without accumulating extra UI objects.
-- Keep the pointer over the plaque while moving: it must not block paddle following.
-- Disable/re-enable MedievalScoreFeedback during a pulse: scale, position and color must restore; scoring must continue with the component disabled, and re-enabling must not reward existing points.
-- Lose all lives and retry, return to menu, change level/difficulty, and repeat. Score zero must not produce a reward popup, and each fresh run should show exactly one plaque.
-- Reopen Medieval and all earlier scenes: their score/UI behavior must remain unchanged.
-
-Source/asset comparisons passed. Unity import, engine compilation, layout and play-mode checks above are pending; no new playtest or audio result is claimed for this checkpoint.
-
-## Levels checkpoint
-
-- Open `Assets/_Project/Scenes/Levels.unity`. Play should show Courtyard, Twin Towers and Crown. Choose a level: its name/description and Easy/Medium/Hard should appear, while the ball remains stopped.
-- Use Back to Levels and choose a different board. Changing selections or repeatedly clicking must not start/reset play until a difficulty is chosen.
-- Exercise all nine combinations. Courtyard should have 28 bricks in four solid rows, Twin Towers 26 bricks in two tall flanks with an open center, and Crown 24 bricks in a crown formation. All must fit inside the existing court.
-- Check the HUD identifies both selected level and difficulty. Verify Rigidbody2D ball speed is 9 on Easy, 12 on Medium, 15 on Hard, including after bounces and life loss.
-- Score points, lose all lives, then Try Again. It must restore the same layout/difficulty with its correct brick count, three lives, zero score and all three abilities ready.
-- Break all bricks, including the final brick with a fireball. Victory should occur exactly once with maximum score 280/260/240 for levels 1/2/3. Late hits must not change the result.
-- Win level 1, select Next Level, and choose a different difficulty for Twin Towers. Repeat from Twin Towers to Crown. The next board must not auto-launch before choosing difficulty. Each new level starts with zero score, three lives and ready abilities.
-- Crown's victory screen should offer Return to Main Menu without a nonexistent fourth level. Return from each result screen and replay any of the three levels directly.
-- On every board, check fireball piercing/duplicate-hit scoring, widened-paddle edge bounces, one-use shield reflection, cooldown UI, life-loss cleanup, and retry/menu cleanup.
-- Test mouse and keyboard menu navigation at 1920x1080 and 1280x720 in 16:9. Verify Back/Next/Return buttons do not overlap the controls text, and the mode label remains readable next to score/lives.
-- Reopen Abilities, Arcade, After and Before; each should retain the behavior of its own checkpoint.
-
-Automated level rules: `dotnet run --project tests/LevelChecks.csproj` (.NET 8, 5,042 assertions across all nine combinations and 300 mixed attempts). Source/asset checks: `python3 tests/verify_project.py` (twelve checks, including frozen older assets). The existing ability and round checks also pass. Unity engine compilation, visual layout, actual physics and UI interaction still require play-mode verification.
-
-## Abilities checkpoint
-
-- Open `Assets/_Project/Scenes/Abilities.unity` and start a difficulty. The three hotbar abilities should all be READY, and remain usable across Easy/Medium/Hard.
-- Press 1 or Space, and also try clicking Fireball. A single flame should travel straight upward through several bricks, with a short orange trail and whoosh. Each brick still awards 10 points; rapid/simultaneous ball/fireball hits must not double-score.
-- Press/release Fireball repeatedly during its 5-second cooldown. It should stay unavailable until ready, with a countdown and recharge bar. Hold a key: it must not cast repeatedly. Clicking another hotbar ability must not change what Space does.
-- Press 2 or click Giant's Grip. The paddle should become 60% wider and green for 6 seconds, then return exactly to its normal size/color. Bounce near both expanded edges; aim should use the expanded collider width. Move to each wall: the expanded paddle must remain inside the court.
-- Verify Giant's Grip cannot stack or recast during its 12-second cooldown.
-- Press 3 or click Rune Shield. A cyan line should appear below the paddle. Deliberately miss: one descending ball should reflect upward, with a flash/cue and no lost life, keeping the selected speed. A second miss must lose a life. Upward movement must not consume the shield.
-- Let another shield expire unused after 8 seconds. It should disappear and still require the remainder of the 14-second cooldown. Casting after a ball has already passed the line must not teleport it back.
-- Cast multiple abilities together. Lose a life: all active buffs and the fireball should clear, while cooldowns keep counting. Retry/new difficulty must instead restore every ability to READY.
-- Use the fireball to break the final brick. Victory must appear once with the correct final score; no spell remains active behind results. Repeat the loss/retry and return-to-menu flow with abilities active.
-- Check keyboard and hotbar buttons at 1920x1080 and 1280x720 in 16:9. The hotbar should sit below the paddle without changing the score/lives UI. Mute audio and verify casts, duration, shield use and cooldowns remain clear.
-- Reopen Arcade, After and Before: no abilities or changed rules should appear in those checkpoints.
-
-Automated ability rules: `dotnet run --project tests/AbilityChecks.csproj` (.NET 8). Source/asset checks: `python3 tests/verify_project.py` (twelve checks, including frozen earlier assets). Existing round rules: `dotnet run --project tests/ArcadeRoundChecks.csproj`. These do not replace Unity engine compilation and the play-mode checks above.
-
-## Arcade main menu and complete runs
-
-- Open `Assets/_Project/Scenes/Arcade.unity` in Unity 6000.3.2f1. Press Play: the main menu should appear, with no moving ball or active paddle behind it.
-- Start each difficulty. Inspect the ball's Rigidbody2D linear velocity magnitude during play: Easy 9, Medium 12, Hard 15. Check again after paddle/wall contact and after losing a life.
-- Confirm every run begins with 28 bricks, score 0, and three lives. The top-center label identifies the chosen mode.
-- Miss twice: play should continue with two lives, then one. Any earned score should remain.
-- Miss a third time: Game Over should show the final score and exactly two buttons, Try Again and Return to Main Menu. The ball/paddle must stay stopped; score/lives must not reset behind the result screen.
-- Click Try Again: the same difficulty should restart with all 28 bricks, three lives, score 0, and no old trail, particle burst or audio left from the previous run.
-- Return to Main Menu after a loss, choose a different difficulty, and verify its speed is applied.
-- Clear all 28 bricks: Victory should show score 280 and a Return to Main Menu button. It must not appear while any brick remains, and the stopped ball must not cause a later game over.
-- Return to Main Menu after winning and start another run. Repeat menu/retry transitions several times; buttons, feedback and event listeners should not duplicate.
-- Test button selection with mouse and with arrow keys/Enter. Check the main menu, Game Over and Victory at 1920x1080 and 1280x720 in 16:9.
-- Reopen Before and After separately. Their original auto-launch and life-reset behavior must remain intact.
-
-Automated checks: `python3 tests/verify_project.py` (twelve source/asset checks) and `dotnet run --project tests/ArcadeRoundChecks.csproj` (.NET 8, 7,868 rule assertions). These pass in the implementation environment. Unity import, C# engine compilation, physics, UI interaction and visual/audio checks above still require the editor.
-
-## Import and first run
-
-- Open with Unity 6000.3.2f1 and let packages import; check Console for C# and shader errors.
-- Open Before, play in 16:9, and verify the silent original behavior. Stop Play mode.
-- Open After. Select `GameFeel - After only`: all five script components and their references should be assigned.
-- Press Play and confirm all five techniques. No additional Inspector setup should be necessary.
-- If an error occurs, copy its full Console text, including the file name and line number, for debugging.
-
-## Event and repetition checks
-
-- Hit the paddle repeatedly: only its visual child compresses and always returns to its original scale. Its BoxCollider2D stays fixed.
-- Break bricks rapidly: each burst uses the brick color, remains near the break, and disappears. The burst pool does not keep growing.
-- Listen for distinct paddle, brick, and loss sounds. Repeated impacts must not become excessively loud. Adjust volume while listening on the target device.
-- Verify every points change in the normal HUD text. Rapid gains should restart one score pop, not stack permanent enlargement.
-- Deliberately lose a ball. The lives value changes; a distinct falling cue plays. The trail must not draw a line from the death zone to the launch point.
-- Lose the final life. Confirm the starter resets score/lives; score zero should not get a reward pop. Bricks are not rebuilt (this is expected).
-- Mute game audio. Brick disappearance/particles, score changes, and lives updates must still make events clear.
-- Stop and restart Play mode twice. Effects/audio should not duplicate because of stale event subscriptions.
-- Reopen Before and verify no feedback has leaked into it.
-
-## Disabling feedback
-
-While playing After, disable each feedback component in turn, then re-enable it. Reactions should stop, reset/clear, and resume without missing references or permanent scaling. The numeric score should continue updating when ScorePopFeedback is disabled because HUD always owns the text value. No camera-shake disable setting is needed because no shake is added.
-
-## Real playtest
-
-Ask one other person to play Before and After. Ask which feels more satisfying, what makes events easier to read, and what distracts them. Make at least one change based on what they say and retest. Record the observation, old/new value, and result in README; leave out their name. Do not describe an imagined playtest as evidence.
-
-## Before submitting
-
-- Replace every README placeholder, including the playtest, student testing statement, and real video link.
-- Record 2–3 minutes with narration and game audio. Show Before for 20–30 seconds, all five effects in After, one implementation, and the actual revision.
-- Test the video link from an account/viewer that has not been granted special access.
-- Ensure GitHub contains Assets, Packages, ProjectSettings, README, LICENSE, and SOURCE, but not Library, Temp, or Logs.
-- Submit the GitHub repository URL on Blackboard by November 16, 2026, 2:00 PM Asia/Riyadh.
-
+The Unity project targets **6000.3.2f1** with a 16:9 reference Game view. Source checks and console rules do not replace editor compilation or play-mode testing.

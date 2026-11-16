@@ -1,29 +1,48 @@
-# SWE402 — JuiceLab Dead Starter
+# Project structure
 
-A deliberately unpolished brick-breaker, adapted from Serkan Ceyhan's MIT-licensed JuiceLab. See SOURCE.md and LICENSE. Completed feedback implementations are removed, not just disabled.
+After uses Unity 6000.3.2f1, C# and the Universal Render Pipeline 2D renderer. The Unity project root contains `Assets`, `Packages` and `ProjectSettings`.
 
-## Open and play
+## Entry points
 
-1. Extract this whole project and add its root folder in Unity Hub.
-2. Use Unity **6000.3.2f1**. Let packages and assets import.
-3. Open `Assets/_Project/Scenes/Before.unity`.
-4. Set Game view to 16:9 and press Play. Focus Game view.
-5. Move using the mouse, A/D, or left/right arrows. The ball launches automatically.
+| Scene | Role |
+|---|---|
+| [Before.unity](Assets/_Project/Scenes/Before.unity) | Original course starter. |
+| [After.unity](Assets/_Project/Scenes/After.unity) | Feedback-only comparison with the original gameplay rules. |
+| [Medieval14_GiantGripVFX.unity](Assets/_Project/Scenes/Medieval14_GiantGripVFX.unity) | Final polished version; first in Build Settings. |
 
-Bricks disappear and add points. Missing the ball reduces lives and relaunches it. Losing all lives resets score and lives but does not rebuild the board. Stop and restart Play mode for a fresh board. No sound, particles, trail, shake, hit-stop, animated score, or squash/stretch is included.
+## Modules
 
-## Start the assignment
+All module paths below are relative to `Assets/_Project`.
 
-Duplicate Before.unity as After.unity. Keep Before unchanged. Add new components in After; duplicate shared assets before modifying them. The separate assignment brief contains requirements and grading, including AI permission and the top-three bonus.
+| Module | Responsibility |
+|---|---|
+| `Scripts/Core` | Starter events, game state, impact data and HUD ownership. |
+| `Scripts/Gameplay` | Original ball, paddle, board, brick and death-zone behavior. |
+| `Feedback` | Original five feedback components and their shared rendering assets. |
+| `Arcade` | Independent difficulty selection and complete-round flow. |
+| `Abilities` | Spell timers, expanded paddle, shield protection, projectile presentation and hotbar. |
+| `Levels` | Layout catalog, level selection, progression, score/lives and final scene adapters. |
+| `Presentation` | Medieval menu styling, display typography, button motion and animated score. |
+| `StoneCourt` / `BreakEffects` / `MasonryParticles` | Stone surfaces, castle decoration, break effects and pooled debris. |
+| `ImpactMotion` / `RelicGear` | Restrained shake, brick reactions, orb/paddle surfaces and contact feedback. |
+| `CastleAudio` / `CastleMusic` | Event/result sounds, original audio assets and music transitions. |
+| `CourtSettings` / `ChapterPresentation` | Pause/options, volume/motion preferences, chapter banners and result decoration. |
+| `FireballVfx` / `RuneShieldVfx` / `GiantGripVfx` | Final ability visuals that observe existing gameplay state. |
+| `Prefabs` / `Settings` / `Scenes` | Scene-specific brick prefabs, rendering configuration and preserved scene versions. |
 
-## Code map
+## Runtime responsibilities
 
-- `Scripts/Gameplay`: paddle, ball, brick, death zone, board generation.
-- `Scripts/Core/GameManager.cs`: score, lives, combo.
-- `Scripts/Core/GameEvents.cs`: event hooks for adding feedback.
-- `Scripts/Core/ImpactInfo.cs`: collision position, normal, color and other event data.
-- `Scripts/Core/HUD.cs`: plain score/lives text. Its score ownership property supports your future UI animation.
+`LevelSession` coordinates the selected level, round state, board, menus, score and lives. `LevelAbilityController` owns spell execution and connects the ability rules to the scene. Feedback components respond to `GameEvents` or observe the existing ability presentation; they do not own the score.
 
-All paths above are relative to `Assets/_Project`.
+Visual feedback uses separate renderers, child transforms, material property blocks and fixed pools. Event subscriptions are removed when components are disabled. Cosmetic random variation uses independent random streams.
 
-Subscribe to events when enabled and unsubscribe when disabled. Preserve the gameplay rules and physics. Animate visual children rather than the collision objects. The upstream comments are in Turkish; identifiers and this guide are in English.
+The final version's gameplay extensions use separate adapters and prefabs, preserving the original Before/After comparison. The scene history is documented in [DEVELOPMENT-HISTORY.md](DEVELOPMENT-HISTORY.md).
+
+## Repository documentation
+
+| File | Content |
+|---|---|
+| [README.md](README.md) | Project overview, demonstration, setup, controls, features and credits. |
+| [TESTING.md](TESTING.md) | Recorded validation results, test scope and runtime verification status. |
+| [DEVELOPMENT-HISTORY.md](DEVELOPMENT-HISTORY.md) | Implementation milestones and scene versions. |
+| [SOURCE.md](SOURCE.md) | Starter provenance and licensing. |
