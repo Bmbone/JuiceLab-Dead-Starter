@@ -6,11 +6,35 @@ Jehad Alharbi — 202248820
 
 1. Open this repository's root folder in Unity Hub using **6000.3.2f1**.
 2. Allow the existing packages to import. No extra tweening or audio packages are required.
-3. Open `Assets/_Project/Scenes/Medieval03_StoneCourt.unity` for the latest playable checkpoint. It is first in Build Settings; UI02, UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
+3. Open `Assets/_Project/Scenes/Medieval04_BrickBreak.unity` for the latest playable checkpoint. It is first in Build Settings; StoneCourt, UI02, UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
 4. Select 16:9 in Game view, press Play, choose a level, then choose Easy, Medium, or Hard. The ball starts only after both selections are made.
 5. Move with the mouse, A/D, or the left/right arrows. Cast with **1 or Space**, **2**, and **3**, or click the hotbar buttons. Menus support mouse selection or arrow keys and Enter.
 
 For the assignment comparison, open `Assets/_Project/Scenes/Before.unity` or `Assets/_Project/Scenes/After.unity`. Their gameplay rules remain unchanged: the ball launches automatically, the final lost life resets score/lives, and stopping/restarting Play restores the board. Arcade adds the menu/difficulty rules, Abilities adds spells, and Levels adds layout selection. Earlier scene assets and scripts remain unchanged.
+
+## Brick break checkpoint — change 4
+
+Open `Assets/_Project/Scenes/Medieval04_BrickBreak.unity`. Destroying a brick now adds a brief warm flash, a small visual recoil, four irregular stone pieces that separate/spin/fall and fade, and a large gold impact score with a dark shadow. The fragments retain the original brick's grain, brass and carving. They draw behind the live ball and intact bricks; the flash is brief. Existing sound and particles still trigger once through the same events.
+
+`BreakEffects/StoneBreakFeedback.cs` listens to `ScoreChanged` and `BrickDestroyed`. LevelSession already raises the actual awarded score just before the break event, so the impact label uses that increase (currently +10 per brick). It never writes the normal score, changes damage, delays a bounce or moves an original brick/collider. Only the pooled visual copies are animated. The existing HUD pulse remains in place.
+
+Twelve reusable slots each hold one flash, four sprite fragments and one shadowed popup. Five shared runtime sprite shapes are created once, rather than new objects or materials for each hit. When full, the pool replaces its oldest visual slot; earned points are unaffected. Score resets, menu/retry transitions and disabling the component clear the effects; re-enabling reads the current score without rewarding old points. Runtime sprites are released on destruction.
+
+| Inspector setting on `GameFeel - Brick Break 04` | Initial value |
+|---|---:|
+| Pool Size | 12 |
+| Fragment Duration / Flash Duration | 0.48 s / 0.065 s |
+| Fragment Speed / Gravity | 1.6 / 4.4 |
+| Popup Duration / Font Size | 0.66 s / 42 pt |
+| Popup Rise / Peak Scale | 56 Canvas units / 1.18 |
+
+Labels use the same 1920x1080 Canvas scaling as the menus, with bounds that clear the 134-unit top HUD and 96-unit spell bar. Menus/results stay above impact labels and fragments; the existing immediate victory/game-over flow is preserved. Stop Play before changing pool size or popup font size; the other motion/duration settings are read while playing. Disable StoneBreakFeedback to remove this pass while scoring and the existing feedback continue.
+
+Validation: C# syntax, scene/reference/metadata checks, frozen gameplay/physics/prefab comparisons, polygon coverage and pixel-space/stone-UV reconstruction, popup bounds at the full punch range, and event/score ownership checks pass. Unity is not installed here: engine compilation, runtime sprite generation, stone-fragment appearance, text layering, sound balance and real playtesting remain pending.
+
+Implementation reference: Unity's [Sprite.OverrideGeometry API](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Sprite.OverrideGeometry.html) specifies pixel coordinates in the sprite rectangle; the helper converts the centered fragment vertices accordingly. This pass uses project-native geometry and the existing materials/font, with no downloaded media.
+
+Next checkpoint: refine the existing destruction particles with dust/chips/sparks, then add restrained screen/brick shake in a separate scene.
 
 ## Stone court checkpoint — change 3
 
@@ -184,7 +208,7 @@ Keep game audio audible alongside narration. Different ball trajectories between
 
 ## AI use
 
-OpenAI ChatGPT/Codex assisted with interpreting the brief, inspecting the starter, writing the five feedback scripts, original procedural audio, the simple feedback shader/material, After scene wiring, the optional Arcade mode and menus, the Abilities checkpoint (gameplay, hotbar, procedural visuals and audio), the Levels checkpoint (three layouts, selection, per-level difficulty and progression), executable rule tests, source-level checks, documentation, the isolated medieval score UI/feedback checkpoint, and the larger Royal Interface menus/HUD including the renamed font subset, and the stone-court shader, independent brick material/prefab and castle-wall decorations. No completed JuiceLab feedback modules were imported.
+OpenAI ChatGPT/Codex assisted with planning and debugging, the five core feedback components, procedural audio and shaders, scene wiring, optional Arcade/Abilities/Levels gameplay, medieval menus/HUD and font subset, stone bricks/castle walls, pooled break animation and impact scores, source/rule checks, and documentation. No completed JuiceLab feedback modules were imported.
 
 Student review, Unity tests, and revisions: **[Describe the tests and changes you actually performed. Do not submit this placeholder.]**
 

@@ -83,3 +83,15 @@ Each stage is pushed separately to main. Stop Play before pulling and open the s
 - Bounce against both inner wall faces and the ceiling, including near pillar bands. Use fireball through a row and complete loss/retry, win/next-level and return/menu flows. Verify the same hit boundaries, totals and lives as UI02; all bricks should still be destructible with the same rules.
 - Validation: C# syntax, scene/prefab YAML and reference comparisons, preserved physics/gameplay data, decorative bounds and shader/material wiring pass. Unity engine/shader compilation, visual/performance review and playtesting remain pending.
 - Stop here for review. Destruction animation, impact score popups, particle improvements and screen/brick shake follow in separate scene checkpoints.
+
+## 10. Brick break animation and impact score popups
+
+- New scene: `Assets/_Project/Scenes/Medieval04_BrickBreak.unity`, first in Build Settings. StoneCourt and every earlier scene, prefab, shader, material and gameplay script are unchanged.
+- Added StoneBreakFeedback to the existing feedback object: a short warm flash/recoil, four irregular sprite fragments with matching stone/brass texture, spin/gravity/fade, and gold shadowed +points labels. Live objects retain their normal collision/scoring path.
+- Labels derive their value from the actual ScoreChanged increase immediately preceding each BrickDestroyed event. Normal score text remains owned by LevelSession. Popups are bounded below the top HUD and above the spell bar, do not capture input, and stay beneath result/menu overlays.
+- A fixed twelve-slot pool reuses its sprites, renderers and labels. Rapid hits recycle the oldest visual, reset clears all slots, re-enabling reads the current score, and runtime sprite shapes are freed on destruction. No per-hit scene objects, colliders or material instances are created.
+- Review: stop Play, pull main, open **Medieval04_BrickBreak**, choose a level/mode, and break isolated bricks from different directions. Check the immediate score/bounce, a visible flash, matching fragments separating cleanly, and a readable +10 label that fades.
+- Fire through several bricks rapidly. Check exact totals, one label per awarded brick within pool capacity, bounded effect count, and no stale tint/rotation/score on reused slots. Check top-row and side hits at 1920x1080 and 1280x720.
+- Test disable/re-enable, loss/retry, win/next level and return/menu while effects are active. Overlays retain the original immediate result timing and cover effects. New runs must have no leftover pieces or popups.
+- Validation: C# syntax, scene/reference/frozen-asset checks, fragment area/coverage/pixel-conversion/UV alignment, popup bounds and event ownership checks pass. Unity import/compilation, actual sprite rendering/animation and play-mode/performance review remain pending.
+- Stop here for review. Particle refinement and restrained screen/brick shake remain separate checkpoints.

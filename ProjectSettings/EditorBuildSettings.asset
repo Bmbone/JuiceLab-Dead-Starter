@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/_Project/Scenes/Medieval04_BrickBreak.unity
+    guid: 3d33a2b221634c05bb04d161d8da2710
+  - enabled: 1
     path: Assets/_Project/Scenes/Medieval03_StoneCourt.unity
     guid: a35a37205a9743d485450ba38df6d313
   - enabled: 1

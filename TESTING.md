@@ -1,5 +1,19 @@
 # Unity verification and submission checklist
 
+## Brick break / impact scores checkpoint
+
+- Open `Assets/_Project/Scenes/Medieval04_BrickBreak.unity` in Unity 6000.3.2f1; let the new script import and check Console for errors. The feedback component should already have both materials, camera and score text assigned.
+- Break one brick with the ball. It must award the same ten points immediately and bounce normally, then show a warm flash, four matching irregular pieces with brief recoil/spin/fall/fade, and a shadowed gold +10 at that position.
+- Hit different faces and use Fireball. Check direction, original stone/brass alignment, no oversized/missing pieces, and no duplicate score. Fragments should stay behind the live ball and intact bricks.
+- Break several bricks rapidly and repeatedly cast Fireball. The fixed pool should not add hierarchy objects or material instances per hit; each reused slot should reset color, rotation, scale, alpha and label. Pool overflow may replace older visual effects but must never affect earned points.
+- At 1920x1080 and 1280x720, break the top row and side columns. Popups should remain readable and within bounds clear of the top HUD/spell bar. Moving the pointer over labels must not stop paddle following.
+- Lose/retry, win/Next Level, and return/menu while fragments are visible. Resets should clear all copies/popups. The existing immediate result screen covers effects rather than delaying game flow.
+- Disable StoneBreakFeedback during an effect and score with it disabled. Normal score, collision, particles and audio should continue. Re-enable it mid-run: old points must not produce a bonus popup, and the next hit should show the correct new increase.
+- Stop/restart Play twice and inspect for stale subscriptions, runtime sprite leaks or doubled effects. Check animation clarity/frame rate with rapid hits, and reduce speed/lifetime if fragments distract from the ball.
+- Reopen StoneCourt and earlier scenes; their break behavior should remain unchanged.
+
+Source C# syntax, scene/asset references and preservation, fragment polygon/UV geometry and popup-bound checks pass. Unity compilation, actual runtime sprite/text rendering, animation and play-mode tests above remain pending.
+
 ## Stone court checkpoint
 
 - Open `Assets/_Project/Scenes/Medieval03_StoneCourt.unity` in Unity 6000.3.2f1 and allow shader/material/script import. Check Console for C# or shader errors; no object should render pink.
