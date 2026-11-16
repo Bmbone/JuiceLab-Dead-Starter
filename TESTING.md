@@ -1,5 +1,19 @@
 # Unity verification and submission checklist
 
+## Masonry particles checkpoint
+
+- Open `Assets/_Project/Scenes/Medieval05_MasonryParticles.unity` in Unity 6000.3.2f1. Let the new shader/materials/script import and check Console. No particle should render pink or as an opaque full billboard square.
+- Break isolated bricks with the ball and Fireball, including side hits. Chips should spray from the contact face, rotate/fall and fade; powder should expand faintly; brass sparks should align with velocity and disappear quickly.
+- At 1920x1080 and 1280x720, verify the ball remains readable through the burst, dust stays behind it, particle colors fit the brick, and top-row/edge hits stay visually clear.
+- Compare with BrickBreak: retain the flash, carved four-piece break, impact +points and existing sound. Only the old uniform particle burst should be replaced.
+- Produce rapid hits and a full Fireball column. The hierarchy should retain eight burst slots with three systems each. No per-hit GameObjects/material instances or unbounded particles should appear; score/lives and collision behavior must stay exact.
+- Check default caps (120 simultaneously emitted particles across this pool), and optionally the Inspector maxima (264). Pool capacity changes require restarting Play. Higher intensity should change size/speed rather than emission count.
+- Lose/retry, win/Next Level and return/menu while particles are alive. All resets must clear every system; idle menus must never emit particles continuously.
+- Set each layer count to zero and restore it to confirm layers can be isolated. Disable/re-enable MasonryParticleFeedback: particles clear and resume on the next break; the separate break/score/audio effects continue. Test with audio muted and check frame rate during clustered breaks.
+- Stop/restart Play twice and inspect for stale listeners or duplicate systems. Reopen BrickBreak and earlier scenes to verify their original particle implementation remains intact.
+
+C# syntax, particle-mask bounds, event lifecycle, caps and scene/asset reference/preservation checks pass. Unity engine/shader compilation, actual particle rendering, layering/motion, frame rate and play-mode tests above remain pending.
+
 ## Brick break / impact scores checkpoint
 
 - Open `Assets/_Project/Scenes/Medieval04_BrickBreak.unity` in Unity 6000.3.2f1; let the new script import and check Console for errors. The feedback component should already have both materials, camera and score text assigned.

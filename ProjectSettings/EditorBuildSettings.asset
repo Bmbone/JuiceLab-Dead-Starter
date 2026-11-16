@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/_Project/Scenes/Medieval05_MasonryParticles.unity
+    guid: 74e07cf3bec54d269fc28bca34453a24
+  - enabled: 1
     path: Assets/_Project/Scenes/Medieval04_BrickBreak.unity
     guid: 3d33a2b221634c05bb04d161d8da2710
   - enabled: 1

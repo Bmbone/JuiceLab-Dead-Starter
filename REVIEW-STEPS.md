@@ -95,3 +95,15 @@ Each stage is pushed separately to main. Stop Play before pulling and open the s
 - Test disable/re-enable, loss/retry, win/next level and return/menu while effects are active. Overlays retain the original immediate result timing and cover effects. New runs must have no leftover pieces or popups.
 - Validation: C# syntax, scene/reference/frozen-asset checks, fragment area/coverage/pixel-conversion/UV alignment, popup bounds and event ownership checks pass. Unity import/compilation, actual sprite rendering/animation and play-mode/performance review remain pending.
 - Stop here for review. Particle refinement and restrained screen/brick shake remain separate checkpoints.
+
+## 11. Layered masonry destruction particles
+
+- New scene: `Assets/_Project/Scenes/Medieval05_MasonryParticles.unity`, first in Build Settings. It replaces the old burst component only in this new scene; BrickBreak and all earlier assets stay frozen.
+- Added faceted, spinning/falling stone chips, soft low-opacity expanding dust and short brass sparks aligned with their velocity. Colors follow the brick stone and metal palette; dust/chips sort behind the ball, while sparks remain narrow and brief.
+- Eight reusable slots each contain three capped ParticleSystems. Default count is 8 chips + 3 puffs + 4 sparks per break, at most 120 emitted particles in the default pool and 264 at the maximum Inspector limits. Manual emission, fixed system seeds and a separate cosmetic random stream preserve game rules/randomness.
+- Score resets, retry/menu feedback resets and disabling the component clear all systems. No per-hit GameObjects/material instances, collisions or continuous emission are added. Earlier break animation, impact labels, audio and HUD are unchanged.
+- Review: stop Play, pull main and open **Medieval05_MasonryParticles**. At 1920x1080 and 1280x720, break isolated bricks from several directions and compare with BrickBreak. Check chip silhouettes/arc/spin, faint soft dust and small brass glints.
+- Use Fireball through multiple bricks and create rapid hits. Verify exact score/lives, a readable ball, bounded particle count, clear resets and no uniform old burst in addition to the new layers. Test loss/retry, win/next-level and return/menu flows while particles are active.
+- Toggle MasonryParticleFeedback off/on: particle layers should clear/resume, with the separate break animation, score labels and audio still functioning. Mute audio and check that impact feedback is readable without sound.
+- Validation: C# syntax, scene/material/shader references, particle bounds, event/ownership and source preservation checks pass. Unity C#/shader compilation, actual appearance, rendering/performance and play-mode review remain pending.
+- Stop here for review. Camera and brick shake follow in the next visual feedback checkpoint.

@@ -6,11 +6,35 @@ Jehad Alharbi — 202248820
 
 1. Open this repository's root folder in Unity Hub using **6000.3.2f1**.
 2. Allow the existing packages to import. No extra tweening or audio packages are required.
-3. Open `Assets/_Project/Scenes/Medieval04_BrickBreak.unity` for the latest playable checkpoint. It is first in Build Settings; StoneCourt, UI02, UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
+3. Open `Assets/_Project/Scenes/Medieval05_MasonryParticles.unity` for the latest playable checkpoint. It is first in Build Settings; BrickBreak, StoneCourt, UI02, UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
 4. Select 16:9 in Game view, press Play, choose a level, then choose Easy, Medium, or Hard. The ball starts only after both selections are made.
 5. Move with the mouse, A/D, or the left/right arrows. Cast with **1 or Space**, **2**, and **3**, or click the hotbar buttons. Menus support mouse selection or arrow keys and Enter.
 
 For the assignment comparison, open `Assets/_Project/Scenes/Before.unity` or `Assets/_Project/Scenes/After.unity`. Their gameplay rules remain unchanged: the ball launches automatically, the final lost life resets score/lives, and stopping/restarting Play restores the board. Arcade adds the menu/difficulty rules, Abilities adds spells, and Levels adds layout selection. Earlier scene assets and scripts remain unchanged.
+
+## Masonry particles checkpoint — change 5
+
+Open `Assets/_Project/Scenes/Medieval05_MasonryParticles.unity`. This checkpoint replaces the earlier uniform brick burst with three complementary layers: faceted stone chips that spray from the struck face and tumble/fall, faint expanding powder puffs, and a few brief velocity-aligned brass glints. The existing flash, four carved break pieces, impact score labels, UI, audio and castle visuals remain in place.
+
+`MasonryParticles/MasonryParticleFeedback.cs` listens only to `BrickDestroyed` and score resets. A new native URP 2D shader supplies soft dust, clipped/beveled chip silhouettes and narrow spark masks, with three separate material assets. No image texture or downloaded media is needed. Dust and chips draw behind the ball; short, narrow sparks add a metal accent without a full-screen flash. Sparks have zero camera-velocity stretching, ready for the later camera-shake pass.
+
+| Setting on `GameFeel - Masonry Particles 05` | Default |
+|---|---:|
+| Pool Size | 8 burst slots / 24 ParticleSystems |
+| Chip / Dust / Spark Count | 8 / 3 / 4 per break |
+| Intensity | 1.0 |
+| Dust Opacity | 0.16 |
+| Chip lifetime | 0.24–0.40 s |
+| Dust lifetime | 0.28–0.42 s |
+| Spark lifetime | 0.13–0.23 s |
+
+At default counts, this pool can hold at most 120 emitted particles at once; the full Inspector limits cap it at 264. Reusing a slot clears its older particles. Emission is manual and event-based, with play-on-awake, looping and automatic emission disabled. The three systems use fixed internal seeds plus a separate cosmetic System.Random stream, preserving gameplay randomness. No scene objects or materials are created per hit. Disabling/resetting feedback clears every system.
+
+The new scene replaces the old BrickBurstFeedback component, so the old burst does not stack on top. All older scenes, feedback scripts, shaders/materials, brick prefabs and gameplay/physics components are unchanged. Stop Play before changing pool size. Set a layer count to zero to disable/isolate it. Count, intensity and opacity settings apply to subsequent hits; disabling MasonryParticleFeedback leaves the separate break animation, score feedback and audio active.
+
+Validation: C# syntax, scene/reference/material/metadata checks, frozen gameplay/physics/break-animation comparisons, particle caps, event lifecycle and procedural-mask bounds checks pass. Unity is not available here: engine/shader compilation, actual particle appearance, motion, layering, frame rate and playtesting still require TESTING.md. Source checks do not establish a Unity render result.
+
+Next checkpoint: restrained life-loss camera shake and brick reactions, each applied only to presentation in a new scene.
 
 ## Brick break checkpoint — change 4
 
@@ -208,7 +232,7 @@ Keep game audio audible alongside narration. Different ball trajectories between
 
 ## AI use
 
-OpenAI ChatGPT/Codex assisted with planning and debugging, the five core feedback components, procedural audio and shaders, scene wiring, optional Arcade/Abilities/Levels gameplay, medieval menus/HUD and font subset, stone bricks/castle walls, pooled break animation and impact scores, source/rule checks, and documentation. No completed JuiceLab feedback modules were imported.
+OpenAI ChatGPT/Codex assisted with planning and debugging, the five core feedback components, procedural audio and shaders, scene wiring, optional Arcade/Abilities/Levels gameplay, medieval menus/HUD and font subset, stone bricks/castle walls, pooled break animation and impact scores, layered masonry particles, source/rule checks, and documentation. No completed JuiceLab feedback modules were imported.
 
 Student review, Unity tests, and revisions: **[Describe the tests and changes you actually performed. Do not submit this placeholder.]**
 
