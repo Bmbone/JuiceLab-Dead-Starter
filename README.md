@@ -15,18 +15,12 @@ The project combines particle effects, reactive animation, event-based sound and
 
 1. Add the repository folder containing `Assets`, `Packages` and `ProjectSettings` to Unity Hub.
 2. Open it with **Unity 6000.3.2f1** and allow package import to complete.
-3. Open `Assets/_Project/Scenes/Medieval14_GiantGripVFX.unity`, the final polished scene and first entry in Build Settings.
+3. Open [Assets/_Project/Scenes/After.unity](Assets/_Project/Scenes/After.unity), the final polished scene and sole entry in Build Settings.
 4. Set Game view to **16:9**, press Play, then select a level and difficulty.
 
-**After** is the final project name. Scene filenames retain the development checkpoints.
+**After** is the final project and scene name. The repository contains one scene: `Assets/_Project/Scenes/After.unity`. It includes the complete medieval presentation, level/difficulty selection and abilities. Earlier development scenes have been removed from the current branch; their revisions remain in Git history.
 
-| Version | Scene | Description |
-|---|---|---|
-| Before | [Before.unity](Assets/_Project/Scenes/Before.unity) | Original unpolished starter. |
-| Feedback comparison | [After.unity](Assets/_Project/Scenes/After.unity) | Five feedback improvements with the original gameplay rules. |
-| Final version | [Medieval14_GiantGripVFX.unity](Assets/_Project/Scenes/Medieval14_GiantGripVFX.unity) | Complete medieval presentation, level/difficulty selection and abilities. |
-
-The original Before/After comparison preserves the starter's layout, speed, controls, collision shapes, scoring and lives behavior. The final version includes additional gameplay systems and is retained separately from that comparison.
+The display font is stored with Git LFS. A Git checkout with LFS support retrieves the font asset; `git lfs pull` downloads it when needed.
 
 ## Controls
 
@@ -48,7 +42,7 @@ Paths in this table are relative to `Assets/_Project`.
 | Improvement | Trigger | Implementation | Purpose |
 |---|---|---|---|
 | Brick impact | `GameEvents.BrickDestroyed` | `Feedback/BrickBurstFeedback.cs`; final `MasonryParticles/MasonryParticleFeedback.cs` | Colored particles and masonry fragments confirm destruction. |
-| Reactive animation | `GameEvents.BallHitPaddle` | `Feedback/PaddleSquashFeedback.cs`; paddle visual child | A short squash and rebound make contact feel bouncy without changing the comparison scene's collider. |
+| Reactive animation | `GameEvents.BallHitPaddle` | `Feedback/PaddleSquashFeedback.cs`; paddle visual child | A short squash and rebound make contact feel bouncy without changing its collider. |
 | Event-based audio | Paddle contact, brick destruction and ball loss | `Feedback/EventAudioFeedback.cs`; final `CastleAudio/CastleAudioFeedback.cs` | Distinct sounds communicate contact, reward and failure. The three required sounds form one improvement. |
 | Interface feedback | Positive `ScoreChanged` event | `Feedback/ScorePopFeedback.cs`; final `Presentation/MedievalScoreFeedback.cs` | A brief scale/color/lift pulse and floating gain label emphasize earned points. |
 | Ball trail | Ball movement; cleared on life loss/reset | `Feedback/BallTrailFeedback.cs` | A short, tapered trail improves motion readability. |
@@ -94,15 +88,15 @@ The hotbar displays readiness, active duration and cooldown. A lost life cancels
 
 ## Design and implementation
 
-Feedback is separated from the round rules through `GameEvents`. Score presentation observes changes while the session owns the numeric score. Collision reactions animate visual children rather than the original comparison physics objects.
+Feedback is separated from the round rules through `GameEvents`. Score presentation observes changes while the session owns the numeric score. Collision reactions animate visual children rather than physics objects; Giant's Grip deliberately changes paddle width as a separate ability.
 
 The final score pulse uses a **1.10 peak scale**, **8-unit upward lift** and **0.28-second duration**. Its gain popup lasts **0.55 seconds**. Later ability effects read existing projectile, shield and paddle state, and reuse fixed visual pools. Giant's Grip decorations calculate the collider shape from the current transform to avoid depending on cached physics bounds.
 
-Development progressed through individual scenes so that earlier implementations remain available for comparison. Level/difficulty selection and abilities are documented as extensions beyond the assignment's unchanged-gameplay comparison.
+Development progressed through individual scenes before the completed version was consolidated into `After.unity`. Earlier versions remain available in Git history. Level/difficulty selection and abilities are gameplay extensions beyond the original feedback-only comparison.
 
 ## Validation
 
-The latest recorded automated pass completed **19 source/asset tests**: 12 existing project checks and 7 additional scene, metadata, material and audio-payload checks. C# syntax parsing covered 63 scripts. Additional checks covered serialized data, shader-mask bounds, font metrics and layout calculations.
+The current single-scene configuration passes **13 source/asset tests**: 6 project checks and 7 scene, metadata, material and audio-payload checks. The checks target `After.unity` and its single Build Settings entry. C# syntax parsing covers 63 scripts. Earlier implementation passes also included shader-mask samples, font metrics and layout calculations.
 
 Unity C#/shader compilation, runtime input/physics, visual/audio review and target-build performance remain unverified in the implementation environment. Recorded peer-playtest findings are not included in the current validation results.
 

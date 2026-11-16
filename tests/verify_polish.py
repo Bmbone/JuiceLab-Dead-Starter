@@ -6,8 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ASSETS = ROOT / "Assets"
-LATEST = ASSETS / "_Project/Scenes/Medieval14_GiantGripVFX.unity"
-PREVIOUS = ASSETS / "_Project/Scenes/Medieval13_RuneShieldVFX.unity"
+LATEST = ASSETS / "_Project/Scenes/After.unity"
 VFX = ASSETS / "_Project/GiantGripVfx"
 
 
@@ -43,20 +42,22 @@ class PolishChecks(unittest.TestCase):
     def test_build_scenes_have_matching_metadata(self):
         text = (ROOT / "ProjectSettings/EditorBuildSettings.asset").read_text()
         scenes = re.findall(r"path: (Assets/.*?\.unity)\n\s+guid: (\w+)", text)
-        self.assertEqual(len(scenes), 20)
+        self.assertEqual(len(scenes), 1)
         self.assertEqual(ROOT / scenes[0][0], LATEST)
         for path, key in scenes:
             self.assertTrue((ROOT / path).is_file())
             self.assertEqual(guid(Path(str(ROOT / path) + ".meta")), key)
 
-    def test_latest_scene_preserves_the_previous_checkpoint(self):
-        previous, latest = dict(blocks(PREVIOUS)), dict(blocks(LATEST))
-        self.assertEqual(set(latest) - set(previous), {"1901802000", "1901802001", "1901802002"})
-        for key, expected in previous.items():
-            actual = latest[key]
-            if key == "9223372036854775807":
-                actual = actual.replace("  - {fileID: 1901802001}\n", "")
-            self.assertEqual(actual, expected, f"Previous scene object changed: {key}")
+    def test_after_scene_roots_match_root_transforms(self):
+        scene = dict(blocks(LATEST))
+        root_transforms = {key for key, body in scene.items()
+                           if body.startswith(("Transform:\n", "RectTransform:\n"))
+                           and "m_Father: {fileID: 0}" in body}
+        root_records = [body for body in scene.values() if body.startswith("SceneRoots:\n")]
+        self.assertEqual(len(root_records), 1)
+        listed_roots = re.findall(r"\{fileID: (-?\d+)\}", root_records[0])
+        self.assertEqual(len(listed_roots), len(set(listed_roots)))
+        self.assertEqual(set(listed_roots), root_transforms)
 
     def test_latest_project_scripts_and_required_references(self):
         by_guid = {guid(meta): Path(str(meta)[:-5]) for meta in ASSETS.rglob("*.cs.meta")}
