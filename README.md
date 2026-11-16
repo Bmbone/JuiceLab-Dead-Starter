@@ -6,11 +6,35 @@ Jehad Alharbi — 202248820
 
 1. Open this repository's root folder in Unity Hub using **6000.3.2f1**.
 2. Allow the existing packages to import. No extra tweening or audio packages are required.
-3. Open `Assets/_Project/Scenes/MedievalUI01_Score.unity` for the latest playable checkpoint. It is first in Build Settings; Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
+3. Open `Assets/_Project/Scenes/MedievalUI02_RoyalInterface.unity` for the latest playable checkpoint. It is first in Build Settings; UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
 4. Select 16:9 in Game view, press Play, choose a level, then choose Easy, Medium, or Hard. The ball starts only after both selections are made.
 5. Move with the mouse, A/D, or the left/right arrows. Cast with **1 or Space**, **2**, and **3**, or click the hotbar buttons. Menus support mouse selection or arrow keys and Enter.
 
 For the assignment comparison, open `Assets/_Project/Scenes/Before.unity` or `Assets/_Project/Scenes/After.unity`. Their gameplay rules remain unchanged: the ball launches automatically, the final lost life resets score/lives, and stopping/restarting Play restores the board. Arcade adds the menu/difficulty rules, Abilities adds spells, and Levels adds layout selection. Earlier scene assets and scripts remain unchanged.
+
+## Royal interface checkpoint — change 2
+
+Open `Assets/_Project/Scenes/MedievalUI02_RoyalInterface.unity`. This UI-only checkpoint uses the castle artwork from the latest Medieval scene, with a framed dark jade/gold menu, an imported serif display typeface, larger text, three horizontal level cards with accurate miniature board previews, colored difficulty cards, larger result screens, and subtle button hover/press motion. The original buttons and their callbacks still control level selection, difficulty, retry, next level and returning to the menu.
+
+| Element | New reference size (1920x1080 Canvas) |
+|---|---:|
+| Main and result headings | 116 pt |
+| Level card headings | 42 pt |
+| Difficulty card headings | 48 pt |
+| Menu descriptions / result buttons | 34 pt |
+| Actual score / lives | 52 / 48 pt |
+| In-game level heading / difficulty | 40 / 26 pt |
+| Spell names / status | 24 / 23 pt |
+
+The three top panels distinguish score, level/difficulty and lives. UI01's gold score flash, upward pulse and combined gain popup are retained, with a larger gain label. The spell bar is wider and taller. Decorative graphics do not intercept pointer input; explicit arrow-key navigation connects the horizontal cards and existing result buttons.
+
+`Presentation/MedievalInterfacePolish.cs` waits for LevelMenuView to construct its hierarchy, then styles it once and refreshes the active screen/navigation as selections change. `MedievalButtonMotion.cs` animates only UI transforms. `Fonts/BrickkeepDisplay-Bold.ttf` is a renamed ASCII subset of Liberation Serif Bold under SIL OFL 1.1; its license, copyright and modification note are included. A dynamic TextMesh Pro display atlas is created once; body text uses the original Liberation Sans.
+
+The latest Medieval scene had a zero-scale HUD and a corner-pivot background sprite. Only the new scene restores the HUD's unit scale and centers/covers the camera with the existing artwork behind gameplay. All gameplay adapters, brick prefabs, ball speed, scoring, lives, layouts and earlier scenes are unchanged from the current main branch.
+
+Validation: C# syntax parsing, Unity scene YAML/reference comparisons, serialized-field/asset metadata checks and font text-width checks pass. Unity is not installed here, so editor import/compilation, display-atlas creation, visual layout, actual input and menu transitions still require the checks in TESTING.md. No new gameplay or real-person playtest result is claimed.
+
+Next requested work remains separate: brick materials/design, break/recoil animation, world-space score popups, richer destruction particles, and restrained screen/brick shake. Stop at this UI checkpoint for review before the next scene.
 
 ## Score UI checkpoint — change 1
 
@@ -137,7 +161,7 @@ Keep game audio audible alongside narration. Different ball trajectories between
 
 ## AI use
 
-OpenAI ChatGPT/Codex assisted with interpreting the brief, inspecting the starter, writing the five feedback scripts, original procedural audio, the simple feedback shader/material, After scene wiring, the optional Arcade mode and menus, the Abilities checkpoint (gameplay, hotbar, procedural visuals and audio), the Levels checkpoint (three layouts, selection, per-level difficulty and progression), executable rule tests, source-level checks, documentation, and the isolated medieval score UI/feedback checkpoint. No completed JuiceLab feedback modules were imported.
+OpenAI ChatGPT/Codex assisted with interpreting the brief, inspecting the starter, writing the five feedback scripts, original procedural audio, the simple feedback shader/material, After scene wiring, the optional Arcade mode and menus, the Abilities checkpoint (gameplay, hotbar, procedural visuals and audio), the Levels checkpoint (three layouts, selection, per-level difficulty and progression), executable rule tests, source-level checks, documentation, the isolated medieval score UI/feedback checkpoint, and the larger Royal Interface menus/HUD including the renamed font subset. No completed JuiceLab feedback modules were imported.
 
 Student review, Unity tests, and revisions: **[Describe the tests and changes you actually performed. Do not submit this placeholder.]**
 

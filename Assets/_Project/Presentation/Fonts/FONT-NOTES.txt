@@ -1,0 +1,1 @@
+Brickkeep Display Bold is an ASCII subset of Liberation Serif Bold, renamed to respect its Reserved Font Name. Copyright and the SIL Open Font License 1.1 are retained in FONT-LICENSE.txt and the font metadata. Generated for this project using fontTools; used for menu/HUD headings. Existing Liberation Sans remains the body font.

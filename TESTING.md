@@ -1,5 +1,19 @@
 # Unity verification and submission checklist
 
+## Royal Interface checkpoint
+
+- Open `Assets/_Project/Scenes/MedievalUI02_RoyalInterface.unity` in Unity 6000.3.2f1. Let the new font and scripts import. Check Console for engine/shader/font errors.
+- Test at 1920x1080 and 1280x720 in 16:9. Menu headings should use the new serif typeface; body text should remain clear. No clipped glyphs, placeholder squares or overlapping labels should appear.
+- Check all three level-card previews match their formations, then exercise all nine level/difficulty combinations. The same original callbacks should run.
+- Navigate cards with Left/Right and Up/Down, then Enter. Back, Next Level, Try Again and Return to Main Menu should all remain reachable by keyboard and mouse. Hover/press scale must settle and reset when a button is hidden.
+- Lose all lives and retry the same board/mode. Win levels 1/2 and continue to the next difficulty selector; win Crown and return to the menu. Repeat transitions and verify panels, decorations and button listeners do not duplicate.
+- During play, score, level/difficulty and lives should be readable in separate top panels. Check exact totals and the retained score flash/pulse/combined +points label during rapid hits.
+- Check the wider spell bar, active/cooldown status, mouse clicks and original key bindings. Move the pointer over decorative frames and labels: they must not interrupt paddle tracking.
+- Resize the Game view: the corner-pivot castle artwork should cover the viewport, stay centered and remain behind gameplay. Verify ball/bricks are never hidden by it.
+- Stop/restart Play twice and inspect for stale runtime font/material objects or duplicate motion. Reopen UI01 and older scenes to verify their versions remain intact.
+
+C# syntax and source/asset/text-metric checks pass. Unity engine compilation, font-atlas creation, actual layout and input/play-mode verification are pending. Brick styling, break animations, world-space score popups and shake are intentionally queued for later scene checkpoints.
+
 ## Medieval score UI checkpoint
 
 - Open `Assets/_Project/Scenes/MedievalUI01_Score.unity`, select a level/difficulty, and test at 1920x1080 and 1280x720 in 16:9. The framed score must sit above the bricks without overlapping the level label or lives.

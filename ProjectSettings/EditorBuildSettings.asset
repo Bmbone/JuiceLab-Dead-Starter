@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/_Project/Scenes/MedievalUI02_RoyalInterface.unity
+    guid: db505d9625cf4eacab8e5c7185885834
+  - enabled: 1
     path: Assets/_Project/Scenes/MedievalUI01_Score.unity
     guid: c451fe09fc4145fa8c595bd5e0635ba0
   - enabled: 1
