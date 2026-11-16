@@ -1,5 +1,21 @@
 # Unity verification and submission checklist
 
+## Ball and paddle checkpoint
+
+- Open `Assets/_Project/Scenes/Medieval07_BallPaddle.unity` in Unity 6000.3.2f1. Allow the shader/materials/scripts to import. Check Console for C# or shader errors; the ball/paddle/halo/rings must not render pink.
+- At 1920x1080 and 1280x720, inspect the wood grain, bevel, brass caps/rivets and jade inlays. Check the ivory/gold orb is easy to follow over the artwork and masonry particles, with a faint halo rather than an opaque billboard square.
+- Play all three difficulties on each formation. Confirm unchanged ball speeds (9/12/15), input, three starting lives, ten points per brick and exact maximum scores (280/260/240). Compare collider/rigidbody/root transforms with ImpactMotion.
+- Hit the paddle at center and both edges, walls and individual bricks. Orb compression should follow the contact normal, glint briefly and return exactly to its child scale of one. The paddle should rebound quickly and settle; rapid contacts must not accumulate scale.
+- Inspect the Ball/Paddle source SpriteRenderers: forceRenderingOff may be true, but enabled state, original sprites/materials, tint and full bounds remain available. Visual proxies must add no colliders or Rigidbody2Ds. There should be exactly one visible ball and paddle.
+- Cast Fireball through a remote cluster. Its original flame/core material and piercing/scoring must remain correct, and a remote break must not flash/compress the orb. Real ball/brick contacts must pulse it once, including corner hits; verify actual collision callback delivery in Unity.
+- Activate Giant's Grip. Check its existing width multiplier, green ability tint and edge bounces. Jade inlays should brighten while brass caps keep their width. The skin should follow paddle rebound and expansion without moving the root or resizing its collider itself.
+- Repeated paddle hits should reuse four ring renderers, each fading in 0.16 s. Object/material counts must stay constant during rapid play. Check ring layering, the thinner gold trail and no visible trail bridge after losing a life.
+- Set Contact Strength to 0 or disable Enable Contact Feedback mid-hit: new glints/compression/rings should clear while skins remain. Disable PaddleSquashFeedback separately to remove the retained paddle rebound; set Halo Opacity to 0 to hide the halo.
+- Disable/re-enable RelicGearFeedback mid-effect: original source rendering should restore and return to one skinned child on re-enable. Test loss/retry, win/Next Level and menu transitions while contacts are active; new rounds must have no stale flash, ring or squash.
+- Stop/restart Play twice and inspect for stale listeners, growing hierarchies or duplicate effects. Reopen ImpactMotion and earlier scenes to confirm their original ball/paddle and trail appearance remains intact.
+
+C# syntax, scene/material/GUID references, frozen assets and physics/gameplay/source-renderer blocks, bounded pulse/scale/ring timing and lifecycle source checks pass. Unity engine/shader compilation, actual graphics, collision callback delivery, rendering visibility/bounds, input and play-mode checks above remain pending.
+
 ## Impact motion checkpoint
 
 - Open `Assets/_Project/Scenes/Medieval06_ImpactMotion.unity` in Unity 6000.3.2f1. Let scripts import, check Console, and verify ImpactMotionFeedback has camera/session/background references.

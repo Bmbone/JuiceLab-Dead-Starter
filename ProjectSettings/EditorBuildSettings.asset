@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/_Project/Scenes/Medieval07_BallPaddle.unity
+    guid: 5687d2cfd4a8417bbb9feb47317610b7
+  - enabled: 1
     path: Assets/_Project/Scenes/Medieval06_ImpactMotion.unity
     guid: efd81a43d0c34b36a5c17a49f0852fc8
   - enabled: 1

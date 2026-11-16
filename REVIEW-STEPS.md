@@ -120,3 +120,16 @@ Each stage is pushed separately to main. Stop Play before pulling and open the s
 - Toggle each motion setting and disable the controller/reaction component mid-pulse. Check exact rest recovery, visibility, current brick tint and cleanup. Test loss/retry, win/Next Level, menu transitions and stop/restart Play twice.
 - Validation: C# syntax, scene/prefab/reference/isolation, pulse bounds, clearance/overscan and callback lifecycle/source checks pass. Actual Unity compilation, render callbacks, renderer bounds, input behavior and visual/play-mode verification are pending.
 - Stop here for review. Ball/paddle polish and event/result audio remain the next checkpoints.
+
+## 13. Castle paddle, enchanted orb and contact feedback
+
+- New scene: `Assets/_Project/Scenes/Medieval07_BallPaddle.unity`, first in Build Settings. All earlier scenes and Assets files remain unchanged.
+- Added a wood-grain paddle with rounded brass caps, rivets and jade inlays, plus a shaded ivory/gold orb, faint halo and a shorter/thinner gold trail. Paddle rebound is smaller and faster in this scene only.
+- Paddle/wall/actual brick contacts produce a short bounded orb compression/glint. Paddle contacts also use a four-slot expanding-ring pool. Only visual children move; original colliders, root transforms, speeds, score, lives and input remain unchanged.
+- Original source renderers keep their sprite/material/tint/bounds while their rendering is hidden. This preserves the material used by Fireball. Giant's Grip keeps its existing widened collider and brightens the jade inlay. The brick observer cannot award points or change velocity; remote spell hits do not trigger orb feedback.
+- Review: stop Play, pull main and open **Medieval07_BallPaddle**. Compare graphics with ImpactMotion at 1920x1080 and 1280x720. Check wood/caps/rivets, orb shading, restrained halo and a clear ball silhouette over the castle background and debris.
+- Test central/edge paddle hits, walls and bricks in Easy, Medium and Hard. Contact animation must settle, paddle/ball controls and speed must match, and rapid hits must never stack the squash or grow the four-ring pool.
+- Cast Fireball and Giant's Grip. Fireball must retain its original flame/core look and score normally; remote brick hits should not pulse the orb. Verify widened paddle edge bounces and fixed-width brass caps/inlays.
+- Test life loss, retry, Next Level and return/menu mid-effect. Toggle Contact Feedback/Strength, set Halo Opacity to zero, and disable/re-enable the skin controller. The original rendering must return on disable, new effects must reset, and no duplicate bodies/rings should appear.
+- Validation: C# syntax, scene/material/metadata and source preservation, fixed physics/gameplay/source-renderer blocks, pulse/scale/pool bounds and lifecycle checks pass. Unity engine/shader compilation, actual rendering/collisions/input and play-mode review remain pending.
+- Stop here for review. Richer impact and separate life-loss/victory/game-over audio remain the next checkpoint.

@@ -6,11 +6,37 @@ Jehad Alharbi — 202248820
 
 1. Open this repository's root folder in Unity Hub using **6000.3.2f1**.
 2. Allow the existing packages to import. No extra tweening or audio packages are required.
-3. Open `Assets/_Project/Scenes/Medieval06_ImpactMotion.unity` for the latest playable checkpoint. It is first in Build Settings; MasonryParticles, BrickBreak, StoneCourt, UI02, UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
+3. Open `Assets/_Project/Scenes/Medieval07_BallPaddle.unity` for the latest checkpoint. It is first in Build Settings; ImpactMotion, MasonryParticles, BrickBreak, StoneCourt, UI02, UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
 4. Select 16:9 in Game view, press Play, choose a level, then choose Easy, Medium, or Hard. The ball starts only after both selections are made.
 5. Move with the mouse, A/D, or the left/right arrows. Cast with **1 or Space**, **2**, and **3**, or click the hotbar buttons. Menus support mouse selection or arrow keys and Enter.
 
 For the assignment comparison, open `Assets/_Project/Scenes/Before.unity` or `Assets/_Project/Scenes/After.unity`. Their gameplay rules remain unchanged: the ball launches automatically, the final lost life resets score/lives, and stopping/restarting Play restores the board. Arcade adds the menu/difficulty rules, Abilities adds spells, and Levels adds layout selection. Earlier scene assets and scripts remain unchanged.
+
+## Ball and paddle checkpoint — change 7
+
+Open `Assets/_Project/Scenes/Medieval07_BallPaddle.unity`. The paddle now has carved wood grain, beveled brass endcaps, rivets and jade rune inlays. The ball is a shaded ivory-and-gold orb with small jade markings and a faint warm halo. A thinner, shorter gold trail matches the castle palette. Ball contacts add a brief directional visual compression and surface glint; paddle contacts also emit a small expanding gold ring and a sharper, reduced paddle rebound.
+
+The new `RelicGear` shader and four shared materials draw these details without downloaded textures. `RelicGearFeedback.cs` builds a collider-free rendering child under each existing visual, plus a halo and a four-slot contact-ring pool. It hides original rendering with forceRenderingOff while preserving each original renderer's sprite, material, tint and bounds for the existing ability systems. In particular, Fireball continues to use the original ball material. Giant's Grip retains its existing width and tint behavior, which brightens the new jade inlays; brass caps keep their world-space width.
+
+`BallContactRelay.cs` observes actual ball/brick collision contacts and only forwards their normal to the visual controller. Paddle/wall contacts use the existing events. Remote Fireball destruction does not masquerade as a collision with the ball. No physics response, damage or scoring is added by the observer. Contact pulses restart within a fixed bound rather than accumulating scale; resets clear rings and restore the orb child to rest.
+
+| Setting on `GameFeel - Relic Gear 07` | Default |
+|---|---:|
+| RelicGearFeedback / Enable Contact Feedback | On |
+| Contact Strength | 1 (0 disables new flashes, ball compression and rings) |
+| Ball Squash / Contact Duration | 0.10 / 0.14 s |
+| Halo Opacity | 0.24 |
+| PaddleSquashFeedback / Squash Amount / Duration | 0.10 / 0.18 s |
+| BallTrailFeedback / Trail Duration / Width | 0.10 s / 0.13 world units |
+| Contact ring pool / Lifetime | 4 slots / 0.16 s |
+
+The contact toggle leaves the skins and halo visible. PaddleSquashFeedback is an independent retained component; disable it separately to remove the paddle rebound. Disable RelicGearFeedback to restore the original ball/paddle rendering. Changing Halo Opacity to zero hides the halo. Loss, retry/menu resets and disabling clear the new contact effects; resource counts stay fixed during play.
+
+All existing scene and asset files remain frozen. The new scene adds two presentation components and adjusts only its own serialized paddle-squash/trail settings. Ball/paddle/camera transforms, source sprites/materials, colliders, speeds, controls, lives, score, formations, abilities, result timing, earlier destruction effects and audio retain the preceding checkpoint's configuration.
+
+Validation: new C# syntax, scene/material/GUID references, preserved physics/source-renderer/gameplay blocks, pulse/scale/ring bounds and source/event lifecycle checks pass. Unity is unavailable here: engine/shader compilation, actual graphics, ball readability, real collision delivery and play-mode verification remain pending. Follow TESTING.md before treating this checkpoint as runtime verified.
+
+Next checkpoint: richer impact sounds and distinct life-loss, victory and game-over cues in another new scene.
 
 ## Impact motion checkpoint — change 6
 
@@ -262,7 +288,7 @@ Keep game audio audible alongside narration. Different ball trajectories between
 
 ## AI use
 
-OpenAI ChatGPT/Codex assisted with planning and debugging, the five core feedback components, procedural audio and shaders, scene wiring, optional Arcade/Abilities/Levels gameplay, medieval menus/HUD and font subset, stone bricks/castle walls, pooled break animation and impact scores, layered masonry particles, render-only camera shake and child-renderer brick reactions, source/rule checks, and documentation. No completed JuiceLab feedback modules were imported.
+OpenAI ChatGPT/Codex assisted with planning and debugging, the five core feedback components, procedural audio and shaders, scene wiring, optional Arcade/Abilities/Levels gameplay, medieval menus/HUD and font subset, stone bricks/castle walls, pooled break animation and impact scores, layered masonry particles, render-only camera shake and child-renderer brick reactions, wood/brass paddle and orb surfaces with pooled contact feedback, source/rule checks, and documentation. No completed JuiceLab feedback modules were imported.
 
 Student review, Unity tests, and revisions: **[Describe the tests and changes you actually performed. Do not submit this placeholder.]**
 
