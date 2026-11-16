@@ -1,5 +1,21 @@
 # Unity verification and submission checklist
 
+## Abilities checkpoint
+
+- Open `Assets/_Project/Scenes/Abilities.unity` and start a difficulty. The three hotbar abilities should all be READY, and remain usable across Easy/Medium/Hard.
+- Press 1 or Space, and also try clicking Fireball. A single flame should travel straight upward through several bricks, with a short orange trail and whoosh. Each brick still awards 10 points; rapid/simultaneous ball/fireball hits must not double-score.
+- Press/release Fireball repeatedly during its 5-second cooldown. It should stay unavailable until ready, with a countdown and recharge bar. Hold a key: it must not cast repeatedly. Clicking another hotbar ability must not change what Space does.
+- Press 2 or click Giant's Grip. The paddle should become 60% wider and green for 6 seconds, then return exactly to its normal size/color. Bounce near both expanded edges; aim should use the expanded collider width. Move to each wall: the expanded paddle must remain inside the court.
+- Verify Giant's Grip cannot stack or recast during its 12-second cooldown.
+- Press 3 or click Rune Shield. A cyan line should appear below the paddle. Deliberately miss: one descending ball should reflect upward, with a flash/cue and no lost life, keeping the selected speed. A second miss must lose a life. Upward movement must not consume the shield.
+- Let another shield expire unused after 8 seconds. It should disappear and still require the remainder of the 14-second cooldown. Casting after a ball has already passed the line must not teleport it back.
+- Cast multiple abilities together. Lose a life: all active buffs and the fireball should clear, while cooldowns keep counting. Retry/new difficulty must instead restore every ability to READY.
+- Use the fireball to break the final brick. Victory must appear once with the correct final score; no spell remains active behind results. Repeat the loss/retry and return-to-menu flow with abilities active.
+- Check keyboard and hotbar buttons at 1920x1080 and 1280x720 in 16:9. The hotbar should sit below the paddle without changing the score/lives UI. Mute audio and verify casts, duration, shield use and cooldowns remain clear.
+- Reopen Arcade, After and Before: no abilities or changed rules should appear in those checkpoints.
+
+Automated ability rules: `dotnet run --project tests/AbilityChecks.csproj` (.NET 8). Source/asset checks: `python3 tests/verify_project.py` (eleven checks, including frozen earlier assets). Existing round rules: `dotnet run --project tests/ArcadeRoundChecks.csproj`. These do not replace Unity engine compilation and the play-mode checks above.
+
 ## Arcade main menu and complete runs
 
 - Open `Assets/_Project/Scenes/Arcade.unity` in Unity 6000.3.2f1. Press Play: the main menu should appear, with no moving ball or active paddle behind it.
@@ -14,7 +30,7 @@
 - Test button selection with mouse and with arrow keys/Enter. Check the main menu, Game Over and Victory at 1920x1080 and 1280x720 in 16:9.
 - Reopen Before and After separately. Their original auto-launch and life-reset behavior must remain intact.
 
-Automated checks: `python3 tests/verify_project.py` (nine source/asset checks) and `dotnet run --project tests/ArcadeRoundChecks.csproj` (.NET 8, 7,868 rule assertions). These pass in the implementation environment. Unity import, C# engine compilation, physics, UI interaction and visual/audio checks above still require the editor.
+Automated checks: `python3 tests/verify_project.py` (eleven source/asset checks) and `dotnet run --project tests/ArcadeRoundChecks.csproj` (.NET 8, 7,868 rule assertions). These pass in the implementation environment. Unity import, C# engine compilation, physics, UI interaction and visual/audio checks above still require the editor.
 
 ## Import and first run
 

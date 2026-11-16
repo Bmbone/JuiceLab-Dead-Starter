@@ -1,6 +1,6 @@
 # Review checkpoints
 
-Each stage is pushed separately to main. Use GitHub commit history to inspect a stage; in Unity, stop Play before pulling and open the After scene.
+Each stage is pushed separately to main. Stop Play before pulling and open the scene named in its checkpoint below. From the Abilities checkpoint onward, each new feature checkpoint gets a new scene; earlier scenes and their gameplay adapters stay frozen.
 
 ## 1. Starter repairs
 
@@ -33,3 +33,12 @@ Each stage is pushed separately to main. Use GitHub commit history to inspect a 
 - Before/After, their gameplay scripts, their brick prefab, and the five feedback implementations are untouched. Arcade has its own round rules and gameplay adapters, reusing shared physics assets and feedback events.
 - Validation: nine source checks and 7,868 compiled C# rule assertions pass, including 300 randomized complete runs. Unity import/play-mode and menu interaction checks remain pending; see TESTING.md.
 - Review: stop Play, pull main, open Arcade (not After), and exercise all three difficulties, a complete loss/retry, and a complete win/return. This checkpoint contains only the requested run flow; further VFX work waits for review.
+
+## 5. Three medieval abilities
+
+- New scene: `Assets/_Project/Scenes/Abilities.unity`, registered first in Build Settings. Arcade, After and Before and all their existing Assets are unchanged byte for byte.
+- Fireball (1/Space, 5-second cooldown) pierces multiple bricks. Giant's Grip (2, 12-second cooldown) widens the paddle by 60% for 6 seconds. Rune Shield (3, 14-second cooldown) blocks one miss and expires after 8 seconds.
+- Added clickable hotbar buttons, ready/active/cooldown text and recharge bars, a flame core/trail, paddle tint, a shield line/deflection flash, and synthesized cast/deflection cues with bounded audio voices.
+- Ball and fireball share a guarded damage path; simultaneous hits cannot double-score. Shield reflection keeps the difficulty speed. A life loss cancels effects without refilling cooldowns; retry/menu/result transitions reset all spell state and visuals.
+- Validation: eleven source/asset checks, compiled ability-rule checks (cooldown stress, shield crossings, duplicate hits, reset behavior), the existing 7,868 round assertions, and C# syntax parsing. Unity import, engine compilation, physics, UI and audio testing still require the editor.
+- Review: stop Play, pull main, open Abilities and select a difficulty. Cast all three abilities with keys and clicks; verify each cooldown, shield consumption, expanded-paddle edges, fireball scoring, retry, win and menu resets. Stop here for review before another scene is created.

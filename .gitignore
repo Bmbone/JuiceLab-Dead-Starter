@@ -57,6 +57,7 @@ ExportedObj/
 .consulo/
 *.csproj
 !/tests/ArcadeRoundChecks.csproj
+!/tests/AbilityChecks.csproj
 *.unityproj
 *.sln
 *.slnx

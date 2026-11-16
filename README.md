@@ -6,11 +6,25 @@ Jehad Alharbi — 202248820
 
 1. Open this repository's root folder in Unity Hub using **6000.3.2f1**.
 2. Allow the existing packages to import. No extra tweening or audio packages are required.
-3. Open `Assets/_Project/Scenes/Arcade.unity` for the playable game with its main menu. This is also the first scene in Build Settings.
+3. Open `Assets/_Project/Scenes/Abilities.unity` for the latest playable checkpoint. It is the first scene in Build Settings; `Arcade.unity` retains the previous difficulty/menu version.
 4. Select 16:9 in Game view, press Play, and choose Easy, Medium, or Hard. The ball starts only after a difficulty is selected.
-5. Move with the mouse, A/D, or the left/right arrows. Menus support mouse selection or arrow keys and Enter.
+5. Move with the mouse, A/D, or the left/right arrows. Cast with **1 or Space**, **2**, and **3**, or click the hotbar buttons. Menus support mouse selection or arrow keys and Enter.
 
-For the assignment comparison, open `Assets/_Project/Scenes/Before.unity` or `Assets/_Project/Scenes/After.unity`. Their gameplay rules remain unchanged: the ball launches automatically, the final lost life resets score/lives, and stopping/restarting Play restores the board. The extra gameplay systems below are isolated in Arcade.
+For the assignment comparison, open `Assets/_Project/Scenes/Before.unity` or `Assets/_Project/Scenes/After.unity`. Their gameplay rules remain unchanged: the ball launches automatically, the final lost life resets score/lives, and stopping/restarting Play restores the board. Arcade adds the menu/difficulty rules; Abilities adds spells in a new scene with its own gameplay adapters. Earlier scene assets and scripts remain unchanged.
+
+## Abilities checkpoint
+
+| Ability | Key | Effect | Cooldown |
+|---|---|---|---:|
+| Fireball | 1 / Space | Shoots upward through multiple bricks with a flame core, trail, impact bursts and a whoosh. | 5 s |
+| Giant's Grip | 2 | Makes the paddle 60% wider for 6 seconds, with a green tint and chime. Collision width, bounce angles and movement limits follow its new size. | 12 s |
+| Rune Shield | 3 | Creates a cyan barrier below the paddle. It reflects one downward-crossing ball without losing a life and expires after 8 seconds if unused. | 14 s |
+
+The clickable hotbar shows READY, effect duration, cooldown seconds and recharge bars. All abilities start ready on each new run/retry and have independent cooldowns. A lost life cancels active effects and the fireball while preserving cooldowns; game over, victory and returning to the menu clear the entire ability state. Abilities cannot be used in menus or result screens.
+
+Fireball hits use the same scoring/destruction path as normal ball hits. Each brick awards points once, including simultaneous hits, and fireballs can trigger the normal victory screen. The fireball is reused and its movement is swept to avoid skipping bricks. Shield reflection preserves the chosen ball speed. The existing three difficulties, three lives, retry and menu flow remain available.
+
+This checkpoint has its own scripts in `Assets/_Project/Abilities` and its own `AbilityBrick.prefab`; the previous Arcade/After/Before scenes and their assets stay frozen. Open the scene for the checkpoint you want to compare.
 
 ## Arcade mode
 
@@ -35,7 +49,7 @@ Playful, bouncy, and easy to read. Small, brief reactions make contact feel resp
 
 ## Improvements
 
-The five feedback scripts and rendering assets are in `Assets/_Project/Feedback`. They are already assigned on `GameFeel - After only` in After and `GameFeel - Arcade only` in Arcade.
+The five feedback scripts and rendering assets are in `Assets/_Project/Feedback`. They are already assigned on the `GameFeel` object in After, Arcade and Abilities.
 
 | Improvement | Trigger | Implementation file/object | Purpose |
 |---|---|---|---|
@@ -75,7 +89,7 @@ Have one other person play both scenes. Do not include their name.
 
 Source-level checks can be run with `python3 tests/verify_project.py`. They check baseline preservation, scene wiring, feedback event lifecycle, and new asset GUIDs. They do not compile C#, compile shaders, run Unity, or verify sound/appearance.
 
-The independent round-rule tests run with `dotnet run --project tests/ArcadeRoundChecks.csproj` using the .NET 8 SDK. They compile the actual `ArcadeRound.cs` and pass 7,868 assertions across fixed scenarios and 300 randomized runs. The nine Python source checks also pass. The .NET SDK is only needed for these optional checks, not for opening or playing the Unity project.
+The independent round-rule tests run with `dotnet run --project tests/ArcadeRoundChecks.csproj` using the .NET 8 SDK. They compile the actual `ArcadeRound.cs` and pass 7,868 assertions across fixed scenarios and 300 randomized runs. `dotnet run --project tests/AbilityChecks.csproj` compiles the actual ability timers and brick-health rules and passes cooldown, shield-crossing, reset and duplicate-hit scoring tests. All eleven Python source/asset checks pass, including byte comparisons that freeze the earlier checkpoints. The .NET SDK is only needed for these optional checks, not for opening or playing the Unity project.
 
 Unity is not installed in the implementation environment. Editor import, compilation, runtime behavior, sound balance, and the real-person playtest still require testing in Unity. Use [TESTING.md](TESTING.md) and replace this status with the tests you actually perform before submission.
 
@@ -94,7 +108,7 @@ Keep game audio audible alongside narration. Different ball trajectories between
 
 ## AI use
 
-OpenAI ChatGPT/Codex assisted with interpreting the brief, inspecting the starter, writing the five feedback scripts, original procedural audio, the simple feedback shader/material, After scene wiring, the optional Arcade mode and menus, executable round-rule tests, source-level checks, and documentation. No completed JuiceLab feedback modules were imported.
+OpenAI ChatGPT/Codex assisted with interpreting the brief, inspecting the starter, writing the five feedback scripts, original procedural audio, the simple feedback shader/material, After scene wiring, the optional Arcade mode and menus, the Abilities checkpoint (gameplay, hotbar, procedural visuals and audio), executable rule tests, source-level checks, and documentation. No completed JuiceLab feedback modules were imported.
 
 Student review, Unity tests, and revisions: **[Describe the tests and changes you actually performed. Do not submit this placeholder.]**
 

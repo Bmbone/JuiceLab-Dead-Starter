@@ -82,7 +82,44 @@ class ProjectChecks(unittest.TestCase):
     def test_required_assets_and_build_scenes(self):
         self.assertTrue((ROOT / "Assets/TextMesh Pro/Sprites/EmojiOne.png").read_bytes().startswith(b"\x89PNG\r\n\x1a\n"))
         settings = (ROOT / "ProjectSettings/EditorBuildSettings.asset").read_text()
-        self.assertEqual(re.findall(r"path: (Assets/.*?\.unity)", settings), ["Assets/_Project/Scenes/Arcade.unity", "Assets/_Project/Scenes/After.unity", "Assets/_Project/Scenes/Before.unity"])
+        self.assertEqual(re.findall(r"path: (Assets/.*?\.unity)", settings), ["Assets/_Project/Scenes/Abilities.unity", "Assets/_Project/Scenes/Arcade.unity", "Assets/_Project/Scenes/After.unity", "Assets/_Project/Scenes/Before.unity"])
+
+    def test_previous_scene_checkpoints_are_frozen(self):
+        checkpoint = "d9d36e9fbeb3c3eaf4f158c05adb5d91a3f4e212"
+        paths = subprocess.check_output(["git", "ls-tree", "-r", "--name-only", checkpoint, "Assets"], cwd=ROOT).decode().splitlines()
+        for path in paths:
+            with self.subTest(path=path):
+                expected = subprocess.check_output(["git", "show", f"{checkpoint}:{path}"], cwd=ROOT)
+                self.assertEqual((ROOT / path).read_bytes(), expected)
+
+    def test_abilities_scene_wiring_and_metadata(self):
+        text = (SCENES / "Abilities.unity").read_text()
+        scene = blocks(text)
+        self.assertEqual(len(scene), len(re.findall(r"^--- !u!\d+ &", text, re.M)))
+        types = {"196722578": "AbilityBoard", "414140399": "AbilityDeathZone", "1027157232": "AbilitySession",
+                 "1534019715": "AbilityBall", "467281905": "AbilityPaddle", "1900502001": "AbilityController"}
+        for block, name in types.items():
+            guid = re.search(r"guid: (\w+)", (ROOT / f"Assets/_Project/Abilities/{name}.cs.meta").read_text()).group(1)
+            self.assertIn(f"guid: {guid}", scene[block])
+            self.assertIn(f"Assembly-CSharp::JuiceStudy.Abilities.{name}", scene[block])
+        self.assertIn("component: {fileID: 1900502001}", scene["1027157230"])
+        for key in ("1027157232", "1534019715"):
+            self.assertIn("abilities: {fileID: 1900502001}", scene[key])
+        for field, target in {"session": "1027157232", "paddle": "467281905", "ballVisual": "535787112",
+                              "paddleVisual": "1879245919", "hudParent": "988065188"}.items():
+            self.assertIn(f"{field}: {{fileID: {target}}}", scene["1900502001"])
+            self.assertIn(target, scene)
+        for asset in ("AbilityBrick.prefab",):
+            path = ROOT / "Assets/_Project/Prefabs" / asset
+            guid = re.search(r"guid: (\w+)", Path(str(path) + ".meta").read_text()).group(1)
+            self.assertIn(f"guid: {guid}", scene["196722578"])
+            self.assertIn("Assembly-CSharp::JuiceStudy.Abilities.AbilityBrick", path.read_text())
+        all_guids = [re.search(r"^guid: (\w+)$", p.read_text(), re.M).group(1)
+                     for p in (ROOT / "Assets").rglob("*.meta")]
+        assets = list((ROOT / "Assets/_Project/Abilities").glob("*.cs")) + [SCENES / "Abilities.unity"]
+        for asset in assets:
+            guid = re.search(r"^guid: ([0-9a-f]{32})$", Path(str(asset) + ".meta").read_text(), re.M).group(1)
+            self.assertEqual(all_guids.count(guid), 1, str(asset))
 
     def test_arcade_scene_references_and_isolation(self):
         scene = (SCENES / "Arcade.unity").read_text()
