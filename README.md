@@ -6,11 +6,44 @@ Jehad Alharbi — 202248820
 
 1. Open this repository's root folder in Unity Hub using **6000.3.2f1**.
 2. Allow the existing packages to import. No extra tweening or audio packages are required.
-3. Open `Assets/_Project/Scenes/Medieval07_BallPaddle.unity` for the latest checkpoint. It is first in Build Settings; ImpactMotion, MasonryParticles, BrickBreak, StoneCourt, UI02, UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
+3. Open `Assets/_Project/Scenes/Medieval08_CastleAudio.unity` for the latest checkpoint. It is first in Build Settings; BallPaddle, ImpactMotion, MasonryParticles, BrickBreak, StoneCourt, UI02, UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
 4. Select 16:9 in Game view, press Play, choose a level, then choose Easy, Medium, or Hard. The ball starts only after both selections are made.
 5. Move with the mouse, A/D, or the left/right arrows. Cast with **1 or Space**, **2**, and **3**, or click the hotbar buttons. Menus support mouse selection or arrow keys and Enter.
 
 For the assignment comparison, open `Assets/_Project/Scenes/Before.unity` or `Assets/_Project/Scenes/After.unity`. Their gameplay rules remain unchanged: the ball launches automatically, the final lost life resets score/lives, and stopping/restarting Play restores the board. Arcade adds the menu/difficulty rules, Abilities adds spells, and Levels adds layout selection. Earlier scene assets and scripts remain unchanged.
+
+## Castle audio checkpoint — change 8
+
+Open `Assets/_Project/Scenes/Medieval08_CastleAudio.unity`. Paddle contacts now have a wooden knock/pluck and brass accent; walls give a quieter stone tap; brick breaks cycle through three layered stone-crunch/chip sounds. A descending plucked cue marks a lost life, a rising major bell/pluck fanfare marks victory, and a slower descending toll marks game over. These are original synthesized cues, supplied as eight mono 44.1 kHz PCM16 WAV assets in `CastleAudio/Clips`.
+
+| Cue | Length | Character |
+|---|---:|---|
+| PaddleWood | 0.18 s | Wooden body, string pluck, small brass transient |
+| WallStone | 0.14 s | Restrained low stone knock |
+| BrickBreak1 / 2 / 3 | 0.24 s each | Three stone/noise/chip variations |
+| LifeLost | 0.68 s | Brief descending three-note cue |
+| VictoryFanfare | 1.85 s | Ascending major phrase and bell chord |
+| GameOverToll | 1.78 s | Slower descending bell phrase |
+
+The new scene replaces EventAudioFeedback with `CastleAudioFeedback.cs`; the old component does not also play. Four impact voices are reused, with separate paddle/wall/brick rate limits, deterministic brick-clip cycling, a capped combo pitch rise and subtle left/right panning. One dedicated life/result voice cannot be stolen by impacts. Life loss stops the old impact tails and briefly lowers new impacts while its cue plays; the ball still relaunches immediately.
+
+The controller reads existing events and LevelSession.IsPlaying. The session commits its winning state before BrickDestroyed and its final-loss state before BallLost, so the last brick produces victory even when hit by Fireball, and the final life produces only the game-over cue. Outcome handling runs before the brick rate limit and latches once per round. No gameplay scripts, result timing or UI callbacks are changed.
+
+| Setting on `GameFeel - Castle Audio 08 / CastleAudioFeedback` | Default |
+|---|---:|
+| Muted / Master Volume | Off / 0.65 |
+| Impact Volume | 0.50 |
+| Life Loss Volume / Result Volume | 0.65 / 0.75 |
+| Collision Voices | 4, plus 1 dedicated life/result voice |
+| Stereo Width | 0.22 (0 centers impacts) |
+
+Mute and volume sliders affect cues already playing. These settings control the new checkpoint cues; existing spell cast/shield sounds retain their own settings. Retry, return to menu, score-zero reset and disabling stop active cues. Re-enabling during a result does not replay its fanfare/toll. There is no automatic menu playback or new AudioListener; clips and voices are not created per hit. Stop Play before changing pool size.
+
+Rebuild the eight WAVs with `python3 tools/generate_castle_audio.py` (Python standard library only). The generator uses fixed local noise seeds, modal partials and smooth attack/release envelopes, and peak-normalizes each clip to 0.72 before writing PCM16. It leaves Unity metadata intact and does not affect gameplay randomness. The AudioImporter metadata requests preloaded, decompressed PCM. No downloaded recordings or audio packages are used.
+
+All existing Assets files and earlier scenes remain frozen. Only the cloned scene's audio component and feedback-object name differ from BallPaddle; its graphics, camera, physics, controls, formations, abilities, scoring and lives are preserved. Validation: C# syntax, YAML/clip/GUID wiring, scene/asset preservation, deterministic WAV generation, sample format/levels/boundaries, event ordering and audio lifecycle source checks pass. Unity is unavailable here: engine import/compilation, actual playback/mix/device listening and play-mode verification remain pending; see TESTING.md.
+
+Next checkpoint: a restrained medieval music loop with transitions between menu, play and results, in another new scene.
 
 ## Ball and paddle checkpoint — change 7
 
@@ -288,7 +321,7 @@ Keep game audio audible alongside narration. Different ball trajectories between
 
 ## AI use
 
-OpenAI ChatGPT/Codex assisted with planning and debugging, the five core feedback components, procedural audio and shaders, scene wiring, optional Arcade/Abilities/Levels gameplay, medieval menus/HUD and font subset, stone bricks/castle walls, pooled break animation and impact scores, layered masonry particles, render-only camera shake and child-renderer brick reactions, wood/brass paddle and orb surfaces with pooled contact feedback, source/rule checks, and documentation. No completed JuiceLab feedback modules were imported.
+OpenAI ChatGPT/Codex assisted with planning and debugging, the five core feedback components, procedural audio and shaders, scene wiring, optional Arcade/Abilities/Levels gameplay, medieval menus/HUD and font subset, stone bricks/castle walls, pooled break animation and impact scores, layered masonry particles, render-only camera shake and child-renderer brick reactions, wood/brass paddle and orb surfaces with pooled contact feedback, original castle sound assets and event/result audio, source/rule checks, and documentation. No completed JuiceLab feedback modules were imported.
 
 Student review, Unity tests, and revisions: **[Describe the tests and changes you actually performed. Do not submit this placeholder.]**
 

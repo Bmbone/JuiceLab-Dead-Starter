@@ -133,3 +133,15 @@ Each stage is pushed separately to main. Stop Play before pulling and open the s
 - Test life loss, retry, Next Level and return/menu mid-effect. Toggle Contact Feedback/Strength, set Halo Opacity to zero, and disable/re-enable the skin controller. The original rendering must return on disable, new effects must reset, and no duplicate bodies/rings should appear.
 - Validation: C# syntax, scene/material/metadata and source preservation, fixed physics/gameplay/source-renderer blocks, pulse/scale/pool bounds and lifecycle checks pass. Unity engine/shader compilation, actual rendering/collisions/input and play-mode review remain pending.
 - Stop here for review. Richer impact and separate life-loss/victory/game-over audio remain the next checkpoint.
+
+## 14. Castle impacts and separate life/result sounds
+
+- New scene: `Assets/_Project/Scenes/Medieval08_CastleAudio.unity`, first in Build Settings. It replaces only the new scene's old audio component and feedback-object name; all earlier Assets files stay unchanged.
+- Added eight original PCM cues: wooden paddle pluck, quiet stone wall tap, three stone-break variations, a short descending life-loss cue, an ascending victory fanfare and a slower game-over toll. The reproducible standard-library generator is `tools/generate_castle_audio.py`.
+- Four fixed impact voices handle rate-limited contacts with subtle panning/variation; one reserved voice handles life/result cues. Final-break victory is checked before throttling. The final life plays game-over alone, and a once-per-round gate prevents repeated result playback.
+- Existing events and IsPlaying identify outcomes after the session commits its state. No gameplay timing, physics, ability or UI code changes are introduced. Life loss still relaunches immediately; new impacts lower briefly beneath the life cue.
+- Review: stop Play, pull main and open **Medieval08_CastleAudio**. Compare paddle, wall and brick sounds; trigger rapid Fireball breaks, repeated collisions and a final Fireball hit. Check exact scoring and a clear victory cue even after a rapid preceding break.
+- Lose a non-final life, then lose all lives: the short cue should accompany remaining lives, and only the longer toll should accompany game over. Repeat all nine level/difficulty choices and win/Next Level, retry and return/menu flows.
+- Tune Master/Impact/Life Loss/Result volume, Muted and Stereo Width on CastleAudioFeedback. Changes should affect already-playing new cues. Spell audio retains its existing settings. Disable/re-enable the controller and stop/restart Play twice: no stale cues, repeated fanfares, duplicate listeners or extra voices should remain.
+- Validation: source syntax, scene/clip/metadata references, frozen assets/gameplay/graphics, deterministic WAV hashes, PCM peaks/RMS/DC/boundaries, event-order and lifecycle source checks pass. Unity import, audio playback/mixing, actual device listening and play-mode review are pending.
+- Stop here for review. Medieval background music and its transitions remain a separate checkpoint.

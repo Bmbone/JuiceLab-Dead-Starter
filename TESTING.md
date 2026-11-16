@@ -1,5 +1,21 @@
 # Unity verification and submission checklist
 
+## Castle audio checkpoint
+
+- Open `Assets/_Project/Scenes/Medieval08_CastleAudio.unity` in Unity 6000.3.2f1. Allow script/audio import, check Console and verify all eight AudioClip fields are populated. Inspect WAV import: mono, preloaded decompressed PCM, 44.1 kHz. Compare the clips directly in the Inspector before balancing in-game.
+- Check paddle hits, wall/ceiling hits and normal brick breaks. Listen for a wood/pluck attack, a quieter stone wall tap and three distinct stone-crunch variations. Verify subtle left/right panning, capped combo pitch and no simultaneous old EventAudioFeedback playback.
+- Use Fireball for clustered breaks and rapid contacts. The four impact sources must remain bounded, with no per-hit objects/clip allocations. Check that rate limiting suppresses audio clutter without changing score, particles or collisions.
+- Miss while lives remain: hear the short descending LifeLost cue once, then normal immediate relaunch. New impacts should be quieter while that cue plays. Lose the final life: hear GameOverToll once, without also playing LifeLost. Result UI timing must remain immediate.
+- Clear the final brick with the ball and with Fireball, including within 25 ms of a preceding break. VictoryFanfare must play once despite the impact rate limit; later stale events must not restart it. Existing ability cleanup must not cut the dedicated result voice.
+- Exercise all nine level/difficulty combinations, normal/expanded paddle and shield/fireball. Confirm unchanged speeds, controls, three starting lives, ten points per brick and exact maximum scores (280/260/240).
+- Try Again, return to menu and start the next level during a cue. Reset must stop the old sound and begin the next run silently until an event. Next Level may let the existing short victory tail finish on the difficulty selector; starting its run must clear it.
+- While a long cue plays, change Master/Impact/Life Loss/Result sliders and Muted. Verify live volume changes with no delayed replay when unmuting. Stereo Width 0 should center new impacts. These settings affect CastleAudioFeedback; existing ability voices keep their own settings.
+- Disable/re-enable CastleAudioFeedback mid-play and during results. Active cues should stop; future play events should resume, and re-enabling at a result must not replay its sound. The default hierarchy must retain exactly four impact voices and one life/result voice, with one existing AudioListener.
+- Listen on speakers and headphones at ordinary volume. Check attack/tail clicks, harsh highs, repetitive brick texture, relative loudness, stereo balance and mixing with spell sounds. Real output/device quality and overall mix need human review even when PCM levels pass offline checks.
+- Stop/restart Play twice and inspect for duplicate listeners or growing voice objects. Reopen BallPaddle and older scenes to confirm their original sound behavior remains intact.
+
+C# syntax, scene/audio/GUID references and preservation, deterministic WAV regeneration, PCM format/finite level/boundary/DC checks, existing event-state ordering and lifecycle source checks pass. Unity engine compilation/import, actual playback, mixing, device listening and play-mode verification remain pending.
+
 ## Ball and paddle checkpoint
 
 - Open `Assets/_Project/Scenes/Medieval07_BallPaddle.unity` in Unity 6000.3.2f1. Allow the shader/materials/scripts to import. Check Console for C# or shader errors; the ball/paddle/halo/rings must not render pink.
