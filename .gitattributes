@@ -169,3 +169,10 @@ Packages/packages-lock.json linguist-generated
 
 # Exceptions for .asset files such as lightning pre-baking
 LightingData.asset     binary
+
+# Small self-contained game assets use ordinary Git so fresh clones and ZIPs
+# contain actual image/audio bytes without an additional LFS download step.
+*.png -filter -diff -merge binary
+*.wav -filter -diff -merge binary
+*.ogg -filter -diff -merge binary
+Assets/_Project/Medieval/**/*.ttf -filter -diff -merge binary

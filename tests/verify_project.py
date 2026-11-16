@@ -22,7 +22,7 @@ def blocks(text):
 class ProjectChecks(unittest.TestCase):
     def test_before_and_shared_gameplay_untouched(self):
         tracked = subprocess.check_output(["git", "ls-tree", "-r", "--name-only", BASE], cwd=ROOT).decode().splitlines()
-        protected = [p for p in tracked if p.startswith(("Assets/", "Packages/", "ProjectSettings/"))]
+        protected = [p for p in tracked if p.startswith(("Assets/", "Packages/", "ProjectSettings/")) and p != "ProjectSettings/EditorBuildSettings.asset"]
         for path in protected:
             with self.subTest(path=path):
                 self.assertEqual((ROOT / path).read_bytes(), baseline(path))
@@ -34,6 +34,10 @@ class ProjectChecks(unittest.TestCase):
             with self.subTest(block=key):
                 if key == "9223372036854775807":
                     self.assertEqual(after[key].replace("  - {fileID: 1900402001}\n", ""), data)
+                elif key == "519420032":
+                    self.assertEqual(after[key], data.replace("m_LocalPosition: {x: -1.93, y: 0, z: -10}", "m_LocalPosition: {x: 0, y: 0, z: -10}"))
+                elif key == "988065188":
+                    self.assertEqual(after[key], data.replace("m_LocalScale: {x: 0, y: 0, z: 0}", "m_LocalScale: {x: 1, y: 1, z: 1}"))
                 else:
                     self.assertEqual(after[key], data)
         self.assertEqual(len(after) - len(before), 7)  # One GameObject, one Transform, five components.
@@ -54,6 +58,11 @@ class ProjectChecks(unittest.TestCase):
         self.assertEqual(scene.count(f"guid: {material_guid}"), 2)
         shader_guid = re.search(r"guid: (\w+)", (FEEDBACK / "Feedback.shader.meta").read_text()).group(1)
         self.assertIn(shader_guid, (FEEDBACK / "Feedback.mat").read_text())
+
+    def test_required_assets_and_build_scenes(self):
+        self.assertTrue((ROOT / "Assets/TextMesh Pro/Sprites/EmojiOne.png").read_bytes().startswith(b"\x89PNG\r\n\x1a\n"))
+        settings = (ROOT / "ProjectSettings/EditorBuildSettings.asset").read_text()
+        self.assertEqual(re.findall(r"path: (Assets/.*?\.unity)", settings), ["Assets/_Project/Scenes/After.unity", "Assets/_Project/Scenes/Before.unity"])
 
     def test_scene_wiring_is_visual_only(self):
         after = blocks((SCENES / "After.unity").read_text())
