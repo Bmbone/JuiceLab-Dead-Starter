@@ -1,5 +1,21 @@
 # Unity verification and submission checklist
 
+## Fireball visual checkpoint
+
+- Open `Assets/_Project/Scenes/Medieval12_FireballVFX.unity` in Unity 6000.3.2f1. Import the new script/shader/materials and check Console. Verify the controller references LevelSession, its ability root and all four materials; AbilityEffects should still create its original reused Fireball hierarchy.
+- Cast with 1/Space, keypad 1 and the hotbar across all nine level/difficulty choices at 1920x1080 and 1280x720. Look for an ivory-hot core, orange/gold tail flowing downward behind upward flight, a faint halo, soft ribbon, one small cast ring and sparse fading embers. No effect should render pink, invisible from bad vertex colors, or as an opaque square.
+- In Scene view, compare the bright head center with the logical projectile center/radius. The tail/halo are decorative; no collider should be added. Check gameplay speed 16, radius 0.22, piercing behavior, cooldown and original whoosh remain unchanged.
+- Fire through clustered bricks and clear the last brick. Each hit must retain its original score/destruction effects, and victory/menu/music/audio timing must stay immediate. Failed cooldown casts and casts blocked by the settings modal must produce no false visual start.
+- Watch the normal ball while effects cross it or debris. Ribbon/halo/embers should remain behind it; the brighter Fireball head must stay distinct. Check central/edge casts and Giant's Grip without hiding the paddle or creating misleading hit flashes.
+- Let Fireball reach its normal ceiling: the head disappears and the short ribbon/embers finish naturally. Cast again after cooldown: history must clear at the new launch point, with no connecting trail across the court. Reuse should not preserve an old cast-ring position or tint.
+- Pause during flight and wait several real seconds. Head animation, embers, ring and ribbon should pause with the projectile; the original spell/cooldown state should resume correctly. Verify actual TrailRenderer time behavior in the target engine/browser.
+- Lose a life mid-flight, retry, choose Next Level and return/menu while effects are active. All new visuals must clear without a stale source-active frame replaying the cast. Result overlays and settings should remain above effects as before.
+- Disable FireballVisualFeedback during flight: original flame/core/trail rendering should return with original materials/colors/configuration intact. Re-enable during the same flight: new visuals resume without a cast ring in midair. Stop/restart Play twice and inspect saved forceRenderingOff flags and fallback visibility.
+- Toggle Enable Embers and tune opacity while playing. Check no growing hierarchy: exactly 19 new SpriteRenderers, one TrailRenderer and one owned quad per controller, with 16 ember slots and at most four spawns in one frame. No new colliders, physics bodies, materials or AudioSources should appear per cast.
+- Check frame rate, actual alpha blending/trail UVs and shader compatibility on the intended build. Unload/reload and inspect cleanup; the runtime quad should be released and built-in white texture/material assets retained. Reopen ChapterPresentation and earlier scenes to confirm their original ability appearance stays unchanged.
+
+C# syntax, scene/material/GUID references and preservation, logical/visual head alignment, bounded shader-mask/emission/pool samples and source/event/visibility lifecycle checks pass. Unity C#/shader compilation, actual sprite/trail/vertex-color rendering, appearance, pause/cleanup/input and play-mode/performance checks remain pending.
+
 ## Chapter presentation checkpoint
 
 - Open `Assets/_Project/Scenes/Medieval11_ChapterPresentation.unity` in Unity 6000.3.2f1. Import scripts and check Console. Verify the new root references LevelSession, the world camera, LeftWall collider and score text. The existing UI must finish construction/styling before the new adapter wires it.

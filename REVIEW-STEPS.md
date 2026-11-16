@@ -183,3 +183,15 @@ Each stage is pushed separately to main. Stop Play before pulling and open the s
 - Disable/re-enable the new controller during play/results and stop/restart Play twice. Old score size/rectangle should restore, earlier menus should not inherit result styling, resources/listeners should not grow, and result audio should not replay.
 - Source checks cover syntax/wiring, scene/asset preservation, mode-context/catalog contract, font/layout/gutter/fade bounds and lifecycle/score ownership. Actual Unity compilation/import, font rendering, layering, input and play-mode review remain pending.
 - Stop here for review. Spell visuals and ability feedback are the next proposed checkpoint.
+
+## 18. Fireball flame, trail and casting visuals
+
+- New scene: `Assets/_Project/Scenes/Medieval12_FireballVFX.unity`, first in Build Settings. Earlier Assets files remain unchanged.
+- Added a centered hot flame head, warm halo, soft short ribbon, small cast ring and fading embers. A new native shader/four shared materials and one runtime quad provide the masks without downloaded media.
+- The controller observes the existing reused Fireball transform and hides only its original rendering. It does not cast, move, collide, damage, score or change cooldowns. Native visuals restore when disabled; a mid-flight re-enable does not replay the cast ring.
+- Sixteen reused ember sprites cap emission at 32/s and four spawns per frame, with a separate cosmetic random stream. Normal expiry lets the tail finish; life loss, reset, menus/results and disable clear it. Recast repositions with emission off and clears history. No objects/materials/audio voices are created per cast.
+- Review all nine level/difficulty choices at 1920x1080 and 1280x720. Cast from center and paddle edges, including during expanded-paddle play. Check centered head, trailing flame direction, restrained halo, readable normal ball and no opaque quad/square artifacts.
+- Pierce clustered bricks and the final brick. Confirm unchanged speed/radius/damage, one score award per brick, original destruction effects and immediate correct victory/audio/menu behavior. Cast attempts during cooldown/settings must not produce false rings or embers.
+- Pause during flight, expire naturally, lose a life mid-flight, retry, Next Level and return/menu. Check frozen motion while paused, no trail bridge/leftover embers and no changed spell/score state. Disable/re-enable mid-flight and inspect original renderer/material/trail restoration.
+- Inspect the fixed 19-sprite/one-trail hierarchy and runtime quad through repeated casts and stop/restart Play. Shader/C# import, actual rendering/vertex colors, layering, cleanup, input and play-mode/performance review remain pending; source/reference/preservation and numeric bounds checks pass.
+- Stop here for review. Rune Shield presentation is the next proposed checkpoint, with Giant's Grip kept separate.

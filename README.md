@@ -6,11 +6,36 @@ Jehad Alharbi — 202248820
 
 1. Open this repository's root folder in Unity Hub using **6000.3.2f1**.
 2. Allow the existing packages to import. No extra tweening or audio packages are required.
-3. Open `Assets/_Project/Scenes/Medieval11_ChapterPresentation.unity` for the latest checkpoint. It is first in Build Settings; CourtSettings, CastleMusic, CastleAudio, BallPaddle, ImpactMotion, MasonryParticles, BrickBreak, StoneCourt, UI02, UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
+3. Open `Assets/_Project/Scenes/Medieval12_FireballVFX.unity` for the latest checkpoint. It is first in Build Settings; ChapterPresentation, CourtSettings, CastleMusic, CastleAudio, BallPaddle, ImpactMotion, MasonryParticles, BrickBreak, StoneCourt, UI02, UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
 4. Select 16:9 in Game view, press Play, choose a level, then choose Easy, Medium, or Hard. The ball starts only after both selections are made.
 5. Move with the mouse, A/D, or the left/right arrows. Cast with **1 or Space**, **2**, and **3**, or click the hotbar buttons. Menus support mouse selection or arrow keys and Enter.
 
 For the assignment comparison, open `Assets/_Project/Scenes/Before.unity` or `Assets/_Project/Scenes/After.unity`. Their gameplay rules remain unchanged: the ball launches automatically, the final lost life resets score/lives, and stopping/restarting Play restores the board. Arcade adds the menu/difficulty rules, Abilities adds spells, and Levels adds layout selection. Earlier scene assets and scripts remain unchanged.
+
+## Fireball visual checkpoint — change 12
+
+Open `Assets/_Project/Scenes/Medieval12_FireballVFX.unity`. Fireball now has an ivory-hot core, an animated orange/gold flame flowing behind its upward motion, a faint warm halo, a softer short ribbon, a small expanding cast ring and fading embers. The new scene changes Fireball presentation only. Its existing piercing sweep, radius, speed, lifetime, cooldown, score path and sound remain unchanged; Giant's Grip and Rune Shield retain their current presentation.
+
+`FireballVfx/FireballVisualFeedback.cs` observes AbilityEffects' existing `Fireball - reused` transform after gameplay updates. It never starts, moves, stops or damages with the logical projectile. Its original renderers are hidden with forceRenderingOff while keeping their materials, colors, enabled states and trail configuration available. Disabling the new component restores the original rendering. Re-enabling during flight resumes the new skin without replaying a cast ring in midair.
+
+The new URP 2D shader and four shared materials supply procedural flame, soft glow, ribbon and ring masks. One owned full-rectangle sprite uses Unity's built-in white texture; no downloaded image or new audio is needed. The nominal 0.22-unit head is centered on the existing gameplay position, with the flame tail trailing below it. Halo, ribbon and embers sort behind the regular ball, while the Fireball head retains its high visibility.
+
+| Setting / resource | Default |
+|---|---:|
+| Enable Embers | On |
+| Ember Opacity / Halo Opacity | 0.70 / 0.20 |
+| Ember pool | 16 reusable sprites |
+| Ember emission / Lifetime | 32 per second, at most 4 per frame / 0.16–0.30 s |
+| Ribbon duration / Initial width | 0.13 s / 0.24 world units |
+| Cast ring lifetime | 0.16 s |
+
+Select `Fireball VFX - Flame Trail and Cast 12` to adjust the two opacity sliders or disable embers. The effect creates its 19 SpriteRenderers, one TrailRenderer, property blocks and quad once. No per-cast GameObjects, sprite/material instances, colliders or AudioSources are created. A separate fixed-seed System.Random stream affects only cosmetic embers, leaving Unity's gameplay random stream unchanged.
+
+Normal ceiling expiry stops the head/emission and lets the short ribbon/embers finish. Life loss, score-zero reset, menu/results and disable clear the new effects; recast repositions with emission off and clears old history to avoid a bridge back to the paddle. Flame age, ember movement and cast-ring timing use scaled time so they pause with the round. This adapter depends on the current reused-fireball hierarchy and lifecycle; TESTING.md includes the required engine checks.
+
+All earlier Assets files remain frozen. The new scene adds only an independent VFX root/transform/controller and its SceneRoots entry, plus new shader/material assets. Existing chapter banners, result layout, pause/settings/preferences, music/SFX, ball/paddle, brick effects, physics and game rules retain ChapterPresentation's configuration. Source checks pass for C# syntax, scene/material/GUID wiring, preserved assets/blocks, centered head geometry, bounded shader masks/emission/pool and lifecycle/source-visibility ownership. Unity is unavailable here: engine/shader compilation, actual appearance, trail/vertex-color rendering, pause/cleanup and play-mode verification remain pending.
+
+Next proposed checkpoint: Rune Shield visual feedback, followed by Giant's Grip in a separate scene.
 
 ## Chapter presentation checkpoint — change 11
 
@@ -403,7 +428,7 @@ Keep game audio audible alongside narration. Different ball trajectories between
 
 ## AI use
 
-OpenAI ChatGPT/Codex assisted with planning and debugging, the five core feedback components, procedural audio and shaders, scene wiring, optional Arcade/Abilities/Levels gameplay, medieval menus/HUD and font subset, stone bricks/castle walls, pooled break animation and impact scores, layered masonry particles, render-only camera shake and child-renderer brick reactions, wood/brass paddle and orb surfaces with pooled contact feedback, original castle sound assets and event/result audio, synchronized original menu/play music, scene-local pause/settings UI and mixer routing, chapter banners and result decoration, source/rule checks, and documentation. No completed JuiceLab feedback modules were imported.
+OpenAI ChatGPT/Codex assisted with planning and debugging, the five core feedback components, procedural audio and shaders, scene wiring, optional Arcade/Abilities/Levels gameplay, medieval menus/HUD and font subset, stone bricks/castle walls, pooled break animation and impact scores, layered masonry particles, render-only camera shake and child-renderer brick reactions, wood/brass paddle and orb surfaces with pooled contact feedback, original castle sound assets and event/result audio, synchronized original menu/play music, scene-local pause/settings UI and mixer routing, chapter banners and result decoration, Fireball flame/ribbon/cast-ring/ember presentation, source/rule checks, and documentation. No completed JuiceLab feedback modules were imported.
 
 Student review, Unity tests, and revisions: **[Describe the tests and changes you actually performed. Do not submit this placeholder.]**
 

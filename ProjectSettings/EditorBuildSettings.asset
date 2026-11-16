@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/_Project/Scenes/Medieval12_FireballVFX.unity
+    guid: ec72830e62df48bbb5f0eaea0355a53b
+  - enabled: 1
     path: Assets/_Project/Scenes/Medieval11_ChapterPresentation.unity
     guid: 08d4de8d303f45edb2b90cc6f14e0da8
   - enabled: 1
