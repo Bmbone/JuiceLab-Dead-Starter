@@ -38,6 +38,8 @@ class ProjectChecks(unittest.TestCase):
                     self.assertEqual(after[key], data.replace("m_LocalPosition: {x: -1.93, y: 0, z: -10}", "m_LocalPosition: {x: 0, y: 0, z: -10}"))
                 elif key == "988065188":
                     self.assertEqual(after[key], data.replace("m_LocalScale: {x: 0, y: 0, z: 0}", "m_LocalScale: {x: 1, y: 1, z: 1}"))
+                elif key in ("468270652", "1875066871"):  # Display-only HUD must not block mouse movement.
+                    self.assertEqual(after[key], data.replace("m_RaycastTarget: 1", "m_RaycastTarget: 0"))
                 else:
                     self.assertEqual(after[key], data)
         self.assertEqual(len(after) - len(before), 7)  # One GameObject, one Transform, five components.
