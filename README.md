@@ -6,11 +6,34 @@ Jehad Alharbi — 202248820
 
 1. Open this repository's root folder in Unity Hub using **6000.3.2f1**.
 2. Allow the existing packages to import. No extra tweening or audio packages are required.
-3. Open `Assets/_Project/Scenes/MedievalUI02_RoyalInterface.unity` for the latest playable checkpoint. It is first in Build Settings; UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
+3. Open `Assets/_Project/Scenes/Medieval03_StoneCourt.unity` for the latest playable checkpoint. It is first in Build Settings; UI02, UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
 4. Select 16:9 in Game view, press Play, choose a level, then choose Easy, Medium, or Hard. The ball starts only after both selections are made.
 5. Move with the mouse, A/D, or the left/right arrows. Cast with **1 or Space**, **2**, and **3**, or click the hotbar buttons. Menus support mouse selection or arrow keys and Enter.
 
 For the assignment comparison, open `Assets/_Project/Scenes/Before.unity` or `Assets/_Project/Scenes/After.unity`. Their gameplay rules remain unchanged: the ball launches automatically, the final lost life resets score/lives, and stopping/restarting Play restores the board. Arcade adds the menu/difficulty rules, Abilities adds spells, and Levels adds layout selection. Earlier scene assets and scripts remain unchanged.
+
+## Stone court checkpoint — change 3
+
+Open `Assets/_Project/Scenes/Medieval03_StoneCourt.unity`. This visual checkpoint retains the Royal Interface and adds colored stone bricks with beveled lighting, fine grain, aged-brass braces/rivets and diamond carvings. Six brighter stone tints distinguish destructible rows from the darker, permanent castle masonry.
+
+The side walls now read as coursed castle pillars, with projecting mouldings, feet, narrow arrow-slit recesses, hanging banners and gold crests. The upper wall has masonry courses and battlement notches. Caps project outward; every decorative piece stays at or outside the original inner wall faces. Upper-wall notches begin above its reachable collision face. These details add no colliders.
+
+| Asset / component | Purpose / tuning |
+|---|---|
+| `StoneCourt/CastleStone.shader` | Native URP 2D stone grain, bevel shading, joints, brass details and optional top-wall notches. |
+| `StoneCourt/RunestoneBricks.mat` | Brick look: Bevel 0.055, Joint 0.01, Grain 0.15. |
+| `StoneCourt/CastleMasonry.mat` | Fixed-wall look: Bevel 0.055, Joint 0.022, Grain 0.18. |
+| `StoneCourt/MedievalStoneSurface.cs` | Per-renderer property blocks supply sprite bounds, physical size, deterministic variation and tint. No material instances or gameplay random values. |
+| `StoneCourt/CastleCourtDecor.cs` | Builds one hierarchy of decorative pillar mouldings, recesses and banners. |
+| `Prefabs/RunestoneBrick.prefab` | Duplicates LevelBrick's unchanged health, points, sprite dimensions and collider; adds only the surface style. |
+
+On each side wall, MedievalStoneSurface uses two columns and fourteen staggered courses. The top uses fourteen columns/two courses and Crenellations. Bricks follow their existing SpriteRenderer row tint; permanent masonry uses its separate Stone Tint. Material changes should be made to these new materials only.
+
+All earlier scenes, shared gameplay scripts, earlier prefabs, UI assets, wall/ball/paddle transforms and collider settings are preserved. The same three layouts, difficulties, abilities, point values and lives apply. Existing particles inherit the updated brick colors; their behavior has not been revised in this checkpoint.
+
+Validation: C# syntax, Unity YAML/reference checks, comparisons of all physics/gameplay components, duplicate-prefab collision/health/point checks, wall-decoration bounds and shader-property wiring pass. Unity is unavailable here: engine C# and shader compilation, actual stone appearance, frame rate and play-mode review remain pending. This does not claim a Unity-rendered preview or completed playtest.
+
+Next checkpoint: brick break/recoil animation and impact score feedback, followed by particle and restrained shake passes in separate scenes.
 
 ## Royal interface checkpoint — change 2
 
@@ -161,7 +184,7 @@ Keep game audio audible alongside narration. Different ball trajectories between
 
 ## AI use
 
-OpenAI ChatGPT/Codex assisted with interpreting the brief, inspecting the starter, writing the five feedback scripts, original procedural audio, the simple feedback shader/material, After scene wiring, the optional Arcade mode and menus, the Abilities checkpoint (gameplay, hotbar, procedural visuals and audio), the Levels checkpoint (three layouts, selection, per-level difficulty and progression), executable rule tests, source-level checks, documentation, the isolated medieval score UI/feedback checkpoint, and the larger Royal Interface menus/HUD including the renamed font subset. No completed JuiceLab feedback modules were imported.
+OpenAI ChatGPT/Codex assisted with interpreting the brief, inspecting the starter, writing the five feedback scripts, original procedural audio, the simple feedback shader/material, After scene wiring, the optional Arcade mode and menus, the Abilities checkpoint (gameplay, hotbar, procedural visuals and audio), the Levels checkpoint (three layouts, selection, per-level difficulty and progression), executable rule tests, source-level checks, documentation, the isolated medieval score UI/feedback checkpoint, and the larger Royal Interface menus/HUD including the renamed font subset, and the stone-court shader, independent brick material/prefab and castle-wall decorations. No completed JuiceLab feedback modules were imported.
 
 Student review, Unity tests, and revisions: **[Describe the tests and changes you actually performed. Do not submit this placeholder.]**
 

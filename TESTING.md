@@ -1,5 +1,18 @@
 # Unity verification and submission checklist
 
+## Stone court checkpoint
+
+- Open `Assets/_Project/Scenes/Medieval03_StoneCourt.unity` in Unity 6000.3.2f1 and allow shader/material/script import. Check Console for C# or shader errors; no object should render pink.
+- Compare all three formations at 1920x1080 and 1280x720. Confirm colored beveled bricks, brass straps/rivets, carvings and restrained grain remain readable behind a fast ball.
+- Inspect both side pillars: coursed stone, mouldings/feet, arrow slits, banners and crests should layer correctly, with no decoration extending into the reachable court. Check the top-wall battlement silhouette.
+- Hit both wall faces and the ceiling repeatedly, including beside caps and banners. Collision positions and bounce behavior must match Royal Interface. No new collision component should be present on the decorative hierarchy.
+- Break bricks normally and with Fireball. Each still awards ten points once; their full sprite bounds and collider should agree, with the existing burst color matching the new row tint.
+- Check all nine level/difficulty choices, ability collisions, complete losses/retries, victory/Next Level and return/menu. Surface details and pillar decoration counts must not grow across round transitions.
+- Stop/restart Play twice and check for material/property-block warnings. Inspect frame rate during rapid breaks; all surfaces should share the two material assets rather than creating per-brick material instances.
+- Reopen Royal Interface and earlier scenes. Their brick materials, colors and plain walls must retain their earlier versions.
+
+Source/asset checks pass. Unity C# and shader compilation, graphics, frame rate, physics/play-mode checks above and actual playtest evidence are pending. Break/recoil animation, impact score popups, new particles and shake are queued for later scene checkpoints.
+
 ## Royal Interface checkpoint
 
 - Open `Assets/_Project/Scenes/MedievalUI02_RoyalInterface.unity` in Unity 6000.3.2f1. Let the new font and scripts import. Check Console for engine/shader/font errors.

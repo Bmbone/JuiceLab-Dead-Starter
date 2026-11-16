@@ -72,3 +72,14 @@ Each stage is pushed separately to main. Stop Play before pulling and open the s
 - During play check the three HUD panels, correct score/lives, score pulse/+points label, larger cooldown text, clickable spells and uninterrupted paddle movement under decorative UI. Resize the Game view and ensure the background remains centered behind the ball/bricks.
 - Validation: source-level C# syntax, scene/reference/isolation, font metadata/coverage and text-width checks pass. Unity engine import/compilation, dynamic font atlas generation and visual/play-mode review are pending.
 - Stop here for review. Brick visual design, break/recoil animation, score popups at impacts, richer particles and screen/brick shake belong in subsequent scene checkpoints.
+
+## 9. Stone bricks and castle walls / pillars
+
+- New scene: `Assets/_Project/Scenes/Medieval03_StoneCourt.unity`, first in Build Settings. Royal Interface and all older scenes remain frozen.
+- Added a new native stone shader, separate brick/wall materials, an independent RunestoneBrick prefab and per-renderer surface styling. Bricks have grain, bevel highlights/shadows, brass braces/rivets and carvings, with six readable row colors.
+- Side walls are coursed castle pillars with outward-projecting mouldings, feet, arrow slits, banners and crests. The upper wall has battlement notches above the reachable inner face. All decorative geometry stays at/outside the side-wall faces, has no colliders, and uses explicit render order.
+- All physics transforms/colliders, brick health/points, gameplay scripts, abilities, menus and score feedback remain intact. The shader uses deterministic variation; it does not advance gameplay Random or instantiate materials.
+- Review: stop Play, pull main, open **Medieval03_StoneCourt**, and test all three formations at 1920x1080 and 1280x720. Check brick/ball contrast against the background, stone/brass details, pillar banners/caps and upper battlements.
+- Bounce against both inner wall faces and the ceiling, including near pillar bands. Use fireball through a row and complete loss/retry, win/next-level and return/menu flows. Verify the same hit boundaries, totals and lives as UI02; all bricks should still be destructible with the same rules.
+- Validation: C# syntax, scene/prefab YAML and reference comparisons, preserved physics/gameplay data, decorative bounds and shader/material wiring pass. Unity engine/shader compilation, visual/performance review and playtesting remain pending.
+- Stop here for review. Destruction animation, impact score popups, particle improvements and screen/brick shake follow in separate scene checkpoints.
