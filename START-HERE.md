@@ -4,7 +4,7 @@ After uses Unity 6000.3.2f1, C# and the Universal Render Pipeline 2D renderer. T
 
 ## Entry point
 
-[Assets/_Project/Scenes/After.unity](Assets/_Project/Scenes/After.unity) is the only scene in the repository and Build Settings. It contains the final polished game, including menus, levels, difficulty selection, spells, audio and visual feedback. Earlier development scenes are retained in Git history rather than the current scene folder.
+[Assets/_Project/Scenes/After.unity](Assets/_Project/Scenes/After.unity) is the final polished game and sole Build Settings entry. It includes menus, levels, difficulty selection, spells, audio and visual feedback. [Before.unity](Assets/_Project/Scenes/Before.unity) is the restored original starter, kept separately for comparison in the Unity Editor. Intermediate development scenes remain in Git history.
 
 ## Modules
 
@@ -24,7 +24,7 @@ All module paths below are relative to `Assets/_Project`.
 | `CastleAudio` / `CastleMusic` | Event/result sounds, original audio assets and music transitions. |
 | `CourtSettings` / `ChapterPresentation` | Pause/options, volume/motion preferences, chapter banners and result decoration. |
 | `FireballVfx` / `RuneShieldVfx` / `GiantGripVfx` | Final ability visuals that observe existing gameplay state. |
-| `Prefabs` / `Settings` / `Scenes` | Brick prefabs, rendering configuration and the final After scene. |
+| `Prefabs` / `Settings` / `Scenes` | Brick prefabs, rendering configuration and the final After scene and original Before comparison. |
 
 ## Runtime responsibilities
 
@@ -32,7 +32,7 @@ All module paths below are relative to `Assets/_Project`.
 
 Visual feedback uses separate renderers, child transforms, material property blocks and fixed pools. Event subscriptions are removed when components are disabled. Cosmetic random variation uses independent random streams.
 
-The gameplay extensions use separate adapters and prefabs. The earlier Before/After comparison and intermediate milestones are available through Git history; the current branch retains only the final After scene. The development history is documented in [DEVELOPMENT-HISTORY.md](DEVELOPMENT-HISTORY.md).
+The gameplay extensions use separate adapters and prefabs. The current branch retains the final After scene and the original Before comparison. Intermediate milestones remain available through Git history. The development history is documented in [DEVELOPMENT-HISTORY.md](DEVELOPMENT-HISTORY.md).
 
 ## Repository documentation
 

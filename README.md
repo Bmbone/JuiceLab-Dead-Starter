@@ -18,7 +18,14 @@ The project combines particle effects, reactive animation, event-based sound and
 3. Open [Assets/_Project/Scenes/After.unity](Assets/_Project/Scenes/After.unity), the final polished scene and sole entry in Build Settings.
 4. Set Game view to **16:9**, press Play, then select a level and difficulty.
 
-**After** is the final project and scene name. The repository contains one scene: `Assets/_Project/Scenes/After.unity`. It includes the complete medieval presentation, level/difficulty selection and abilities. Earlier development scenes have been removed from the current branch; their revisions remain in Git history.
+**After** is the final project and scene name. The repository includes two separate scenes:
+
+| Scene | Purpose |
+|---|---|
+| [After.unity](Assets/_Project/Scenes/After.unity) | Final polished game, including the complete medieval presentation, level/difficulty selection and abilities. The sole entry in Build Settings. |
+| [Before.unity](Assets/_Project/Scenes/Before.unity) | Restored original, unpolished course starter for comparison. Available separately in the Unity Editor. |
+
+Before was restored with its original scene metadata. Its restoration does not change After, shared game assets or the default build. Intermediate development scenes remain in Git history.
 
 The display font is stored with Git LFS. A Git checkout with LFS support retrieves the font asset; `git lfs pull` downloads it when needed.
 
@@ -96,7 +103,7 @@ Development progressed through individual scenes before the completed version wa
 
 ## Validation
 
-The current single-scene configuration passes **13 source/asset tests**: 6 project checks and 7 scene, metadata, material and audio-payload checks. The checks target `After.unity` and its single Build Settings entry. C# syntax parsing covers 63 scripts. Earlier implementation passes also included shader-mask samples, font metrics and layout calculations.
+The final game and restored comparison scene pass **13 source/asset tests**: 6 project checks and 7 scene, metadata, material and audio-payload checks. The checks cover both scenes while retaining `After.unity` as the single Build Settings entry. C# syntax parsing covers 63 scripts. Earlier implementation passes also included shader-mask samples, font metrics and layout calculations.
 
 Unity C#/shader compilation, runtime input/physics, visual/audio review and target-build performance remain unverified in the implementation environment. Recorded peer-playtest findings are not included in the current validation results.
 

@@ -18,8 +18,9 @@ def script_guid(path):
 
 
 class ProjectChecks(unittest.TestCase):
-    def test_after_is_the_only_scene_and_build_entry(self):
-        self.assertEqual(list((PROJECT / "Scenes").glob("*.unity")), [SCENE])
+    def test_after_is_the_build_entry_with_before_comparison(self):
+        self.assertEqual(set((PROJECT / "Scenes").glob("*.unity")),
+                         {SCENE, PROJECT / "Scenes/Before.unity"})
         text = (ROOT / "ProjectSettings/EditorBuildSettings.asset").read_text()
         entries = re.findall(r"path: (Assets/.*?\.unity)\n\s+guid: (\w+)", text)
         expected_guid = re.search(r"guid: (\w+)", Path(str(SCENE) + ".meta").read_text()).group(1)

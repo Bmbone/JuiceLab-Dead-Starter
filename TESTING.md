@@ -1,15 +1,15 @@
 # Validation report
 
-This report records source and asset validation for the consolidated project. `Assets/_Project/Scenes/After.unity` is the only scene in the current branch and the only Build Settings entry. The scene consolidation replaces the previous multi-scene test assumptions; earlier milestone results remain historical evidence.
+This report records source and asset validation for the consolidated project. `Assets/_Project/Scenes/After.unity` is the final game and only Build Settings entry. The original `Before.unity` is restored separately for editor comparison. The scene consolidation replaces the previous multi-scene test assumptions; earlier milestone results remain historical evidence.
 
 ## Current automated results
 
 | Check | Scope | Recorded result |
 |---|---|---|
-| `tests/verify_project.py` | Single-scene entry point, gameplay/feedback wiring, singleton isolation, feedback lifecycle and score/trail isolation | 6 tests passed |
+| `tests/verify_project.py` | After build entry with Before comparison, gameplay/feedback wiring, singleton isolation, feedback lifecycle and score/trail isolation | 6 tests passed |
 | `tests/verify_polish.py` | Unique asset IDs, metadata targets, scene/prefab references, final scene fields, materials and WAV payloads | 7 tests passed |
 | C# syntax parsing | All 63 scripts under Assets | No syntax errors detected |
-| Serialized-data parsing | 1 scene, 6 prefabs, 22 materials, 1 mixer and 9 serialized assets | Parsing passed |
+| Serialized-data parsing | 2 scenes, 6 prefabs, 22 materials, 1 mixer and 9 serialized assets | Parsing passed |
 | Final scene preservation | Consolidated After scene content | Unchanged by the documentation/configuration cleanup |
 | Historical shader-mask sampling | Procedural alpha masks and numeric bounds | Finite, bounded sample values |
 | Historical text and layout calculations | Status-label glyph advances, court gutters and Settings clearance | Within calculated bounds at 1920×1080 and 1280×720 |
@@ -47,7 +47,7 @@ All nine combinations are implemented. Their engine playthrough status is record
 
 ## Technical considerations
 
-- Only the final After scene is retained. The original comparison and intermediate versions remain in Git history; levels, selectable speeds and abilities are gameplay extensions.
+- Before is restored from the original starter with its original metadata. After and all pre-existing game assets remain unchanged by the restoration. Only After is included in Build Settings; intermediate versions remain in Git history.
 - Rune Shield feedback observes the native line-width flash. Deflection detection during low-frame-rate execution remains an engine-validation item.
 - Giant's Grip visuals derive the current world-space box from the collider's local shape and transform, avoiding a cached physics-bounds dependency with automatic transform syncing disabled.
 - Status badges use calculated court gutters and hide when the viewport does not provide enough space. Final TMP and alpha rendering remain engine-dependent.
@@ -55,7 +55,7 @@ All nine combinations are implemented. Their engine playthrough status is record
 
 ## Reproducibility
 
-The Python checks use the standard library and target the current single-scene structure. The three console rule harnesses target .NET 8. The display font uses Git LFS and is downloaded separately from its tracked pointer.
+The Python checks use the standard library and cover After plus the restored Before comparison, with After as the only build scene. The three console rule harnesses target .NET 8. The display font uses Git LFS and is downloaded separately from its tracked pointer.
 
 ```sh
 python tests/verify_project.py

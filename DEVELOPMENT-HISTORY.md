@@ -1,6 +1,6 @@
 # Development history
 
-After was developed through separate scene milestones and then consolidated into **Assets/_Project/Scenes/After.unity**, the only scene retained in the current branch. The scene names below describe historical Git revisions; they are not additional scene files in the current project.
+After was developed through separate scene milestones and then consolidated into **Assets/_Project/Scenes/After.unity**, the final game scene and sole Build Settings entry. The original `Before.unity` has been restored separately for comparison. The scene names below describe historical Git revisions. Only the final After scene and original Before scene are retained in the current project.
 
 ## Gameplay foundation
 
@@ -42,6 +42,6 @@ The selected gameplay extension is level and difficulty selection. Courtyard, Tw
 
 ## Validation history
 
-Before scene consolidation, milestone 14 included 12 existing source checks and 7 additional asset/scene checks, all passing. After consolidation, the Python checks were updated to target only `After.unity`; 6 project checks and 7 asset/scene checks pass for the current structure. Source analysis also identified a potential dependency on stale physics bounds for the new paddle decoration; its implementation uses the current collider shape and transform instead.
+Before scene consolidation, milestone 14 included 12 existing source checks and 7 additional asset/scene checks, all passing. After consolidation and restoration of the original Before comparison, the Python checks cover both scenes while keeping After as the sole build entry; 6 project checks and 7 asset/scene checks pass for the current structure. Source analysis also identified a potential dependency on stale physics bounds for the new paddle decoration; its implementation uses the current collider shape and transform instead.
 
 Unity compilation, runtime behavior, device performance and recorded peer-playtest results are outside the completed source-validation scope. The detailed status is maintained in [TESTING.md](TESTING.md).
