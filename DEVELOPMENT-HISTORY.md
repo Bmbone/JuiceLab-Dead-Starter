@@ -1,6 +1,6 @@
 # Development history
 
-After was developed through separate scene milestones and then consolidated into **Assets/_Project/Scenes/After.unity**, the final game scene and sole Build Settings entry. The original `Before.unity` has been restored separately for comparison. The scene names below describe historical Git revisions. Only the final After scene and original Before scene are retained in the current project.
+After was developed through separate scene milestones and then consolidated into **Assets/_Project/Scenes/After.unity**, the final game scene and sole Build Settings entry. `Before.unity` contains the original starter for comparison. The scene names below describe historical Git revisions. Only the final After scene and original Before scene are retained in the current project.
 
 ## Gameplay foundation
 
@@ -38,10 +38,10 @@ Historical scene paths in both tables were relative to `Assets/_Project/Scenes`.
 
 The original feedback layer uses the starter's event hooks. Subsequent gameplay extensions use independent rules, adapters and prefabs. Later presentation passes add renderers, child transforms, material property blocks and reusable visual pools with earlier scene versions now retained in Git history.
 
-The selected gameplay extension is level and difficulty selection. Courtyard, Twin Towers and Crown provide different formations, and Easy/Medium/Hard use speeds of 9/12/15 world units per second. This extends the game beyond the controlled Before/After feedback comparison.
+A friend's playtest suggestion led to level and difficulty selection. Courtyard, Twin Towers and Crown provide different formations, and Easy/Medium/Hard use speeds of 9/12/15 world units per second. This extends the game beyond the controlled Before/After feedback comparison.
 
 ## Validation history
 
-Before scene consolidation, milestone 14 included 12 existing source checks and 7 additional asset/scene checks, all passing. After consolidation and restoration of the original Before comparison, the Python checks cover both scenes while keeping After as the sole build entry; 6 project checks and 7 asset/scene checks pass for the current structure. Source analysis also identified a potential dependency on stale physics bounds for the new paddle decoration; its implementation uses the current collider shape and transform instead.
+Before scene consolidation, milestone 14 included 12 existing source checks and 7 additional asset/scene checks, all passing. For the final Before/After scene structure, the Python checks cover both scenes while keeping After as the sole build entry; 6 project checks and 7 asset/scene checks pass for the current structure. Source analysis also identified a potential dependency on stale physics bounds for the new paddle decoration; its implementation uses the current collider shape and transform instead.
 
-Unity compilation, runtime behavior, device performance and recorded peer-playtest results are outside the completed source-validation scope. The detailed status is maintained in [TESTING.md](TESTING.md).
+Unity compilation, runtime behavior and device performance are outside the completed source-validation scope. Qualitative playtest feedback and the level/difficulty revision are documented in [README.md](README.md). The detailed validation status is maintained in [TESTING.md](TESTING.md).

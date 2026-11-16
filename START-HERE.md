@@ -4,7 +4,7 @@ After uses Unity 6000.3.2f1, C# and the Universal Render Pipeline 2D renderer. T
 
 ## Entry point
 
-[Assets/_Project/Scenes/After.unity](Assets/_Project/Scenes/After.unity) is the final polished game and sole Build Settings entry. It includes menus, levels, difficulty selection, spells, audio and visual feedback. [Before.unity](Assets/_Project/Scenes/Before.unity) is the restored original starter, kept separately for comparison in the Unity Editor. Intermediate development scenes remain in Git history.
+[Assets/_Project/Scenes/After.unity](Assets/_Project/Scenes/After.unity) is the final polished game and sole Build Settings entry. It includes menus, levels, difficulty selection, spells, audio and visual feedback. [Before.unity](Assets/_Project/Scenes/Before.unity) is the original starter, kept separately for comparison in the Unity Editor. Intermediate development scenes remain in Git history.
 
 ## Modules
 

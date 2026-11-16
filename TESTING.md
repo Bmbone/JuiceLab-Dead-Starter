@@ -1,6 +1,6 @@
 # Validation report
 
-This report records source and asset validation for the consolidated project. `Assets/_Project/Scenes/After.unity` is the final game and only Build Settings entry. The original `Before.unity` is restored separately for editor comparison. The scene consolidation replaces the previous multi-scene test assumptions; earlier milestone results remain historical evidence.
+This report records source and asset validation for the consolidated project. `Assets/_Project/Scenes/After.unity` is the final game and only Build Settings entry. `Before.unity` provides the original starter for editor comparison. The scene consolidation replaces the previous multi-scene test assumptions; earlier milestone results remain historical evidence.
 
 ## Current automated results
 
@@ -31,7 +31,7 @@ Unity and .NET were unavailable during the latest implementation pass.
 | Pause, resets, component re-enable and scene cleanup | Not verified in Unity |
 | Sound balance, music transitions and device output | Not verified by listening |
 | Build compatibility and performance | Not verified |
-| Recorded peer-playtest findings | Not documented |
+| Qualitative peer-playtest feedback | A friend suggested levels and difficulty selection; the implemented revision is documented in README.md |
 
 The [demonstration video](https://youtu.be/BF2wYM0IkJU) accompanies the project.
 
@@ -47,7 +47,7 @@ All nine combinations are implemented. Their engine playthrough status is record
 
 ## Technical considerations
 
-- Before is restored from the original starter with its original metadata. After and all pre-existing game assets remain unchanged by the restoration. Only After is included in Build Settings; intermediate versions remain in Git history.
+- Before contains the original starter, and After contains the final game. Only After is included in Build Settings; intermediate versions remain in Git history.
 - Rune Shield feedback observes the native line-width flash. Deflection detection during low-frame-rate execution remains an engine-validation item.
 - Giant's Grip visuals derive the current world-space box from the collider's local shape and transform, avoiding a cached physics-bounds dependency with automatic transform syncing disabled.
 - Status badges use calculated court gutters and hide when the viewport does not provide enough space. Final TMP and alpha rendering remain engine-dependent.
@@ -55,7 +55,7 @@ All nine combinations are implemented. Their engine playthrough status is record
 
 ## Reproducibility
 
-The Python checks use the standard library and cover After plus the restored Before comparison, with After as the only build scene. The three console rule harnesses target .NET 8. The display font uses Git LFS and is downloaded separately from its tracked pointer.
+The Python checks use the standard library and cover After plus the original Before comparison, with After as the only build scene. The three console rule harnesses target .NET 8. The display font uses Git LFS and is downloaded separately from its tracked pointer.
 
 ```sh
 python tests/verify_project.py

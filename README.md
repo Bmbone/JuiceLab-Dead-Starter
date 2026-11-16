@@ -23,9 +23,9 @@ The project combines particle effects, reactive animation, event-based sound and
 | Scene | Purpose |
 |---|---|
 | [After.unity](Assets/_Project/Scenes/After.unity) | Final polished game, including the complete medieval presentation, level/difficulty selection and abilities. The sole entry in Build Settings. |
-| [Before.unity](Assets/_Project/Scenes/Before.unity) | Restored original, unpolished course starter for comparison. Available separately in the Unity Editor. |
+| [Before.unity](Assets/_Project/Scenes/Before.unity) | Original, unpolished course starter for comparison. Available separately in the Unity Editor. |
 
-Before was restored with its original scene metadata. Its restoration does not change After, shared game assets or the default build. Intermediate development scenes remain in Git history.
+Before demonstrates the starter's original gameplay, while After contains the completed game-feel improvements and gameplay extensions. After is the default build scene; intermediate development milestones remain in Git history.
 
 The display font is stored with Git LFS. A Git checkout with LFS support retrieves the font asset; `git lfs pull` downloads it when needed.
 
@@ -65,9 +65,20 @@ Brick destruction combines particles and sound, while paddle contact combines an
 - **Sound:** separate contact, brick, life-loss, defeat and victory cues, plus menu/play music transitions.
 - **Motion settings:** Screen Shake and Brick Motion switches, with separate Music and Sound Effects volume controls.
 
+## Playtest and revision
+
+During a playtest, a friend suggested adding multiple levels and selectable difficulty. I used this feedback to extend the game with different brick formations and a choice of ball speed.
+
+| Playtest feedback | Revision | Resulting behavior |
+|---|---|---|
+| Add different levels. | Implemented Courtyard, Twin Towers and Crown, each with a distinct brick formation. | Players can select one of three layouts before starting a round. |
+| Add difficulty choices. | Implemented Easy, Medium and Hard with ball speeds of 9, 12 and 15 world units per second. | Each level supports all three difficulties, giving nine level/difficulty combinations. |
+
+The revision adds variety and lets the player choose the pace of a run. Retry keeps the selected level and difficulty, while the main menu allows a different combination for the next attempt.
+
 ## Levels and difficulty
 
-Level and difficulty selection is the selected gameplay extension. Different formations add variety, while independent speed choices let the player control the challenge.
+Level and difficulty selection implements the playtest revision described above. Different formations add variety, while independent speed choices let the player control the challenge.
 
 | Level | Formation | Bricks | Maximum score |
 |---|---|---:|---:|
@@ -81,7 +92,7 @@ Level and difficulty selection is the selected gameplay extension. Different for
 | Medium | 12 | 3 |
 | Hard | 15 | 3 |
 
-All nine combinations are available. Each brick awards ten points. Retry restores the selected layout and difficulty, three lives, zero score and ready abilities. Winning Courtyard or Twin Towers offers the next level's difficulty selection; Crown victory returns to the menu. Scores are tracked per level.
+All nine combinations are available. Each brick awards ten points. Retry keeps the selected combination, rebuilds the board and resets the run to three lives, zero score and ready abilities. Winning Courtyard or Twin Towers offers the next level's difficulty selection; Crown victory returns to the menu. Scores are tracked per level.
 
 ## Abilities
 
@@ -103,9 +114,9 @@ Development progressed through individual scenes before the completed version wa
 
 ## Validation
 
-The final game and restored comparison scene pass **13 source/asset tests**: 6 project checks and 7 scene, metadata, material and audio-payload checks. The checks cover both scenes while retaining `After.unity` as the single Build Settings entry. C# syntax parsing covers 63 scripts. Earlier implementation passes also included shader-mask samples, font metrics and layout calculations.
+The Before and After scenes pass **13 source/asset tests**: 6 project checks and 7 scene, metadata, material and audio-payload checks. The checks cover both scenes while retaining `After.unity` as the single Build Settings entry. C# syntax parsing covers 63 scripts. Earlier implementation passes also included shader-mask samples, font metrics and layout calculations.
 
-Unity C#/shader compilation, runtime input/physics, visual/audio review and target-build performance remain unverified in the implementation environment. Recorded peer-playtest findings are not included in the current validation results.
+Unity C#/shader compilation, runtime input/physics, visual/audio review and target-build performance remain unverified in the implementation environment. The qualitative playtest feedback and resulting revision are documented in the Playtest and revision section.
 
 [Validation details](TESTING.md) · [Project structure](START-HERE.md) · [Development history](DEVELOPMENT-HISTORY.md)
 
