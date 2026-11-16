@@ -1,5 +1,21 @@
 # Unity verification and submission checklist
 
+## Castle music checkpoint
+
+- Open `Assets/_Project/Scenes/Medieval09_CastleMusic.unity` in Unity 6000.3.2f1. Import scripts/audio and check Console. Verify both music clips reference the new OGG assets, use preloaded decompressed PCM, preserve 44.1 kHz / 661,500 samples, and have normalization off.
+- Listen in the menu and during play for at least five complete 15-second loops. Check actual seams for clicks/gaps, musical continuity, balance and fatigue on speakers/headphones. Offline seam measurements do not prove Unity/device playback is seamless.
+- Start/leave/retry rounds repeatedly and switch all nine level/difficulty choices. Listen for the calmer arrangement blending into the rhythmic one over 0.8 seconds without restarting the phrase or doubling the common backing. Confirm all existing game speeds, controls, visuals and scoring.
+- Lose non-final lives: the LifeLost cue should stay clear as music briefly lowers and then recovers. The tune must keep its place while the ball relaunches immediately. Rapid contacts and Fireball should not restart or allocate music.
+- Win with the ball and Fireball, including rapid final breaks, then lose all lives in another run. Music should fade to silence in about 0.18 seconds while the correct existing result cue plays once; result timing stays immediate.
+- Return to menu or choose Next Level from a win. Calm music should return at selection, and gameplay should wait for difficulty as before. Verify Next Level's added listener never calls or duplicates its original action.
+- Inspect exactly two music sources under the independent music root, separate from GameFeel's reset hierarchy. Compare their timeSamples over several loops and through transitions. Their sample positions should stay aligned; inspect Unity scheduling behavior on the actual target platform.
+- Change Music Volume and Muted during playback; SFX/spells retain their own settings. Unmuting should reveal the current phrase, not restart it. Change crossfade/fade/duck settings and confirm bounded gains without abrupt scale-up.
+- Disable/re-enable the music component after the first UI frame, including during play, results and transitions. Playback stops immediately. While disabled, return/menu, Next Level and new-round state should still be remembered; re-enable should fade a fresh synchronized phrase in that context, with results remaining silent.
+- Change output device/sample rate if available. Both sources should stop and reschedule together, then fade in without duplicated voices. Check pause/focus behavior and any WebGL build on its actual browser after user interaction.
+- Stop/restart Play twice, including the project's domain-reload options if used, and unload/reload the scene. Check duplicate event/button listeners, leaked voice objects and stale result state. Reopen CastleAudio and older scenes; their sound and music behavior must retain the earlier version.
+
+C# syntax, scene/importer/GUID wiring, prior asset/component preservation, deterministic generation on the same encoder, decoded sample count/format/peak/DC/seam measurements, crossfade bounds and state/lifecycle source checks pass. Unity import/compilation, actual DSP alignment/looping/mix, output-device behavior and play-mode listening remain pending.
+
 ## Castle audio checkpoint
 
 - Open `Assets/_Project/Scenes/Medieval08_CastleAudio.unity` in Unity 6000.3.2f1. Allow script/audio import, check Console and verify all eight AudioClip fields are populated. Inspect WAV import: mono, preloaded decompressed PCM, 44.1 kHz. Compare the clips directly in the Inspector before balancing in-game.

@@ -6,11 +6,44 @@ Jehad Alharbi — 202248820
 
 1. Open this repository's root folder in Unity Hub using **6000.3.2f1**.
 2. Allow the existing packages to import. No extra tweening or audio packages are required.
-3. Open `Assets/_Project/Scenes/Medieval08_CastleAudio.unity` for the latest checkpoint. It is first in Build Settings; BallPaddle, ImpactMotion, MasonryParticles, BrickBreak, StoneCourt, UI02, UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
+3. Open `Assets/_Project/Scenes/Medieval09_CastleMusic.unity` for the latest checkpoint. It is first in Build Settings; CastleAudio, BallPaddle, ImpactMotion, MasonryParticles, BrickBreak, StoneCourt, UI02, UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
 4. Select 16:9 in Game view, press Play, choose a level, then choose Easy, Medium, or Hard. The ball starts only after both selections are made.
 5. Move with the mouse, A/D, or the left/right arrows. Cast with **1 or Space**, **2**, and **3**, or click the hotbar buttons. Menus support mouse selection or arrow keys and Enter.
 
 For the assignment comparison, open `Assets/_Project/Scenes/Before.unity` or `Assets/_Project/Scenes/After.unity`. Their gameplay rules remain unchanged: the ball launches automatically, the final lost life resets score/lives, and stopping/restarting Play restores the board. Arcade adds the menu/difficulty rules, Abilities adds spells, and Levels adds layout selection. Earlier scene assets and scripts remain unchanged.
+
+## Castle music checkpoint — change 9
+
+Open `Assets/_Project/Scenes/Medieval09_CastleMusic.unity`. The courtyard now has an original plucked-string and bell theme over a quiet open-fifth drone. Its calm menu arrangement blends into a fuller gameplay arrangement with bass, extra plucks and restrained frame-drum percussion. Both arrangements share one eight-bar, 96 BPM, 3/4 phrase: exactly 15 seconds / 661,500 samples at 44.1 kHz.
+
+`CastleMusic/CastleMusicController.cs` creates two reusable 2D AudioSources and schedules both at the same DSP time, after loading and checking their sample counts/rates. Linear crossfade weights keep their common backing from doubling. Both loops keep running through normal menu/round transitions, including life loss and retry. A separate scene root keeps music outside GameFeel's round-reset toggles.
+
+| Situation | Music behavior |
+|---|---|
+| Main menu / difficulty selection | Calm arrangement |
+| Start / retry a round | Blend into the gameplay arrangement without restarting the phrase |
+| Lose a non-final life | Briefly lower music, then recover while play continues |
+| Victory / game over | Fade to silence so the existing result cue stays clear |
+| Return to menu / Next Level selector | Fade back to the calm arrangement |
+
+Score-zero resets identify menu/play transitions. Existing final-brick/loss events identify results after the session commits its state. Next Level has no score-reset event, so the controller adds one state-only listener to that existing button after LevelMenuView builds its hierarchy; original callbacks are retained. No UI text is parsed. State observers remain attached while the component is disabled, allowing it to remember transitions made during silence; they are detached on destruction. Disabling stops both music sources immediately. Re-enabling schedules a fresh synchronized phrase in the remembered context, with a fade-in. Output-device changes also reschedule the pair together.
+
+| Setting on `Castle Music - Round Transitions 09 / CastleMusicController` | Default |
+|---|---:|
+| Muted / Music Volume | Off / 0.22 |
+| Crossfade / Fade In | 0.80 / 0.70 s |
+| Result Fade | 0.18 s |
+| Life Duck Gain / Hold | 0.35 / 0.70 s |
+
+Music mute and volume are independent of CastleAudioFeedback and spell sounds. Muting keeps the phrase clock running. Life ducking attacks quickly and recovers within approximately 0.35 seconds after its hold. No AudioListener, per-transition objects, runtime clip synthesis, physics changes or global audio-setting changes are added. The two sources use a lower priority than the existing impact/result voices.
+
+The two original OGG files in `CastleMusic/Clips` use wrapped note tails and matching lengths. Their import metadata requests preloaded, decompressed PCM with normalization off, preserving sample alignment. Regenerate with `python3 tools/generate_castle_music.py` (Python standard library plus FFmpeg with libvorbis). The generator composes both arrangements from the same backing, uses fixed offline drum-noise seeds, applies a shared peak gain, and writes deterministic OGG output with the same encoder version. Unity playback needs no extra package or FFmpeg installation. No external recordings, MIDI files or sound fonts are used.
+
+All previous Assets files stay frozen. The new scene adds only the independent music root/controller and its SceneRoots entry; existing UI, visuals, SFX, abilities, controls, physics and game rules retain CastleAudio's configuration. Source validation passes for C# syntax, scene/GUID/importer references, preserved blocks/assets, decoded sample counts/levels/seam steps, deterministic regeneration, crossfade bounds and event/lifecycle ownership. Unity is unavailable here: engine import/compilation, actual loop seams, scheduling, mix and device/play-mode listening checks remain pending in TESTING.md.
+
+Implementation references: Unity's [PlayScheduled](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/AudioSource.PlayScheduled.html), [AudioClip.samples](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/AudioClip-samples.html) and [audio-configuration event](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/AudioSettings.OnAudioConfigurationChanged.html). These describe the APIs, not an executed Unity playtest.
+
+Next checkpoint: a compact pause/settings panel with separate music/SFX controls and motion options, in another new scene.
 
 ## Castle audio checkpoint — change 8
 
@@ -321,7 +354,7 @@ Keep game audio audible alongside narration. Different ball trajectories between
 
 ## AI use
 
-OpenAI ChatGPT/Codex assisted with planning and debugging, the five core feedback components, procedural audio and shaders, scene wiring, optional Arcade/Abilities/Levels gameplay, medieval menus/HUD and font subset, stone bricks/castle walls, pooled break animation and impact scores, layered masonry particles, render-only camera shake and child-renderer brick reactions, wood/brass paddle and orb surfaces with pooled contact feedback, original castle sound assets and event/result audio, source/rule checks, and documentation. No completed JuiceLab feedback modules were imported.
+OpenAI ChatGPT/Codex assisted with planning and debugging, the five core feedback components, procedural audio and shaders, scene wiring, optional Arcade/Abilities/Levels gameplay, medieval menus/HUD and font subset, stone bricks/castle walls, pooled break animation and impact scores, layered masonry particles, render-only camera shake and child-renderer brick reactions, wood/brass paddle and orb surfaces with pooled contact feedback, original castle sound assets and event/result audio, synchronized original menu/play music, source/rule checks, and documentation. No completed JuiceLab feedback modules were imported.
 
 Student review, Unity tests, and revisions: **[Describe the tests and changes you actually performed. Do not submit this placeholder.]**
 
