@@ -38,8 +38,26 @@ class ProjectChecks(unittest.TestCase):
                     self.assertEqual(after[key], data.replace("m_LocalPosition: {x: -1.93, y: 0, z: -10}", "m_LocalPosition: {x: 0, y: 0, z: -10}"))
                 elif key == "988065188":
                     self.assertEqual(after[key], data.replace("m_LocalScale: {x: 0, y: 0, z: 0}", "m_LocalScale: {x: 1, y: 1, z: 1}"))
-                elif key in ("468270652", "1875066871"):  # Display-only HUD must not block mouse movement.
-                    self.assertEqual(after[key], data.replace("m_RaycastTarget: 1", "m_RaycastTarget: 0"))
+                elif key in ("468270651", "1875066870"):
+                    if key == "468270651":
+                        expected = data.replace("m_AnchoredPosition: {x: -115, y: -40}", "m_AnchoredPosition: {x: -64, y: -40}")
+                        expected = expected.replace("m_SizeDelta: {x: 400, y: 60}", "m_SizeDelta: {x: 320, y: 64}")
+                    else:
+                        expected = data.replace("m_AnchoredPosition: {x: 460, y: -40}", "m_AnchoredPosition: {x: 64, y: -40}")
+                        expected = expected.replace("m_SizeDelta: {x: 600, y: 70}", "m_SizeDelta: {x: 480, y: 64}")
+                    self.assertEqual(after[key], expected)
+                elif key in ("468270652", "1875066871"):
+                    expected = data.replace("m_RaycastTarget: 1", "m_RaycastTarget: 0")
+                    for old, new in (("m_fontSize: 48", "m_fontSize: 36"),
+                                     ("m_fontSizeBase: 48", "m_fontSizeBase: 36"),
+                                     ("m_fontWeight: 400", "m_fontWeight: 700"),
+                                     ("m_fontStyle: 0", "m_fontStyle: 1"),
+                                     ("m_characterSpacing: 0", "m_characterSpacing: 1.5")):
+                        expected = expected.replace(old, new)
+                    color, rgba = ("{r: 0.91764706, g: 0.85882353, b: 0.76078431, a: 1}", 4290960362) if key == "468270652" else ("{r: 0.90588235, g: 0.77254902, b: 0.49411765, a: 1}", 4286498279)
+                    expected = expected.replace("m_fontColor: {r: 1, g: 1, b: 1, a: 1}", f"m_fontColor: {color}")
+                    expected = expected.replace("m_fontColor32:\n    serializedVersion: 2\n    rgba: 4294967295", f"m_fontColor32:\n    serializedVersion: 2\n    rgba: {rgba}")
+                    self.assertEqual(after[key], expected)
                 else:
                     self.assertEqual(after[key], data)
         self.assertEqual(len(after) - len(before), 7)  # One GameObject, one Transform, five components.

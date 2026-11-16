@@ -15,4 +15,12 @@ Each stage is pushed separately to main. Use GitHub commit history to inspect a 
 - Disabled Raycast Target only on After's score and lives labels. The paddle's existing UI-hover guard otherwise stops mouse following over these display-only labels.
 - Review: stop Play, pull main, open `Assets/_Project/Scenes/After.unity`, and play in 16:9. Move the mouse horizontally over the score and lives labels; the paddle should keep following. Confirm both labels still update during scoring and ball loss.
 - Validation: all seven source checks pass; Before and shared gameplay remain unchanged. Unity runtime verification is still pending.
-- Next small checkpoint: medieval castle background. Later presentation work covers textures, UI, VFX, sound effects, and music; gameplay abilities, including the brick-piercing fireball, belong in a separate optional mode to preserve the assignment comparison.
+- Roadmap: simple UI and VFX first, followed by textures, background, sound effects, and music. Gameplay abilities, including the brick-piercing fireball, belong in a separate optional mode to preserve the assignment comparison.
+
+## 3. Simple medieval HUD styling
+
+- Moved score and lives to matching top corners with equal 64-unit side margins and 40-unit top margins at the Canvas's 1920x1080 reference resolution.
+- Styled score in warm gold and lives in parchment ivory, using matching 36-point bold text with light letter spacing. Existing score-pop feedback and non-blocking pointer behavior are preserved.
+- Review: pull main, open `Assets/_Project/Scenes/After.unity`, and compare the HUD with Before. Check at 1920x1080 and 1280x720; score and lives should stay readable in opposite corners. Break bricks and lose a ball to confirm values and score animation still update.
+- Validation: all seven source checks pass; Before, gameplay, and feedback scripts remain unchanged. Unity visual/play-mode checks are pending.
+- Next small checkpoint: improve brick-impact VFX.
