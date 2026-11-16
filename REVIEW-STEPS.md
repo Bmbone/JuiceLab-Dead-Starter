@@ -207,3 +207,13 @@ Each stage is pushed separately to main. Stop Play before pulling and open the s
 - Test pause, life loss, retry, Next Level, return/menu, rapid/low-frame-rate play and disable/re-enable. Check no stale badge or fake burst, restored native renderer flags and unchanged Fireball/other abilities. Narrow viewports should hide the plaque before it overlaps the court.
 - Source checks cover syntax/wiring/frozen assets, native width-marker/lifecycle ownership, plane and HUD clearance, shader masks and shard bounds. Unity engine/shader import, actual readability/detection/rendering, cleanup and play-mode/performance checks remain pending.
 - Stop here for review. Giant's Grip presentation is next.
+
+## 20. Giant's Grip polish and combined regression review
+
+- Stop Play, pull main and open `Assets/_Project/Scenes/Medieval14_GiantGripVFX.unity`, now first in Build Settings. Every earlier scene remains available.
+- Choose any level/difficulty and cast 2, keypad 2 or the second spell card. The original paddle expands immediately; emerald aura and gold edge runes follow its actual collider geometry, calculated from the current pose to avoid a stale physics-bounds read with AutoSyncTransforms off. A brief rising burst and ENLARGED plaque confirm the change.
+- Wait for the native six-second effect to expire. The physical paddle returns normally; gold motes and a brief RESTORED plaque confirm expiry. Casting during cooldown should produce no false effect.
+- Check both movement limits, simultaneous Fireball/Rune Shield, pause/resume, losing a life, retry, Next Level and return to the menu. No new effect should change reach, speed, score, protection, timers or sound. A disable/re-enable during expansion should not repeat a cast burst.
+- The badge sits above Settings in the left gutter; the shield badge remains on the right. Check 1080p/720p and a narrow viewport. Tune Aura Opacity and Enable Motes on the new root; inspect the fixed eight-mote pool.
+- Available regression checks pass: 12 existing source tests and 7 added asset/scene/audio-payload tests, plus C# syntax, serialized-data and numeric shader/text/layout checks. All 372 older Assets blobs are preserved.
+- Engine verification is still open: Unity/.NET are absent here. Import/compile in Unity 6000.3.2f1, run the three rule harnesses and complete the nine-choice play matrix in TESTING.md before treating this as a tested build. Record any actual failure for a focused follow-up fix.

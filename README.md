@@ -6,11 +6,36 @@ Jehad Alharbi — 202248820
 
 1. Open this repository's root folder in Unity Hub using **6000.3.2f1**.
 2. Allow the existing packages to import. No extra tweening or audio packages are required.
-3. Open `Assets/_Project/Scenes/Medieval13_RuneShieldVFX.unity` for the latest checkpoint. It is first in Build Settings; FireballVFX, ChapterPresentation, CourtSettings, CastleMusic, CastleAudio, BallPaddle, ImpactMotion, MasonryParticles, BrickBreak, StoneCourt, UI02, UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
+3. Open `Assets/_Project/Scenes/Medieval14_GiantGripVFX.unity` for the latest checkpoint. It is first in Build Settings; RuneShieldVFX, FireballVFX, ChapterPresentation, CourtSettings, CastleMusic, CastleAudio, BallPaddle, ImpactMotion, MasonryParticles, BrickBreak, StoneCourt, UI02, UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
 4. Select 16:9 in Game view, press Play, choose a level, then choose Easy, Medium, or Hard. The ball starts only after both selections are made.
 5. Move with the mouse, A/D, or the left/right arrows. Cast with **1 or Space**, **2**, and **3**, or click the hotbar buttons. Menus support mouse selection or arrow keys and Enter.
 
 For the assignment comparison, open `Assets/_Project/Scenes/Before.unity` or `Assets/_Project/Scenes/After.unity`. Their gameplay rules remain unchanged: the ball launches automatically, the final lost life resets score/lives, and stopping/restarting Play restores the board. Arcade adds the menu/difficulty rules, Abilities adds spells, and Levels adds layout selection. Earlier scene assets and scripts remain unchanged.
+
+## Giant's Grip and regression checkpoint — change 14
+
+Open `Assets/_Project/Scenes/Medieval14_GiantGripVFX.unity`. Giant's Grip gains an emerald outline/glow around the enlarged paddle, gold end runes, a short rising activation burst and a softer gold expiry burst. A large ENLARGED / RESTORED plaque sits above Settings beside the left pillar. The earlier Fireball and Rune Shield presentation remains present.
+
+`GiantGripVfx/GiantGripVisualFeedback.cs` observes the existing `AbilityPaddle.Width` after gameplay updates and positions its decorations from the real BoxCollider2D shape transformed by the current paddle pose. Automatic physics syncing is off in this project; calculating these bounds from the current transform avoids depending on a cached physics pose. It never changes paddle position/scale, collider, controls, ability state, sound, duration or cooldown. The original 3-unit width, 1.6x expansion to 4.8 units, six-second effect and twelve-second cooldown remain unchanged. End runes sit inside the actual reach; the faint outer glow is decorative. No substitute countdown is displayed.
+
+The retained noninteractive plaque uses the HUD's borrowed font at 22/32 points. It stays above the existing Settings button, hides when less than 272 reference units of left gutter are available, and remains below menus/settings. On normal expiry the label briefly changes to RESTORED; life loss, score-zero resets and menu/results clear everything without reporting an expiry. Re-enabling during an active spell resumes its appearance without repeating an activation burst. Animation uses scaled time, so it pauses with the round.
+
+| Setting / resource | Default |
+|---|---:|
+| Aura Opacity | 0.65 |
+| Enable Motes / Pool | On / 8 sprites |
+| Activation mote lifetime | 0.32–0.44 s |
+| Expiry mote lifetime | 0.22–0.30 s |
+| RESTORED confirmation | Up to 0.40 s, including fade |
+| World renderers | 11 reused sprites; no new physics or audio voice |
+
+Select `Giant Grip VFX - Emerald Reach 14` to tune opacity or disable motes. One owned white-texture quad, three shared procedural URP materials, property blocks and the fixed pool are allocated once. No per-use GameObjects, sprite/material instances or audio voices are created. A private System.Random stream affects cosmetics only. Disable removes only the new overlays, leaving the original paddle presentation intact; destruction releases owned UI/quad resources and retains the borrowed font and material assets.
+
+The combined source regression pass is complete: **12 existing tests + 7 added asset/scene checks pass**. `tests/verify_polish.py` checks every scene/prefab's local object graph, metadata uniqueness/targets, build-scene GUIDs, latest project-script fields, scene preservation, new materials and eight PCM WAV payloads. Additional checks parse all 63 project C# scripts, 20 scenes, 6 prefabs, 22 materials, the mixer and 9 serialized assets, and sample shader bounds, glyph advances and 16:9/4:3 badge layout. No source/schema failures remain in these checks.
+
+All 372 prior Assets blobs remain unchanged. This scene adds only the independent Giant's Grip root/transform/controller plus its SceneRoots entry. **Unity and .NET are unavailable here**, so C# semantic compilation, URP shader compilation, the three executable rule harnesses, listening/visual review, actual pause/reset/input behavior, all nine level/difficulty playthroughs and build/performance checks remain pending. Source checks do not establish engine correctness. The full current matrix and commands are in TESTING.md.
+
+The planned visual polish pass is implemented. The remaining stage is Unity verification and any fixes its results identify.
 
 ## Rune Shield visual checkpoint — change 13
 
@@ -452,7 +477,7 @@ Keep game audio audible alongside narration. Different ball trajectories between
 
 ## AI use
 
-OpenAI ChatGPT/Codex assisted with planning and debugging, the five core feedback components, procedural audio and shaders, scene wiring, optional Arcade/Abilities/Levels gameplay, medieval menus/HUD and font subset, stone bricks/castle walls, pooled break animation and impact scores, layered masonry particles, render-only camera shake and child-renderer brick reactions, wood/brass paddle and orb surfaces with pooled contact feedback, original castle sound assets and event/result audio, synchronized original menu/play music, scene-local pause/settings UI and mixer routing, chapter banners and result decoration, Fireball flame/ribbon/cast-ring/ember presentation, Rune Shield ward/badge/deflection presentation, source/rule checks, and documentation. No completed JuiceLab feedback modules were imported.
+OpenAI ChatGPT/Codex assisted with planning and debugging, the five core feedback components, procedural audio and shaders, scene wiring, optional Arcade/Abilities/Levels gameplay, medieval menus/HUD and font subset, stone bricks/castle walls, pooled break animation and impact scores, layered masonry particles, render-only camera shake and child-renderer brick reactions, wood/brass paddle and orb surfaces with pooled contact feedback, original castle sound assets and event/result audio, synchronized original menu/play music, scene-local pause/settings UI and mixer routing, chapter banners and result decoration, Fireball flame/ribbon/cast-ring/ember presentation, Rune Shield ward/badge/deflection presentation, Giant's Grip aura/runes/status/motes, source/rule checks, and documentation. No completed JuiceLab feedback modules were imported.
 
 Student review, Unity tests, and revisions: **[Describe the tests and changes you actually performed. Do not submit this placeholder.]**
 

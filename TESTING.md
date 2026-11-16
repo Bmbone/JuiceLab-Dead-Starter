@@ -1,5 +1,51 @@
 # Unity verification and submission checklist
 
+## Giant's Grip and combined regression checkpoint
+
+Latest scene: `Assets/_Project/Scenes/Medieval14_GiantGripVFX.unity` (first in Build Settings). This checkpoint combines the final planned ability presentation with the available source/asset regression pass. Earlier scenes and gameplay source remain frozen.
+
+Verified in this environment:
+
+- `python tests/verify_project.py`: **12 tests passed**, with historical Git objects available for its baseline checks.
+- `python tests/verify_polish.py`: **7 tests passed**, covering unique metadata and targets, every scene/prefab's local references, all 20 build scenes, preserved previous scene objects, required project-script fields, the three new material/shader links and eight complete PCM WAV payloads.
+- All 63 Assets C# scripts parsed without syntax errors. YAML parsing passed for 20 scenes, 6 prefabs, 22 materials, one mixer and 9 serialized assets. Unity/package-provided references still require package import; these checks do not resolve package code or compile shaders.
+- All 372 prior Assets blobs match the preceding checkpoint. The new scene adds three objects and one SceneRoots entry only.
+- Numerical shader samples are finite/bounded. Existing font glyph advances fit the 208-unit badge labels, including ENLARGED and RESTORED at 32 points. Layout calculations leave the badge clear of Settings/court at 1920x1080 and 1280x720 and hide it at 4:3 when the gutter is too narrow.
+
+**Not executed:** Unity compilation/import, .NET console rule harnesses, rendering/listening, real input/physics, pause/cleanup, device builds and performance. Neither Unity nor .NET is installed here. The source pass cannot certify play-mode behavior.
+
+Run from a complete repository checkout with .NET 8 installed:
+
+```sh
+python tests/verify_project.py
+python tests/verify_polish.py
+dotnet run --project tests/ArcadeRoundChecks.csproj
+dotnet run --project tests/AbilityChecks.csproj
+dotnet run --project tests/LevelChecks.csproj
+```
+
+Import in Unity 6000.3.2f1, let scripts/shaders compile and check Console before playing. Check the new component's session/paddle/collider/camera/wall/font and material references. Required engine matrix:
+
+| Level | Easy | Medium | Hard |
+|---|---|---|---|
+| Level 1 | Pending | Pending | Pending |
+| Level 2 | Pending | Pending | Pending |
+| Level 3 | Pending | Pending | Pending |
+
+For each combination, check its brick layout/ball speed, mouse and keyboard movement, all three spells, cooldowns, last-brick victory, life loss/game over and retry/menu paths. Confirm score/lives/results remain consistent and sounds/music do not duplicate.
+
+Giant's Grip acceptance checks:
+
+- Cast using 2, keypad 2 and the second hotbar card. The physical paddle must keep its original 1.6x expansion, six-second duration and twelve-second cooldown. Aura/end runes track the actual bounds calculated from the collider shape/current transform, including fast keyboard and mouse moves with AutoSyncTransforms off; no collision shape, movement limit or animation delay may be introduced.
+- Check emerald aura/gold runes, one eight-mote activation burst, readable ENLARGED label and a gold burst/RESTORED confirmation on unused normal expiry. No opaque rectangle, pink shader or clipped TMP label should appear.
+- Failed/cooldown/pause-blocked casts must produce no extra pulse. The effect must not imply an extra hit, protection or a new sound.
+- Pause mid-activation/expansion/expiry and resume. Ages, motes and label fade must freeze with the round; native ability timers and movement must resume correctly.
+- Lose a life, clear the last brick, retry, select Next Level and return to menu while expanded or while motes fade. New overlays must clear immediately with no false expiry confirmation or carry-over.
+- Disable/re-enable the component during expansion: original paddle should remain present, the new appearance may resume, and a second cast burst must not replay. Stop/restart Play twice and unload/reload to check event/resource cleanup.
+- Check both edges, fast movement and simultaneous Fireball/Rune Shield. Ball stays above new world effects. Verify badge above Settings/outside court, menu/settings ordering and narrow-viewport hide behavior.
+- Tune Aura Opacity/Enable Motes. Confirm 11 fixed SpriteRenderers, eight mote slots, one owned quad, borrowed HUD font, three shared materials and zero new colliders/audio voices/per-use objects. Confirm stable hierarchy/material count over repeated casts and on the target build.
+- Reopen RuneShieldVFX and earlier scenes to confirm their original assets/presentation remain available. Listen to menu, paddle/wall/brick, cast, win, life-loss and defeat cues and inspect music transitions in the actual engine.
+
 ## Rune Shield visual checkpoint
 
 - Open `Assets/_Project/Scenes/Medieval13_RuneShieldVFX.unity` in Unity 6000.3.2f1. Import script/shader/materials and check Console. Verify session/ability root/camera/right-wall/font and three material references, plus the existing generated Rune shield LineRenderer.
