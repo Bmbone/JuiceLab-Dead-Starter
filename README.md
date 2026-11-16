@@ -6,11 +6,41 @@ Jehad Alharbi — 202248820
 
 1. Open this repository's root folder in Unity Hub using **6000.3.2f1**.
 2. Allow the existing packages to import. No extra tweening or audio packages are required.
-3. Open `Assets/_Project/Scenes/Medieval05_MasonryParticles.unity` for the latest playable checkpoint. It is first in Build Settings; BrickBreak, StoneCourt, UI02, UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
+3. Open `Assets/_Project/Scenes/Medieval06_ImpactMotion.unity` for the latest playable checkpoint. It is first in Build Settings; MasonryParticles, BrickBreak, StoneCourt, UI02, UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
 4. Select 16:9 in Game view, press Play, choose a level, then choose Easy, Medium, or Hard. The ball starts only after both selections are made.
 5. Move with the mouse, A/D, or the left/right arrows. Cast with **1 or Space**, **2**, and **3**, or click the hotbar buttons. Menus support mouse selection or arrow keys and Enter.
 
 For the assignment comparison, open `Assets/_Project/Scenes/Before.unity` or `Assets/_Project/Scenes/After.unity`. Their gameplay rules remain unchanged: the ball launches automatically, the final lost life resets score/lives, and stopping/restarting Play restores the board. Arcade adds the menu/difficulty rules, Abilities adds spells, and Levels adds layout selection. Earlier scene assets and scripts remain unchanged.
+
+## Impact motion checkpoint — change 6
+
+Open `Assets/_Project/Scenes/Medieval06_ImpactMotion.unity`. Brick destruction now produces a restrained camera pulse and a brief damped reaction in nearby surviving bricks. Losing a life while play continues produces a stronger camera jolt. Motion decays to rest; repeated hits refresh a bounded pulse. The HUD, impact labels and existing immediate menu/result screens stay stable.
+
+`ImpactMotion/ImpactMotionFeedback.cs` applies a temporary view matrix only inside URP's camera-render callbacks, then resets it after rendering, before Update/FixedUpdate and on disable/reset. It never changes the camera transform or projection. This keeps the existing mouse paddle's ScreenToWorldPoint mapping outside rendering unchanged. The castle background gets a small constant overscan margin based on configured maximum displacement to cover viewport edges; the margin does not pulse on individual hits and is removed when camera motion is disabled.
+
+`Prefabs/ReactiveRunestoneBrick.prefab` duplicates the previous brick without changing its collider, root transform, health, points, material or surface component. `BrickVisualReaction.cs` creates one collider-free child renderer, copies the root appearance/property block after surface styling, and animates only that child. Root rendering is suppressed with forceRenderingOff while its enabled state, tint and bounds remain available to gameplay. Disabling the reaction component restores root rendering; resets return the child pose to rest. Live bricks react only within the configured radius; destroyed bricks retain the earlier four-piece break animation.
+
+Select `GameFeel - Impact Motion 06` and tune ImpactMotionFeedback:
+
+| Inspector setting | Default |
+|---|---:|
+| Enable Camera Shake / Enable Brick Reactions | On / On |
+| Motion Strength | 1 (set **0** to disable all new motion) |
+| Brick Shake Amplitude / Duration | 0.018 world units / 0.11 s |
+| Life Loss Amplitude / Duration | 0.075 world units / 0.26 s |
+| Neighbor Radius | 2.6 world units |
+| Neighbor Amplitude / Duration | 0.035 world units / 0.20 s |
+| Neighbor Compression | 0.016 |
+
+**Camera-shake off setting:** uncheck **Enable Camera Shake** on ImpactMotionFeedback. **Brick-motion off setting:** uncheck **Enable Brick Reactions**. Either can be changed independently while playing. Setting Motion Strength to zero disables both. Disabling the component restores the view and stops brick motion; other animation, particle, scoring and audio feedback remain available.
+
+All old scenes, prefabs, materials/shaders, gameplay scripts, ball/paddle/camera transforms and collision settings are preserved. The new scene only selects the independent reactive prefab and adds the controller. No new physics objects, per-hit GameObjects/material instances, gameplay randomness or global time changes are introduced.
+
+Validation: C# syntax, scene/reference/metadata and duplicated-prefab checks, preserved physics/health/score, bounded concurrent-pulse samples, background coverage, inter-brick clearance, render/event lifecycle and reset checks pass. Unity is unavailable here: engine compilation, actual URP callback rendering/restoration, source renderer bounds, pointer control during jolts, visual tuning and playtesting remain pending. See TESTING.md before treating the pass as runtime verified.
+
+Implementation references: Unity's [worldToCameraMatrix documentation](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Camera-worldToCameraMatrix.html) and [beginCameraRendering](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Rendering.RenderPipelineManager-beginCameraRendering.html). These API references informed the render-only approach; they are not evidence of an executed Unity playtest.
+
+Next checkpoint: ball/paddle appearance and contact feedback, followed by the remaining audio polish.
 
 ## Masonry particles checkpoint — change 5
 
@@ -195,7 +225,7 @@ Select `GameFeel - After only` in After to tune the Inspector values:
 - Score pop: peak scale and duration. Initial settings: 1.16 and 0.18 seconds.
 - Trail: duration and width. Initial settings: 0.12 seconds and 0.16 world units. Ball loss is announced before relaunch, so the trail resets in LateUpdate after the move.
 
-These are initial implementation choices, not claimed playtest findings. Change one value at a time, then record actual observations below. No camera shake or hit-stop is used.
+These are initial implementation choices, not claimed playtest findings. Change one value at a time, then record actual observations below. After uses no camera shake or hit-stop. The optional Impact Motion checkpoint adds the separately configurable shake described above.
 
 Each feedback component subscribes in OnEnable and unsubscribes in OnDisable. Temporary effects finish or reuse fixed pools. Feedback does not consume UnityEngine.Random, preserving the gameplay's random launch generator.
 
@@ -232,7 +262,7 @@ Keep game audio audible alongside narration. Different ball trajectories between
 
 ## AI use
 
-OpenAI ChatGPT/Codex assisted with planning and debugging, the five core feedback components, procedural audio and shaders, scene wiring, optional Arcade/Abilities/Levels gameplay, medieval menus/HUD and font subset, stone bricks/castle walls, pooled break animation and impact scores, layered masonry particles, source/rule checks, and documentation. No completed JuiceLab feedback modules were imported.
+OpenAI ChatGPT/Codex assisted with planning and debugging, the five core feedback components, procedural audio and shaders, scene wiring, optional Arcade/Abilities/Levels gameplay, medieval menus/HUD and font subset, stone bricks/castle walls, pooled break animation and impact scores, layered masonry particles, render-only camera shake and child-renderer brick reactions, source/rule checks, and documentation. No completed JuiceLab feedback modules were imported.
 
 Student review, Unity tests, and revisions: **[Describe the tests and changes you actually performed. Do not submit this placeholder.]**
 

@@ -1,5 +1,20 @@
 # Unity verification and submission checklist
 
+## Impact motion checkpoint
+
+- Open `Assets/_Project/Scenes/Medieval06_ImpactMotion.unity` in Unity 6000.3.2f1. Let scripts import, check Console, and verify ImpactMotionFeedback has camera/session/background references.
+- Break individual bricks from several directions, then use Fireball for clustered hits. Check restrained camera pulses and damped reactions only in nearby live bricks. Repeated hits must remain capped and settle fully.
+- Miss the ball while lives remain. The life-loss jolt should be stronger and brief, with the normal immediate ball relaunch and correct life count. Final result/menu screens retain their existing immediate timing and remain stable.
+- Check the camera Transform and projection are unchanged during the visible jolt. Its rendering override should be cleared after each camera pass and on disable/reset; verify no lingering view shift after a pulse.
+- Hold the pointer at one screen position and trigger shake. The paddle target should match the unshaken scene, without drift/jitter caused by mouse mapping. Test keyboard input, wall/paddle/brick edge bounces and the expanded paddle as well.
+- In Scene view, inspect root colliders/transforms while nearby visuals react. Only the child renderer should move. Check root SpriteRenderer.bounds stays equal to the original full brick dimensions even with root rendering suppressed, and impact sizes/positions remain correct.
+- Inspect the child appearance: current row tint, grain/brass/carving and material property block should match the previous scene. There must be exactly one generated visual child per live brick, with no duplicate visible root or per-hit objects/material instances.
+- Test Enable Camera Shake off, Enable Brick Reactions off, and Motion Strength 0 independently. Disable the controller or reaction component during a pulse; verify the view/child pose restores and original bricks remain visible. Re-enable and check subsequent hits.
+- At 1920x1080 and 1280x720, watch all viewport edges during the strongest jolt. The background must cover them; the top HUD, score popups and spell bar should stay stable and readable.
+- Run loss/retry, victory/Next Level and menu transitions during motion. New rounds must begin at rest. Stop/restart Play twice and check for stale render/event subscriptions or doubled reactions. Reopen MasonryParticles and earlier scenes to confirm their versions remain unchanged.
+
+C# syntax, source/asset references and preservation, bounded pulse/clearance/overscan and lifecycle checks pass. Unity engine compilation, URP render behavior, source renderer bounds, pointer control and visual/play-mode checks above remain pending.
+
 ## Masonry particles checkpoint
 
 - Open `Assets/_Project/Scenes/Medieval05_MasonryParticles.unity` in Unity 6000.3.2f1. Let the new shader/materials/script import and check Console. No particle should render pink or as an opaque full billboard square.

@@ -107,3 +107,16 @@ Each stage is pushed separately to main. Stop Play before pulling and open the s
 - Toggle MasonryParticleFeedback off/on: particle layers should clear/resume, with the separate break animation, score labels and audio still functioning. Mute audio and check that impact feedback is readable without sound.
 - Validation: C# syntax, scene/material/shader references, particle bounds, event/ownership and source preservation checks pass. Unity C#/shader compilation, actual appearance, rendering/performance and play-mode review remain pending.
 - Stop here for review. Camera and brick shake follow in the next visual feedback checkpoint.
+
+## 12. Screen shake and neighboring brick reactions
+
+- New scene: `Assets/_Project/Scenes/Medieval06_ImpactMotion.unity`, first in Build Settings. Earlier scenes, prefabs, materials/shaders and gameplay code remain unchanged.
+- Added capped, damped brick-impact camera pulses, stronger life-loss jolts while playing, and small nearby-brick reactions. Menus/results/HUD stay stable; original immediate end-of-round timing is preserved.
+- Camera motion is applied only as a URP render-time view override, restored after rendering and before input/physics callbacks. The camera transform/projection stay fixed. Adaptive constant background overscan covers the maximum displacement without zooming on each impact.
+- A new ReactiveRunestoneBrick prefab retains the original root SpriteRenderer, collider and LevelBrick settings. One child renderer per brick copies its appearance and alone receives the motion/compression. Root rendering is suppressed without disabling its data; collider/health/points and hit bounds remain fixed.
+- Controls on `GameFeel - Impact Motion 06 / ImpactMotionFeedback`: separate Enable Camera Shake and Enable Brick Reactions toggles, a zero-to-one Motion Strength slider, amplitudes, durations and neighbor radius. Motion Strength 0 disables the whole new pass. Reset, disable/re-enable, menu and retry return the view and children to rest.
+- Review: stop Play, pull main and open **Medieval06_ImpactMotion**. Break isolated/clustered bricks and use Fireball. Check a small capped camera pulse and only nearby survivors reacting, with no overlapping visual bricks or increased displacement during rapid hits.
+- Deliberately lose non-final lives: compare the stronger brief jolt with brick impacts. Test mouse following over the same screen position during motion, keyboard movement, edge bounces and source/collider bounds. The HUD should remain still, the background should cover edges, and normal controls/speeds must match MasonryParticles.
+- Toggle each motion setting and disable the controller/reaction component mid-pulse. Check exact rest recovery, visibility, current brick tint and cleanup. Test loss/retry, win/Next Level, menu transitions and stop/restart Play twice.
+- Validation: C# syntax, scene/prefab/reference/isolation, pulse bounds, clearance/overscan and callback lifecycle/source checks pass. Actual Unity compilation, render callbacks, renderer bounds, input behavior and visual/play-mode verification are pending.
+- Stop here for review. Ball/paddle polish and event/result audio remain the next checkpoints.
