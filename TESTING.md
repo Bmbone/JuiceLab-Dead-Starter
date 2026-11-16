@@ -1,5 +1,20 @@
 # Unity verification and submission checklist
 
+## Chapter presentation checkpoint
+
+- Open `Assets/_Project/Scenes/Medieval11_ChapterPresentation.unity` in Unity 6000.3.2f1. Import scripts and check Console. Verify the new root references LevelSession, the world camera, LeftWall collider and score text. The existing UI must finish construction/styling before the new adapter wires it.
+- Start and retry all nine level/difficulty choices at 1920x1080 and 1280x720. The two-second banner must show the correct number/name/difficulty and fade beside the left pillar. Ball launch, movement, hotbar input, speeds and collision positions must remain immediate/unchanged.
+- Watch fast balls and edge hits during the introduction. The banner must remain outside the collision court, keep a margin for camera motion, and never intercept the pointer. Resize narrower than 16:9 and verify its safety check hides it when the gutter becomes too small.
+- Pause during the introduction, wait several real seconds, then resume. Remaining banner time should be preserved and settings should cover it. Lose a non-final life: the banner must not restart. Repeat retry/menu/Next Level transitions and check for stale labels or overlapping old banners.
+- Win each chapter with ball and Fireball, including rapid final hits. Verify the exact final score remains the original LevelMenuView string (maximum 280/260/240) in the new plaque, with no rounded/animated replacement or extra points.
+- Check gold victory shields/CLEAR seal, coral game-over accents/RETRY seal and the correct next-step line. Levels 1/2 should name the next chapter; Crown must retain its original valid return action. Score, stamps, title, side crests, cue and footer must not overlap or clip.
+- Use Try Again, Next Level and Return to Main Menu by mouse and keyboard immediately on result arrival. Decorative fading must not delay, block, duplicate or replace any action. Existing victory/game-over sounds and music transitions should still trigger exactly as before.
+- Open settings from results and return to all selection screens. Check ordering above new decorations, retained focus/navigation, preserved preferences and no result-sized score text leaking into the difficulty/menu summaries.
+- Disable ChapterPresentation during a banner and during a result. The banner/decor should disappear and original score font size/rectangle should restore. Re-enable mid-play: no old intro should replay; re-enable at results: decoration may fade in, with no repeated game state or audio event.
+- Repeat round transitions and stop/restart Play twice. Intro/result object counts should remain constant, fonts must be borrowed rather than recreated/destroyed, and no stale ScoreChanged listeners should remain after unloading. Reopen CourtSettings/earlier scenes to verify their original presentation remains intact.
+
+C# syntax, scene/GUID references and preservation, current mode-label/catalog contract, font/layout/gutter/fade bounds, exact score ownership and lifecycle source checks pass. Unity compilation/import, actual TMP rendering/layering, camera/Canvas gutter behavior, pause/input and play-mode verification remain pending.
+
 ## Court settings checkpoint
 
 - Open `Assets/_Project/Scenes/Medieval10_CourtSettings.unity` in Unity 6000.3.2f1. Import scripts/mixer/fonts, check Console and confirm the new settings root references LevelSession, board, music root, world camera, ImpactMotionFeedback, font and mixer groups. Mixer.SetFloat must find MusicVolume and SFXVolume.

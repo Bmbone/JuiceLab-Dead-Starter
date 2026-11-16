@@ -6,11 +6,33 @@ Jehad Alharbi — 202248820
 
 1. Open this repository's root folder in Unity Hub using **6000.3.2f1**.
 2. Allow the existing packages to import. No extra tweening or audio packages are required.
-3. Open `Assets/_Project/Scenes/Medieval10_CourtSettings.unity` for the latest checkpoint. It is first in Build Settings; CastleMusic, CastleAudio, BallPaddle, ImpactMotion, MasonryParticles, BrickBreak, StoneCourt, UI02, UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
+3. Open `Assets/_Project/Scenes/Medieval11_ChapterPresentation.unity` for the latest checkpoint. It is first in Build Settings; CourtSettings, CastleMusic, CastleAudio, BallPaddle, ImpactMotion, MasonryParticles, BrickBreak, StoneCourt, UI02, UI01, Medieval, Levels, Abilities, Arcade, After and Before retain their earlier versions.
 4. Select 16:9 in Game view, press Play, choose a level, then choose Easy, Medium, or Hard. The ball starts only after both selections are made.
 5. Move with the mouse, A/D, or the left/right arrows. Cast with **1 or Space**, **2**, and **3**, or click the hotbar buttons. Menus support mouse selection or arrow keys and Enter.
 
 For the assignment comparison, open `Assets/_Project/Scenes/Before.unity` or `Assets/_Project/Scenes/After.unity`. Their gameplay rules remain unchanged: the ball launches automatically, the final lost life resets score/lives, and stopping/restarting Play restores the board. Arcade adds the menu/difficulty rules, Abilities adds spells, and Levels adds layout selection. Earlier scene assets and scripts remain unchanged.
+
+## Chapter presentation checkpoint — change 11
+
+Open `Assets/_Project/Scenes/Medieval11_ChapterPresentation.unity`. Starting or retrying a round now briefly displays a heraldic banner with the level number, name and difficulty beside the left castle pillar. Victory and game-over screens gain castle shield seals, a framed final score, gold/coral outcome accents and a clearer next-step line. The exact score and original result buttons remain owned by LevelMenuView.
+
+| Element | Presentation |
+|---|---|
+| Level introduction | 232x300 banner in the left gutter; 32-point serif level name |
+| Banner timing | 2.0 s default, with a short fade in/out and no launch delay |
+| Final score | Original exact score text, enlarged to 60 pt inside a framed plaque |
+| Victory / defeat | Gold CLEAR seal / coral RETRY seal |
+| Next-step line | Next chapter name, final-clear encouragement or retry prompt |
+
+`ChapterPresentation.cs` runs after MedievalInterfacePolish and waits for the existing generated UI. It observes score-zero round resets, then reads only the original mode label's `L<number> NAME | DIFFICULTY` context to identify the level/difficulty. It never parses or replaces the score, adds points, changes game state, adds button listeners or changes selection/navigation. Result visibility comes from the existing Return/Try Again/Next button states. The three catalog formations, nine mode combinations and immediate start/result timing are preserved.
+
+The banner sits outside the original left-wall collision face, with a 16-unit outer margin and 24-unit safety allowance. It hides if the camera projection and Canvas scale leave less than 272 reference units of gutter. It never covers the court to perform a countdown. Its age uses scaled time, so the existing pause freezes the remaining display time; a non-final lost life does not replay it. All banner/decor images and text ignore raycasts. Its Canvas sorts below menus and the settings modal.
+
+`ChapterPresentationView.cs` creates one reusable banner and result-decoration hierarchy from native UI shapes, including castle shield motifs. Decorative result elements fade in over 0.18 seconds while the existing score and actions are available immediately. The score's font size/rectangle are restored when leaving results or disabling the new component, preserving any new menu style already applied by its original owner. Fonts are borrowed from the existing HUD/interface; no new font/material/audio asset or per-round UI hierarchy is created.
+
+All existing Assets files stay frozen. The cloned scene adds only an independent chapter-presentation root/transform/controller and its SceneRoots entry. Pause/settings, saved preferences, audio/music, physics, controls, ability rules, score/lives and old UI callbacks retain CourtSettings' configuration. Source checks pass for C# syntax, scene/GUID wiring, preserved assets/blocks, context formatting and catalog coverage, banner/crest/score layout bounds, fade bounds and event/font/score ownership. Unity is unavailable here: engine import/compilation, actual font layout/layering, gutter visibility and pause/menu/result play-mode review remain pending in TESTING.md.
+
+Next proposed checkpoint: clearer spell visuals and ability feedback, in another new scene.
 
 ## Court settings checkpoint — change 10
 
@@ -381,7 +403,7 @@ Keep game audio audible alongside narration. Different ball trajectories between
 
 ## AI use
 
-OpenAI ChatGPT/Codex assisted with planning and debugging, the five core feedback components, procedural audio and shaders, scene wiring, optional Arcade/Abilities/Levels gameplay, medieval menus/HUD and font subset, stone bricks/castle walls, pooled break animation and impact scores, layered masonry particles, render-only camera shake and child-renderer brick reactions, wood/brass paddle and orb surfaces with pooled contact feedback, original castle sound assets and event/result audio, synchronized original menu/play music, scene-local pause/settings UI and mixer routing, source/rule checks, and documentation. No completed JuiceLab feedback modules were imported.
+OpenAI ChatGPT/Codex assisted with planning and debugging, the five core feedback components, procedural audio and shaders, scene wiring, optional Arcade/Abilities/Levels gameplay, medieval menus/HUD and font subset, stone bricks/castle walls, pooled break animation and impact scores, layered masonry particles, render-only camera shake and child-renderer brick reactions, wood/brass paddle and orb surfaces with pooled contact feedback, original castle sound assets and event/result audio, synchronized original menu/play music, scene-local pause/settings UI and mixer routing, chapter banners and result decoration, source/rule checks, and documentation. No completed JuiceLab feedback modules were imported.
 
 Student review, Unity tests, and revisions: **[Describe the tests and changes you actually performed. Do not submit this placeholder.]**
 

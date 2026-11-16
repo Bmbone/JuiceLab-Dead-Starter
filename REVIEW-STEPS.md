@@ -170,3 +170,16 @@ Each stage is pushed separately to main. Stop Play before pulling and open the s
 - Test Main Menu, disable/re-enable the settings component, scene unload/reload and stop Play while paused. Time scale must restore; audio routing, UI, render/event subscriptions and persistent values must clean up correctly. Check the two motion options independently after retry and new-board rebuilds.
 - C# syntax, scene/mixer/GUID/asset preservation, geometry bounds, dB mapping and lifecycle/input-order source checks pass. Unity compilation/mixer/font import, actual input blocking/pause preservation, layout/focus, motion/persistence and playback remain pending.
 - Stop here for review. Level introductions and richer result presentation are the next proposed checkpoint.
+
+## 17. Chapter banners and result presentation
+
+- New scene: `Assets/_Project/Scenes/Medieval11_ChapterPresentation.unity`, first in Build Settings. All prior Assets files remain unchanged.
+- Added a short heraldic level/difficulty banner beside the left pillar, with a gutter-safety check and no countdown or launch delay. Pause freezes its remaining time; non-final life loss does not restart it.
+- Added castle shield seals, a framed 60-point final-score readout, gold CLEAR/coral RETRY accents and a context-specific next-step line. The original score text remains exact and the existing Try Again/Next Level/Main Menu actions and navigation remain immediately available.
+- One retained UI hierarchy reuses the existing body/display fonts. New visuals ignore raycasts and sit below settings. Result score styling restores on menu transitions/disable; decorative fading introduces no game-flow delay or new audio.
+- Review all nine level/difficulty choices at 1920x1080 and 1280x720. Check correct chapter/difficulty, a readable banner outside the collision court, normal immediate ball launch and unchanged HUD/spell-bar input. Narrow viewports should hide the banner if the gutter is insufficient.
+- Pause/resume during the banner, retry, return/menu and continue through Next Level. The banner should appear once per fresh round, without stale names or a replay on non-final life loss.
+- Win with ball/Fireball and lose all lives. Check exact final scores, score-plaque/seal spacing, correct next-chapter cue and all existing mouse/keyboard actions. Crown should retain only its valid return action. Settings must remain above all new decoration.
+- Disable/re-enable the new controller during play/results and stop/restart Play twice. Old score size/rectangle should restore, earlier menus should not inherit result styling, resources/listeners should not grow, and result audio should not replay.
+- Source checks cover syntax/wiring, scene/asset preservation, mode-context/catalog contract, font/layout/gutter/fade bounds and lifecycle/score ownership. Actual Unity compilation/import, font rendering, layering, input and play-mode review remain pending.
+- Stop here for review. Spell visuals and ability feedback are the next proposed checkpoint.

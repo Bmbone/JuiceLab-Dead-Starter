@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/_Project/Scenes/Medieval11_ChapterPresentation.unity
+    guid: 08d4de8d303f45edb2b90cc6f14e0da8
+  - enabled: 1
     path: Assets/_Project/Scenes/Medieval10_CourtSettings.unity
     guid: a8406bb8b43a44868da7b9db6be2a3e3
   - enabled: 1
