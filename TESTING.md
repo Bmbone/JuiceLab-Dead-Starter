@@ -1,5 +1,21 @@
 # Unity verification and submission checklist
 
+## Arcade main menu and complete runs
+
+- Open `Assets/_Project/Scenes/Arcade.unity` in Unity 6000.3.2f1. Press Play: the main menu should appear, with no moving ball or active paddle behind it.
+- Start each difficulty. Inspect the ball's Rigidbody2D linear velocity magnitude during play: Easy 9, Medium 12, Hard 15. Check again after paddle/wall contact and after losing a life.
+- Confirm every run begins with 28 bricks, score 0, and three lives. The top-center label identifies the chosen mode.
+- Miss twice: play should continue with two lives, then one. Any earned score should remain.
+- Miss a third time: Game Over should show the final score and exactly two buttons, Try Again and Return to Main Menu. The ball/paddle must stay stopped; score/lives must not reset behind the result screen.
+- Click Try Again: the same difficulty should restart with all 28 bricks, three lives, score 0, and no old trail, particle burst or audio left from the previous run.
+- Return to Main Menu after a loss, choose a different difficulty, and verify its speed is applied.
+- Clear all 28 bricks: Victory should show score 280 and a Return to Main Menu button. It must not appear while any brick remains, and the stopped ball must not cause a later game over.
+- Return to Main Menu after winning and start another run. Repeat menu/retry transitions several times; buttons, feedback and event listeners should not duplicate.
+- Test button selection with mouse and with arrow keys/Enter. Check the main menu, Game Over and Victory at 1920x1080 and 1280x720 in 16:9.
+- Reopen Before and After separately. Their original auto-launch and life-reset behavior must remain intact.
+
+Automated checks: `python3 tests/verify_project.py` (nine source/asset checks) and `dotnet run --project tests/ArcadeRoundChecks.csproj` (.NET 8, 7,868 rule assertions). These pass in the implementation environment. Unity import, C# engine compilation, physics, UI interaction and visual/audio checks above still require the editor.
+
 ## Import and first run
 
 - Open with Unity 6000.3.2f1 and let packages import; check Console for C# and shader errors.

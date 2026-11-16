@@ -82,7 +82,44 @@ class ProjectChecks(unittest.TestCase):
     def test_required_assets_and_build_scenes(self):
         self.assertTrue((ROOT / "Assets/TextMesh Pro/Sprites/EmojiOne.png").read_bytes().startswith(b"\x89PNG\r\n\x1a\n"))
         settings = (ROOT / "ProjectSettings/EditorBuildSettings.asset").read_text()
-        self.assertEqual(re.findall(r"path: (Assets/.*?\.unity)", settings), ["Assets/_Project/Scenes/After.unity", "Assets/_Project/Scenes/Before.unity"])
+        self.assertEqual(re.findall(r"path: (Assets/.*?\.unity)", settings), ["Assets/_Project/Scenes/Arcade.unity", "Assets/_Project/Scenes/After.unity", "Assets/_Project/Scenes/Before.unity"])
+
+    def test_arcade_scene_references_and_isolation(self):
+        scene = (SCENES / "Arcade.unity").read_text()
+        arcade = blocks(scene)
+        self.assertEqual(len(arcade), len(re.findall(r"^--- !u!\d+ &", scene, re.M)))
+        component_types = {"196722578": "ArcadeBoard", "414140399": "ArcadeDeathZone",
+                           "1027157232": "ArcadeSession", "1534019715": "ArcadeBall"}
+        for block, script in component_types.items():
+            meta = (ROOT / f"Assets/_Project/Arcade/{script}.cs.meta").read_text()
+            guid = re.search(r"guid: (\w+)", meta).group(1)
+            self.assertIn(f"guid: {guid}", arcade[block])
+            self.assertIn(f"Assembly-CSharp::JuiceStudy.Arcade.{script}", arcade[block])
+        for field, target in {"ball": "1534019715", "paddle": "467281905", "board": "196722578",
+                              "hud": "988065184", "scoreText": "1875066871", "livesText": "468270652",
+                              "feedback": "1900402000"}.items():
+            self.assertIn(f"{field}: {{fileID: {target}}}", arcade["1027157232"])
+            self.assertIn(target, arcade)
+        self.assertIn("session: {fileID: 1027157232}", arcade["1534019715"])
+        self.assertNotIn("988065189", scene)  # The baseline HUD would read the baseline singleton.
+        self.assertNotIn("Assembly-CSharp::GameManager", scene)
+        self.assertNotIn("Assembly-CSharp::Ball\n", scene)
+        after = blocks((SCENES / "After.unity").read_text())
+        for key, value in arcade.items():
+            if value.startswith(("Rigidbody2D:\n", "BoxCollider2D:\n", "CircleCollider2D:\n")):
+                self.assertEqual(value, after[key], f"Physics shape/settings changed in {key}")
+        prefab = ROOT / "Assets/_Project/Prefabs/ArcadeBrick.prefab"
+        prefab_guid = re.search(r"guid: (\w+)", prefab.with_suffix(".prefab.meta").read_text()).group(1)
+        self.assertIn(f"guid: {prefab_guid}", arcade["196722578"])
+        self.assertIn("Assembly-CSharp::JuiceStudy.Arcade.ArcadeBrick", prefab.read_text())
+
+    def test_arcade_metadata_is_unique(self):
+        all_guids = [re.search(r"^guid: (\w+)$", p.read_text(), re.M).group(1)
+                     for p in (ROOT / "Assets").rglob("*.meta")]
+        new_assets = list((ROOT / "Assets/_Project/Arcade").glob("*.cs")) + [SCENES / "Arcade.unity"]
+        for asset in new_assets:
+            guid = re.search(r"^guid: ([0-9a-f]{32})$", Path(str(asset) + ".meta").read_text(), re.M).group(1)
+            self.assertEqual(all_guids.count(guid), 1, str(asset))
 
     def test_scene_wiring_is_visual_only(self):
         after = blocks((SCENES / "After.unity").read_text())

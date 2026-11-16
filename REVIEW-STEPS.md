@@ -24,3 +24,12 @@ Each stage is pushed separately to main. Use GitHub commit history to inspect a 
 - Review: pull main, open `Assets/_Project/Scenes/After.unity`, and compare the HUD with Before. Check at 1920x1080 and 1280x720; score and lives should stay readable in opposite corners. Break bricks and lose a ball to confirm values and score animation still update.
 - Validation: all seven source checks pass; Before, gameplay, and feedback scripts remain unchanged. Unity visual/play-mode checks are pending.
 - Next small checkpoint: improve brick-impact VFX.
+
+## 4. Difficulty menu, game over and victory
+
+- Added `Assets/_Project/Scenes/Arcade.unity` as the first build scene, with Easy (9), Medium (12), and Hard (15) ball speeds and three lives per run.
+- Added a gold/ivory main menu, in-game difficulty label, Game Over with Try Again/Return to Main Menu, and Victory with Return to Main Menu. Result screens retain the final score and stop gameplay.
+- Try Again preserves difficulty and resets the complete board, lives, score, paddle, and transient feedback. Returning to the main menu allows choosing a new difficulty without reloading scenes or changing global time scale.
+- Before/After, their gameplay scripts, their brick prefab, and the five feedback implementations are untouched. Arcade has its own round rules and gameplay adapters, reusing shared physics assets and feedback events.
+- Validation: nine source checks and 7,868 compiled C# rule assertions pass, including 300 randomized complete runs. Unity import/play-mode and menu interaction checks remain pending; see TESTING.md.
+- Review: stop Play, pull main, open Arcade (not After), and exercise all three difficulties, a complete loss/retry, and a complete win/return. This checkpoint contains only the requested run flow; further VFX work waits for review.

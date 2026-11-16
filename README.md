@@ -6,11 +6,28 @@ Jehad Alharbi — 202248820
 
 1. Open this repository's root folder in Unity Hub using **6000.3.2f1**.
 2. Allow the existing packages to import. No extra tweening or audio packages are required.
-3. Open `Assets/_Project/Scenes/Before.unity` for the original, or `Assets/_Project/Scenes/After.unity` for the feedback version.
-4. Select 16:9 in Game view, press Play, and focus Game view. The ball launches automatically.
-5. Move with the mouse, A/D, or the left/right arrows. Stop and restart Play mode for a fresh board.
+3. Open `Assets/_Project/Scenes/Arcade.unity` for the playable game with its main menu. This is also the first scene in Build Settings.
+4. Select 16:9 in Game view, press Play, and choose Easy, Medium, or Hard. The ball starts only after a difficulty is selected.
+5. Move with the mouse, A/D, or the left/right arrows. Menus support mouse selection or arrow keys and Enter.
 
-The supplied gameplay rules are unchanged: the same board, controls, speed, collision shapes, scoring, and lives. The final lost life resets score/lives but does not rebuild the board. There is no added restart menu or gameplay system.
+For the assignment comparison, open `Assets/_Project/Scenes/Before.unity` or `Assets/_Project/Scenes/After.unity`. Their gameplay rules remain unchanged: the ball launches automatically, the final lost life resets score/lives, and stopping/restarting Play restores the board. The extra gameplay systems below are isolated in Arcade.
+
+## Arcade mode
+
+| Difficulty | Ball speed (world units/second) | Starting lives |
+|---|---:|---:|
+| Easy | 9 | 3 |
+| Medium | 12 | 3 |
+| Hard | 15 | 3 |
+
+Each run has the same 28-brick board and awards 10 points per brick. The chosen speed applies to the initial launch, every bounce, and every relaunch after a miss.
+
+- Losing the third life opens **Game Over** with the final score, **Try Again**, and **Return to Main Menu**.
+- Try Again keeps the difficulty and rebuilds the full board, resets the score, and restores three lives.
+- Breaking the last brick opens **Victory** with the final score and **Return to Main Menu**.
+- The ball and paddle stop on both result screens. Returning to the menu clears the previous board and feedback before another difficulty is chosen.
+
+`Assets/_Project/Arcade` contains the independent round rules, scene controller, gameplay adapters, and gold/ivory menu UI. The mode reuses the existing paddle controls, physics assets, and five feedback components. Its brick prefab is duplicated so the comparison scenes retain their original rules and assets.
 
 ## Intended feel
 
@@ -18,7 +35,7 @@ Playful, bouncy, and easy to read. Small, brief reactions make contact feel resp
 
 ## Improvements
 
-All new scripts and rendering assets are in `Assets/_Project/Feedback`. The five components are already assigned on `GameFeel - After only` in the After scene.
+The five feedback scripts and rendering assets are in `Assets/_Project/Feedback`. They are already assigned on `GameFeel - After only` in After and `GameFeel - Arcade only` in Arcade.
 
 | Improvement | Trigger | Implementation file/object | Purpose |
 |---|---|---|---|
@@ -58,6 +75,8 @@ Have one other person play both scenes. Do not include their name.
 
 Source-level checks can be run with `python3 tests/verify_project.py`. They check baseline preservation, scene wiring, feedback event lifecycle, and new asset GUIDs. They do not compile C#, compile shaders, run Unity, or verify sound/appearance.
 
+The independent round-rule tests run with `dotnet run --project tests/ArcadeRoundChecks.csproj` using the .NET 8 SDK. They compile the actual `ArcadeRound.cs` and pass 7,868 assertions across fixed scenarios and 300 randomized runs. The nine Python source checks also pass. The .NET SDK is only needed for these optional checks, not for opening or playing the Unity project.
+
 Unity is not installed in the implementation environment. Editor import, compilation, runtime behavior, sound balance, and the real-person playtest still require testing in Unity. Use [TESTING.md](TESTING.md) and replace this status with the tests you actually perform before submission.
 
 ## Demonstration video — REQUIRED BEFORE SUBMISSION
@@ -75,7 +94,7 @@ Keep game audio audible alongside narration. Different ball trajectories between
 
 ## AI use
 
-OpenAI ChatGPT/Codex assisted with interpreting the brief, inspecting the starter, writing the five feedback scripts, original procedural audio, the simple feedback shader/material, After scene wiring, source-level checks, and documentation. No completed JuiceLab feedback modules were imported.
+OpenAI ChatGPT/Codex assisted with interpreting the brief, inspecting the starter, writing the five feedback scripts, original procedural audio, the simple feedback shader/material, After scene wiring, the optional Arcade mode and menus, executable round-rule tests, source-level checks, and documentation. No completed JuiceLab feedback modules were imported.
 
 Student review, Unity tests, and revisions: **[Describe the tests and changes you actually performed. Do not submit this placeholder.]**
 

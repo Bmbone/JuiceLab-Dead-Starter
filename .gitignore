@@ -1,4 +1,8 @@
 # Unity .gitignore Template
+
+# Optional standalone arcade-rule checks (.NET); not part of the Unity build.
+/tests/bin/
+/tests/obj/
 # Source: https://github.com/github/gitignore/blob/main/Unity.gitignore
 # Last synced: 2026-07-02
 # License: CC0-1.0
@@ -52,6 +56,7 @@
 ExportedObj/
 .consulo/
 *.csproj
+!/tests/ArcadeRoundChecks.csproj
 *.unityproj
 *.sln
 *.slnx

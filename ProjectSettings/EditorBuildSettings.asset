@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/_Project/Scenes/Arcade.unity
+    guid: 3c259676416849cea907d81947454f54
+  - enabled: 1
     path: Assets/_Project/Scenes/After.unity
     guid: a3402000000000000000000000000008
   - enabled: 1
